@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: 668ad8760ab6f5c4c9d708d90f34e6ed
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures:
+  - _MetallicGlossMap: {fileID: 2800000, guid: 75f1fbacfa73385419ec8d7700a107ea, type: 3}
+  nonModifiableTextures: []
+  preprocessorOverride: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

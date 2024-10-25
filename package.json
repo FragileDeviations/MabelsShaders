@@ -1,0 +1,21 @@
+{
+  "name": "com.fragiledeviations.mabelsshaders",
+  "version": "1.0.0",
+  "displayName": "Mabel's Shaders",
+  "description": "Various shaders for SLZ URP",
+  "unity": "2021.3",
+  "dependencies": {
+  },
+  "keywords": [
+    "slz",
+    "shader",
+    "urp"
+  ],
+  "author": {
+    "name": "Mabel",
+    "email": "mae@weatherelectric.xyz",
+    "url": "https://github.com/FragileDeviations"
+  },
+  "unityRelease": "16f1",
+  "hideInEditor": false
+}

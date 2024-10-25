@@ -1,3 +1,8 @@
+# v1.1.1 - Parallax Platform Switch Fix
+## Changed Shaders
+### LitMAS+
+* Made parallax samples be forced to 0 on Quest because it apparently still calculates POM and thats not avoidable due to Amplify limits
+
 # v1.1.0 - Parallax Platform Switch
 ## Changed Shaders
 ### LitMAS+

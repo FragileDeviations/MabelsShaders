@@ -1,10 +1,12 @@
 {
   "name": "com.fragiledeviations.mabelsshaders",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "displayName": "Mabel's Shaders",
   "description": "Various shaders for SLZ URP",
   "unity": "2021.3",
   "dependencies": {
+    "com.unity.render-pipelines.universal": "8148.0.7-4",
+    "com.unity.render-pipelines.core": "8148.0.7-5"
   },
   "keywords": [
     "slz",

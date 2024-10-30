@@ -1,3 +1,9 @@
+# v1.2.0 - Bright Spots In MonoSH Fix
+## Changed Shaders
+### LitMAS+
+* Changed MonoSH normal handling to fix bright Spots
+* Fixed LitMAS+ Alpha Clip being pitch black
+
 # v1.1.1 - Parallax Platform Switch Fix
 ## Changed Shaders
 ### LitMAS+

@@ -40,10 +40,10 @@ MonoBehaviour:
     m_nativeDirectivesIndex: -1
     m_nativeDirectivesFoldout: 0
     m_directivesSaveItems: []
-  m_nodeCategory: 5
+  m_nodeCategory: 0
   m_headerStyle: 0
   m_headerColor: {r: 1, g: 0.4, b: 0, a: 1}
-  m_customNodeCategory: 
+  m_customNodeCategory: Bakery
   m_previewPosition: 0
   m_hidden: 0
   m_url: 

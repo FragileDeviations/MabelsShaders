@@ -11,7 +11,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 		[Space(30)][Header(Alpha)][Space(10)][Toggle(_USEOPACITYMAP_ON)] _UseOpacityMap("Use Opacity Map", Float) = 0
 		[NoScaleOffset]_OpacityMap("Opacity Map", 2D) = "white" {}
 		_OpacityMultiplier("Opacity Multiplier", Range( 0 , 1)) = 1
-		_AlphaClipThreshhold("Alpha Clip Threshold", Range( 0 , 1)) = 0.5
+		_AlphaClipThreshold("Alpha Clip Threshold", Range( 0 , 1)) = 0.5
 		[Toggle][Space(30)][Header(PBR)][Space(10)][Toggle(_NORMALS_ON)] _Normals("Normal Map Enabled", Float) = 0
 		[NoScaleOffset][Normal]_BumpMap("Normal Map", 2D) = "bump" {}
 		[NoScaleOffset]_MetallicGlossMap("MAS", 2D) = "white" {}
@@ -50,7 +50,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 		
 		Tags { "RenderPipeline"="UniversalPipeline" "RenderType"="Opaque" "Queue"="Geometry" }
 		
-		Blend [_BlendSrc] [_BlendDst]
+		Blend One Zero
 		ZWrite On
 		Cull [_Cull]
 		ZTest LEqual
@@ -286,23 +286,23 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 			// End Injection UNIFORMS from Injection_Emission.hlsl ----------------------------------------------------------
 			
 			CBUFFER_START(UnityPerMaterial)
-				half4 _BaseMap_ST;
-				half4 _EmissionColor;
-				half4 _HeightMap_ST;
-				half4 _BaseColor;
-				half4 _DetailMap_ST;
-				half _OpacityMultiplier;
-				half _BakedMutiplier;
-				half _MonoSHAdjustment;
-				half _EmissionFalloff;
-				half _TriplanarScale;
-				half _RefPlane;
-				half _SidewallSteps;
-				half _MaxSamples;
-				half _MinSamples;
-				half _ParallaxScale;
-				half _AlphaClipThreshhold;
-				half _Cull;
+				float4 _BaseMap_ST;
+				float4 _EmissionColor;
+				float4 _HeightMap_ST;
+				float4 _BaseColor;
+				float4 _DetailMap_ST;
+				float _OpacityMultiplier;
+				float _BakedMutiplier;
+				float _MonoSHAdjustment;
+				float _EmissionFalloff;
+				float _TriplanarScale;
+				float _RefPlane;
+				float _SidewallSteps;
+				float _MaxSamples;
+				float _MinSamples;
+				float _ParallaxScale;
+				float _AlphaClipThreshold;
+				float _Cull;
 				//float4 _BaseMap_ST;
 				//half4 _BaseColor;
 			// Begin Injection MATERIAL_CBUFFER from Injection_NormalMap_CBuffer.hlsl ----------------------------------------------------------
@@ -407,7 +407,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 				return xNorm * projNormal.x + yNorm * projNormal.y + zNorm * projNormal.z;
 			}
 			
-			inline half3 MyCustomExpression( half4 In0 )
+			inline float3 MyCustomExpression( half4 In0 )
 			{
 				return UnpackNormal(In0);;
 			}
@@ -448,7 +448,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 				return xNorm * projNormal.x + yNorm * projNormal.y + zNorm * projNormal.z;
 			}
 			
-			inline half MyCustomExpression217_g255( half detailSmooth, half smoothness )
+			inline float MyCustomExpression217_g255( float detailSmooth, float smoothness )
 			{
 				return smoothness * (2.0 * detailSmooth);
 			}
@@ -486,11 +486,11 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 			
-				half3 ase_worldTangent = TransformObjectToWorldDir(v.tangent.xyz);
+				float3 ase_worldTangent = TransformObjectToWorldDir(v.tangent.xyz);
 				o.ase_texcoord7.xyz = ase_worldTangent;
-				half3 ase_worldNormal = TransformObjectToWorldNormal(v.normal);
+				float3 ase_worldNormal = TransformObjectToWorldNormal(v.normal);
 				o.ase_texcoord8.xyz = ase_worldNormal;
-				half ase_vertexTangentSign = v.tangent.w * ( unity_WorldTransformParams.w >= 0.0 ? 1.0 : -1.0 );
+				float ase_vertexTangentSign = v.tangent.w * ( unity_WorldTransformParams.w >= 0.0 ? 1.0 : -1.0 );
 				float3 ase_worldBitangent = cross( ase_worldNormal, ase_worldTangent ) * ase_vertexTangentSign;
 				o.ase_texcoord9.xyz = ase_worldBitangent;
 				
@@ -566,251 +566,251 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 			{
 				UNITY_SETUP_INSTANCE_ID(i);
 				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
-				half4 uvs4_BaseMap = float4(i.uv0XY_bitZ_fog.xy,0,0);
+				float4 uvs4_BaseMap = float4(i.uv0XY_bitZ_fog.xy,0,0);
 				uvs4_BaseMap.xy = float4(i.uv0XY_bitZ_fog.xy,0,0).xy * _BaseMap_ST.xy + _BaseMap_ST.zw;
 				#ifdef SHADER_API_MOBILE
-				half staticSwitch318 = 0.0;
+				float staticSwitch322 = 0.0;
 				#else
-				half staticSwitch318 = _ParallaxScale;
+				float staticSwitch322 = _ParallaxScale;
 				#endif
 				#ifdef _QUESTPARALLAXENABLED_ON
-				half staticSwitch320 = _ParallaxScale;
+				float staticSwitch324 = _ParallaxScale;
 				#else
-				half staticSwitch320 = staticSwitch318;
+				float staticSwitch324 = staticSwitch322;
 				#endif
-				half3 ase_worldTangent = i.ase_texcoord7.xyz;
-				half3 ase_worldNormal = i.ase_texcoord8.xyz;
+				float3 ase_worldTangent = i.ase_texcoord7.xyz;
+				float3 ase_worldNormal = i.ase_texcoord8.xyz;
 				float3 ase_worldBitangent = i.ase_texcoord9.xyz;
-				half3 tanToWorld0 = float3( ase_worldTangent.x, ase_worldBitangent.x, ase_worldNormal.x );
-				half3 tanToWorld1 = float3( ase_worldTangent.y, ase_worldBitangent.y, ase_worldNormal.y );
-				half3 tanToWorld2 = float3( ase_worldTangent.z, ase_worldBitangent.z, ase_worldNormal.z );
+				float3 tanToWorld0 = float3( ase_worldTangent.x, ase_worldBitangent.x, ase_worldNormal.x );
+				float3 tanToWorld1 = float3( ase_worldTangent.y, ase_worldBitangent.y, ase_worldNormal.y );
+				float3 tanToWorld2 = float3( ase_worldTangent.z, ase_worldBitangent.z, ase_worldNormal.z );
 				float3 ase_worldViewDir = ( _WorldSpaceCameraPos.xyz - i.wPos.xyz );
 				ase_worldViewDir = normalize(ase_worldViewDir);
-				half3 ase_tanViewDir =  tanToWorld0 * ase_worldViewDir.x + tanToWorld1 * ase_worldViewDir.y  + tanToWorld2 * ase_worldViewDir.z;
+				float3 ase_tanViewDir =  tanToWorld0 * ase_worldViewDir.x + tanToWorld1 * ase_worldViewDir.y  + tanToWorld2 * ase_worldViewDir.z;
 				ase_tanViewDir = normalize(ase_tanViewDir);
 				#ifdef SHADER_API_MOBILE
-				half staticSwitch317 = 0.0;
+				float staticSwitch321 = 0.0;
 				#else
-				half staticSwitch317 = _MinSamples;
+				float staticSwitch321 = _MinSamples;
 				#endif
 				#ifdef _QUESTPARALLAXENABLED_ON
-				half staticSwitch321 = _MinSamples;
+				float staticSwitch325 = _MinSamples;
 				#else
-				half staticSwitch321 = staticSwitch317;
+				float staticSwitch325 = staticSwitch321;
 				#endif
 				#ifdef SHADER_API_MOBILE
-				half staticSwitch316 = 0.0;
+				float staticSwitch320 = 0.0;
 				#else
-				half staticSwitch316 = _MaxSamples;
+				float staticSwitch320 = _MaxSamples;
 				#endif
 				#ifdef _QUESTPARALLAXENABLED_ON
-				half staticSwitch322 = _MaxSamples;
+				float staticSwitch326 = _MaxSamples;
 				#else
-				half staticSwitch322 = staticSwitch316;
+				float staticSwitch326 = staticSwitch320;
 				#endif
 				#ifdef SHADER_API_MOBILE
-				half staticSwitch315 = 0.0;
+				float staticSwitch319 = 0.0;
 				#else
-				half staticSwitch315 = _SidewallSteps;
+				float staticSwitch319 = _SidewallSteps;
 				#endif
 				#ifdef _QUESTPARALLAXENABLED_ON
-				half staticSwitch323 = _SidewallSteps;
+				float staticSwitch327 = _SidewallSteps;
 				#else
-				half staticSwitch323 = staticSwitch315;
+				float staticSwitch327 = staticSwitch319;
 				#endif
 				#ifdef SHADER_API_MOBILE
-				half staticSwitch319 = 0.0;
+				float staticSwitch323 = 0.0;
 				#else
-				half staticSwitch319 = _RefPlane;
+				float staticSwitch323 = _RefPlane;
 				#endif
 				#ifdef _QUESTPARALLAXENABLED_ON
-				half staticSwitch324 = _RefPlane;
+				float staticSwitch328 = _RefPlane;
 				#else
-				half staticSwitch324 = staticSwitch319;
+				float staticSwitch328 = staticSwitch323;
 				#endif
-				half2 OffsetPOM111 = POM( _HeightMap, uvs4_BaseMap.xy, ddx(uvs4_BaseMap.xy), ddy(uvs4_BaseMap.xy), ase_worldNormal, ase_worldViewDir, ase_tanViewDir, (int)staticSwitch321, (int)staticSwitch322, (int)staticSwitch323, staticSwitch320, staticSwitch324, _HeightMap_ST.xy, float2(0,0), 0 );
+				float2 OffsetPOM111 = POM( _HeightMap, uvs4_BaseMap.xy, ddx(uvs4_BaseMap.xy), ddy(uvs4_BaseMap.xy), ase_worldNormal, ase_worldViewDir, ase_tanViewDir, (int)staticSwitch325, (int)staticSwitch326, (int)staticSwitch327, staticSwitch324, staticSwitch328, _HeightMap_ST.xy, float2(0,0), 0 );
 				#ifdef SHADER_API_MOBILE
-				half4 staticSwitch308 = uvs4_BaseMap;
+				float4 staticSwitch318 = uvs4_BaseMap;
 				#else
-				half4 staticSwitch308 = half4( OffsetPOM111, 0.0 , 0.0 );
+				float4 staticSwitch318 = float4( OffsetPOM111, 0.0 , 0.0 );
 				#endif
 				#ifdef _QUESTPARALLAXENABLED_ON
-				half4 staticSwitch307 = half4( OffsetPOM111, 0.0 , 0.0 );
+				float4 staticSwitch317 = float4( OffsetPOM111, 0.0 , 0.0 );
 				#else
-				half4 staticSwitch307 = staticSwitch308;
+				float4 staticSwitch317 = staticSwitch318;
 				#endif
 				#ifdef _HEIGHTMAPENABLED_ON
-				half4 staticSwitch112 = staticSwitch307;
+				float4 staticSwitch112 = staticSwitch317;
 				#else
-				half4 staticSwitch112 = uvs4_BaseMap;
+				float4 staticSwitch112 = uvs4_BaseMap;
 				#endif
-				half4 Texture_Coordinates149 = staticSwitch112;
-				half4 temp_output_17_0 = ( tex2D( _BaseMap, Texture_Coordinates149.xy ) * _BaseColor );
-				half2 appendResult230 = (half2(_TriplanarScale , _TriplanarScale));
-				half2 TriplanarScale228 = appendResult230;
+				float4 Texture_Coordinates149 = staticSwitch112;
+				float4 temp_output_17_0 = ( tex2D( _BaseMap, Texture_Coordinates149.xy ) * _BaseColor );
+				float2 appendResult230 = (float2(_TriplanarScale , _TriplanarScale));
+				float2 TriplanarScale228 = appendResult230;
 				float4 triplanar226 = TriplanarSampling226( _BaseMap, i.wPos.xyz, ase_worldNormal, 1.0, TriplanarScale228, 1.0, 0 );
-				half4 temp_output_231_0 = ( triplanar226 * _BaseColor );
+				float4 temp_output_231_0 = ( triplanar226 * _BaseColor );
 				#ifdef _TRIPLANARENABLED_ON
-				half4 staticSwitch225 = temp_output_231_0;
+				float4 staticSwitch225 = temp_output_231_0;
 				#else
-				half4 staticSwitch225 = temp_output_17_0;
+				float4 staticSwitch225 = temp_output_17_0;
 				#endif
-				half4 temp_output_21_0_g255 = staticSwitch225;
-				half4 temp_output_109_0_g256 = round( temp_output_21_0_g255 );
-				half2 texCoord203 = i.uv0XY_bitZ_fog.xy * float2( 1,1 ) + float2( 0,0 );
+				float4 temp_output_21_0_g255 = staticSwitch225;
+				float4 temp_output_109_0_g256 = round( temp_output_21_0_g255 );
+				float2 texCoord203 = i.uv0XY_bitZ_fog.xy * float2( 1,1 ) + float2( 0,0 );
 				#ifdef _HEIGHTMAPENABLED_ON
-				half4 staticSwitch204 = Texture_Coordinates149;
+				float4 staticSwitch204 = Texture_Coordinates149;
 				#else
-				half4 staticSwitch204 = half4( texCoord203, 0.0 , 0.0 );
+				float4 staticSwitch204 = float4( texCoord203, 0.0 , 0.0 );
 				#endif
 				#ifdef _TRIPLANARENABLED_ON
-				half4 staticSwitch261 = half4( texCoord203, 0.0 , 0.0 );
+				float4 staticSwitch261 = float4( texCoord203, 0.0 , 0.0 );
 				#else
-				half4 staticSwitch261 = staticSwitch204;
+				float4 staticSwitch261 = staticSwitch204;
 				#endif
-				half2 temp_output_218_0_g255 = staticSwitch261.xy;
-				half4 tex2DNode1_g255 = tex2D( _DetailMap, ( ( temp_output_218_0_g255 * _DetailMap_ST.xy ) + _DetailMap_ST.zw ) );
+				float2 temp_output_218_0_g255 = staticSwitch261.xy;
+				float4 tex2DNode1_g255 = tex2D( _DetailMap, ( ( temp_output_218_0_g255 * _DetailMap_ST.xy ) + _DetailMap_ST.zw ) );
 				#ifdef _DETAILS_ON
-				half4 staticSwitch16_g255 = ( ( temp_output_109_0_g256 * ( 1.0 - ( ( 1.0 - temp_output_21_0_g255 ) * ( 1.0 - (tex2DNode1_g255.r).xxxx ) * 2.0 ) ) ) + ( ( 1.0 - temp_output_109_0_g256 ) * ( temp_output_21_0_g255 * (tex2DNode1_g255.r).xxxx * 2.0 ) ) );
+				float4 staticSwitch16_g255 = ( ( temp_output_109_0_g256 * ( 1.0 - ( ( 1.0 - temp_output_21_0_g255 ) * ( 1.0 - (tex2DNode1_g255.r).xxxx ) * 2.0 ) ) ) + ( ( 1.0 - temp_output_109_0_g256 ) * ( temp_output_21_0_g255 * (tex2DNode1_g255.r).xxxx * 2.0 ) ) );
 				#else
-				half4 staticSwitch16_g255 = temp_output_21_0_g255;
+				float4 staticSwitch16_g255 = temp_output_21_0_g255;
 				#endif
-				half4 Albedo138 = staticSwitch16_g255;
+				float4 Albedo138 = staticSwitch16_g255;
 				
-				half4 tex2DNode8 = tex2D( _BumpMap, Texture_Coordinates149.xy );
-				half4 In02_g219 = tex2DNode8;
-				half3 localMyCustomExpression2_g219 = MyCustomExpression( In02_g219 );
-				half3 temp_output_160_0 = localMyCustomExpression2_g219;
-				half3 lerpResult217 = lerp( temp_output_160_0 , float3( 0,0,1 ) , step( 0.0 , 0.0 ));
+				float4 tex2DNode8 = tex2D( _BumpMap, Texture_Coordinates149.xy );
+				float4 In02_g219 = tex2DNode8;
+				float3 localMyCustomExpression2_g219 = MyCustomExpression( In02_g219 );
+				float3 temp_output_160_0 = localMyCustomExpression2_g219;
+				float3 lerpResult217 = lerp( temp_output_160_0 , float3( 0,0,1 ) , step( 0.0 , 0.0 ));
 				#ifdef _NORMALS_ON
-				half3 staticSwitch99 = temp_output_160_0;
+				float3 staticSwitch99 = temp_output_160_0;
 				#else
-				half3 staticSwitch99 = lerpResult217;
+				float3 staticSwitch99 = lerpResult217;
 				#endif
 				float4 triplanar252 = TriplanarSampling252( _BumpMap, i.wPos.xyz, ase_worldNormal, 1.0, TriplanarScale228, 1.0, 0 );
-				half4 In02_g246 = triplanar252;
-				half3 localMyCustomExpression2_g246 = MyCustomExpression( In02_g246 );
-				half3 temp_output_242_0 = localMyCustomExpression2_g246;
-				half3 lerpResult245 = lerp( temp_output_242_0 , float3( 0,0,1 ) , step( 0.0 , 0.0 ));
+				float4 In02_g246 = triplanar252;
+				float3 localMyCustomExpression2_g246 = MyCustomExpression( In02_g246 );
+				float3 temp_output_242_0 = localMyCustomExpression2_g246;
+				float3 lerpResult245 = lerp( temp_output_242_0 , float3( 0,0,1 ) , step( 0.0 , 0.0 ));
 				#ifdef _NORMALS_ON
-				half3 staticSwitch247 = temp_output_242_0;
+				float3 staticSwitch247 = temp_output_242_0;
 				#else
-				half3 staticSwitch247 = lerpResult245;
+				float3 staticSwitch247 = lerpResult245;
 				#endif
 				#ifdef _TRIPLANARENABLED_ON
-				half3 staticSwitch258 = staticSwitch247;
+				float3 staticSwitch258 = staticSwitch247;
 				#else
-				half3 staticSwitch258 = staticSwitch99;
+				float3 staticSwitch258 = staticSwitch99;
 				#endif
-				half4 temp_output_22_0_g255 = half4( staticSwitch258 , 0.0 );
-				half2 temp_output_57_0_g255 = (tex2DNode1_g255).ga;
-				half2 break79_g255 = temp_output_57_0_g255;
-				half3 appendResult56_g255 = (half3(break79_g255.y , break79_g255.x , 1.0));
-				half3 temp_cast_23 = (1.0).xxx;
+				float4 temp_output_22_0_g255 = float4( staticSwitch258 , 0.0 );
+				float2 temp_output_57_0_g255 = (tex2DNode1_g255).ga;
+				float2 break79_g255 = temp_output_57_0_g255;
+				float3 appendResult56_g255 = (float3(break79_g255.y , break79_g255.x , 1.0));
+				float3 temp_cast_23 = (1.0).xxx;
 				#ifdef _DETAILS_ON
-				half4 staticSwitch26_g255 = half4( BlendNormal( temp_output_22_0_g255.rgb , ( ( appendResult56_g255 * 2.0 ) - temp_cast_23 ) ) , 0.0 );
+				float4 staticSwitch26_g255 = float4( BlendNormal( temp_output_22_0_g255.rgb , ( ( appendResult56_g255 * 2.0 ) - temp_cast_23 ) ) , 0.0 );
 				#else
-				half4 staticSwitch26_g255 = temp_output_22_0_g255;
+				float4 staticSwitch26_g255 = temp_output_22_0_g255;
 				#endif
-				half4 Normal139 = staticSwitch26_g255;
+				float4 Normal139 = staticSwitch26_g255;
 				
-				half4 color104 = IsGammaSpace() ? half4(0,0,0,0) : half4(0,0,0,0);
-				half dotResult45 = dot( ase_worldViewDir , ase_worldNormal );
-				half4 temp_output_29_0 = ( tex2D( _EmissionMap, Texture_Coordinates149.xy ) * _EmissionColor * saturate( pow( abs( dotResult45 ) , _EmissionFalloff ) ) );
+				float4 color104 = IsGammaSpace() ? float4(0,0,0,0) : float4(0,0,0,0);
+				float dotResult45 = dot( ase_worldViewDir , ase_worldNormal );
+				float4 temp_output_29_0 = ( tex2D( _EmissionMap, Texture_Coordinates149.xy ) * _EmissionColor * saturate( pow( abs( dotResult45 ) , _EmissionFalloff ) ) );
 				#ifdef _EMISSION_ON
-				half4 staticSwitch103 = temp_output_29_0;
+				float4 staticSwitch103 = temp_output_29_0;
 				#else
-				half4 staticSwitch103 = color104;
+				float4 staticSwitch103 = color104;
 				#endif
-				half4 color276 = IsGammaSpace() ? half4(0,0,0,0) : half4(0,0,0,0);
+				float4 color276 = IsGammaSpace() ? float4(0,0,0,0) : float4(0,0,0,0);
 				float4 triplanar281 = TriplanarSampling281( _EmissionMap, i.wPos.xyz, ase_worldNormal, 1.0, TriplanarScale228, 1.0, 0 );
-				half dotResult268 = dot( ase_worldViewDir , ase_worldNormal );
-				half4 temp_output_275_0 = ( triplanar281 * _EmissionColor * saturate( pow( abs( dotResult268 ) , _EmissionFalloff ) ) );
+				float dotResult268 = dot( ase_worldViewDir , ase_worldNormal );
+				float4 temp_output_275_0 = ( triplanar281 * _EmissionColor * saturate( pow( abs( dotResult268 ) , _EmissionFalloff ) ) );
 				#ifdef _EMISSION_ON
-				half4 staticSwitch278 = temp_output_275_0;
+				float4 staticSwitch278 = temp_output_275_0;
 				#else
-				half4 staticSwitch278 = color276;
+				float4 staticSwitch278 = color276;
 				#endif
 				#ifdef _TRIPLANARENABLED_ON
-				half4 staticSwitch264 = staticSwitch278;
+				float4 staticSwitch264 = staticSwitch278;
 				#else
-				half4 staticSwitch264 = staticSwitch103;
+				float4 staticSwitch264 = staticSwitch103;
 				#endif
-				half3 temp_output_13_0_g263 = staticSwitch264.rgb;
-				half4 tex2DNode9 = tex2D( _MetallicGlossMap, Texture_Coordinates149.xy );
+				float3 temp_output_13_0_g263 = staticSwitch264.rgb;
+				float4 tex2DNode9 = tex2D( _MetallicGlossMap, Texture_Coordinates149.xy );
 				float4 triplanar253 = TriplanarSampling253( _MetallicGlossMap, i.wPos.xyz, ase_worldNormal, 1.0, TriplanarScale228, 1.0, 0 );
 				#ifdef _TRIPLANARENABLED_ON
-				half staticSwitch255 = triplanar253.y;
+				float staticSwitch255 = triplanar253.y;
 				#else
-				half staticSwitch255 = tex2DNode9.g;
+				float staticSwitch255 = tex2DNode9.g;
 				#endif
-				half Ambient_Occlusion133 = staticSwitch255;
+				float Ambient_Occlusion133 = staticSwitch255;
 				float localBakerySpecMonoSHFull4_g264 = ( 0.0 );
-				float3 tanNormal26_g264 = Normal139.rgb;
-				half3 worldNormal26_g264 = float3(dot(tanToWorld0,tanNormal26_g264), dot(tanToWorld1,tanNormal26_g264), dot(tanToWorld2,tanNormal26_g264));
-				float3 normalWorld4_g264 = worldNormal26_g264;
+				float3 mapNormal16_g266 = Normal139.rgb;
+				float3 normalizeResult18_g266 = normalize( ( ( ase_worldTangent * mapNormal16_g266.x ) + ( ase_worldBitangent * mapNormal16_g266.y ) + ( ase_worldNormal * mapNormal16_g266.z ) ) );
+				float3 normalWorld4_g264 = normalizeResult18_g266;
 				float2 lightmapUV4_g264 = (i.ase_texcoord10.xy*(unity_LightmapST).xy + (unity_LightmapST).zw);
-				half3 normalizeResult2_g264 = normalize( ase_worldViewDir );
+				float3 normalizeResult2_g264 = normalize( ase_worldViewDir );
 				float3 viewDir4_g264 = normalizeResult2_g264;
 				#ifdef _TRIPLANARENABLED_ON
-				half staticSwitch256 = saturate( ( ( triplanar252.b + triplanar253.b ) - 1.0 ) );
+				float staticSwitch256 = saturate( ( ( triplanar252.b + triplanar253.b ) - 1.0 ) );
 				#else
-				half staticSwitch256 = saturate( ( ( tex2DNode8.b + tex2DNode9.b ) - 1.0 ) );
+				float staticSwitch256 = saturate( ( ( tex2DNode8.b + tex2DNode9.b ) - 1.0 ) );
 				#endif
-				half temp_output_23_0_g255 = staticSwitch256;
-				half detailSmooth217_g255 = tex2DNode1_g255.b;
-				half smoothness217_g255 = temp_output_23_0_g255;
-				half localMyCustomExpression217_g255 = MyCustomExpression217_g255( detailSmooth217_g255 , smoothness217_g255 );
+				float temp_output_23_0_g255 = staticSwitch256;
+				float detailSmooth217_g255 = tex2DNode1_g255.b;
+				float smoothness217_g255 = temp_output_23_0_g255;
+				float localMyCustomExpression217_g255 = MyCustomExpression217_g255( detailSmooth217_g255 , smoothness217_g255 );
 				#ifdef _DETAILS_ON
-				half staticSwitch17_g255 = localMyCustomExpression217_g255;
+				float staticSwitch17_g255 = localMyCustomExpression217_g255;
 				#else
-				half staticSwitch17_g255 = temp_output_23_0_g255;
+				float staticSwitch17_g255 = temp_output_23_0_g255;
 				#endif
-				half Smoothness134 = staticSwitch17_g255;
+				float Smoothness134 = staticSwitch17_g255;
 				float smoothness4_g264 = Smoothness134;
-				half3 temp_output_9_0_g263 = Albedo138.rgb;
+				float3 temp_output_9_0_g263 = Albedo138.rgb;
 				float3 albedo4_g264 = temp_output_9_0_g263;
 				#ifdef _TRIPLANARENABLED_ON
-				half staticSwitch254 = triplanar253.r;
+				float staticSwitch254 = triplanar253.r;
 				#else
-				half staticSwitch254 = tex2DNode9.r;
+				float staticSwitch254 = tex2DNode9.r;
 				#endif
-				half Metallic132 = staticSwitch254;
+				float Metallic132 = staticSwitch254;
 				float metalness4_g264 = Metallic132;
 				float3 diffuseSH4_g264 = float3( 0,0,0 );
 				float3 specularSH4_g264 = float3( 0,0,0 );
 				BakerySpecMonoSHFull_float( normalWorld4_g264 , lightmapUV4_g264 , viewDir4_g264 , smoothness4_g264 , albedo4_g264 , metalness4_g264 , diffuseSH4_g264 , specularSH4_g264 );
 				#ifdef _MONOSHENABLED_ON
-				half3 staticSwitch30_g263 = ( ( temp_output_13_0_g263 + ( Ambient_Occlusion133 * ( diffuseSH4_g264 * temp_output_9_0_g263 ) ) ) + ( specularSH4_g264 * _MonoSHAdjustment ) );
+				float3 staticSwitch30_g263 = ( ( temp_output_13_0_g263 + ( Ambient_Occlusion133 * ( diffuseSH4_g264 * temp_output_9_0_g263 ) ) ) + ( specularSH4_g264 * _MonoSHAdjustment ) );
 				#else
-				half3 staticSwitch30_g263 = temp_output_13_0_g263;
+				float3 staticSwitch30_g263 = temp_output_13_0_g263;
 				#endif
 				
 				#ifdef _TRIPLANARENABLED_ON
-				half4 staticSwitch265 = ( temp_output_275_0 * _BakedMutiplier );
+				float4 staticSwitch265 = ( temp_output_275_0 * _BakedMutiplier );
 				#else
-				half4 staticSwitch265 = ( temp_output_29_0 * _BakedMutiplier );
+				float4 staticSwitch265 = ( temp_output_29_0 * _BakedMutiplier );
 				#endif
 				
-				half4 temp_output_2_0_g254 = temp_output_17_0;
+				float4 temp_output_2_0_g254 = temp_output_17_0;
 				#ifdef _USEOPACITYMAP_ON
-				half staticSwitch288 = ( tex2D( _OpacityMap, Texture_Coordinates149.xy ).r * _OpacityMultiplier );
+				float staticSwitch288 = ( tex2D( _OpacityMap, Texture_Coordinates149.xy ).r * _OpacityMultiplier );
 				#else
-				half staticSwitch288 = (temp_output_2_0_g254).a;
+				float staticSwitch288 = (temp_output_2_0_g254).a;
 				#endif
-				half4 temp_output_2_0_g253 = temp_output_231_0;
+				float4 temp_output_2_0_g253 = temp_output_231_0;
 				float4 triplanar296 = TriplanarSampling296( _OpacityMap, i.wPos.xyz, ase_worldNormal, 1.0, TriplanarScale228, 1.0, 0 );
 				#ifdef _USEOPACITYMAP_ON
-				half staticSwitch290 = ( triplanar296.x * _OpacityMultiplier );
+				float staticSwitch290 = ( triplanar296.x * _OpacityMultiplier );
 				#else
-				half staticSwitch290 = (temp_output_2_0_g253).w;
+				float staticSwitch290 = (temp_output_2_0_g253).w;
 				#endif
 				#ifdef _TRIPLANARENABLED_ON
-				half staticSwitch291 = staticSwitch290;
+				float staticSwitch291 = staticSwitch290;
 				#else
-				half staticSwitch291 = staticSwitch288;
+				float staticSwitch291 = staticSwitch288;
 				#endif
-				half Alpha147 = staticSwitch291;
+				float Alpha147 = staticSwitch291;
 				
 			
 			//--------------------------------------------------------------------------------------------------------------------------
@@ -855,7 +855,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 				half smoothness = Smoothness134;
 				half ao = Ambient_Occlusion133;
 				half alpha = Alpha147;
-				half alphaclip = ( _AlphaClipThreshhold + ( _Cull * 0.0 ) );
+				half alphaclip = ( _AlphaClipThreshold + ( _Cull * 0.0 ) );
 				half alphaclipthresholdshadow = half(0);
 				#ifdef ASE_DEPTH_WRITE_ON
 				float DepthValue = 0;
@@ -1047,8 +1047,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 			    float4 vertex : POSITION;
 			
 				float4 ase_texcoord : TEXCOORD0;
-				half4 ase_tangent : TANGENT;
-				half3 ase_normal : NORMAL;
+				float4 ase_tangent : TANGENT;
+				float3 ase_normal : NORMAL;
 			    UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -1068,23 +1068,23 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 			sampler2D _HeightMap;
 			sampler2D _OpacityMap;
 			CBUFFER_START( UnityPerMaterial )
-			half4 _BaseMap_ST;
-			half4 _EmissionColor;
-			half4 _HeightMap_ST;
-			half4 _BaseColor;
-			half4 _DetailMap_ST;
-			half _OpacityMultiplier;
-			half _BakedMutiplier;
-			half _MonoSHAdjustment;
-			half _EmissionFalloff;
-			half _TriplanarScale;
-			half _RefPlane;
-			half _SidewallSteps;
-			half _MaxSamples;
-			half _MinSamples;
-			half _ParallaxScale;
-			half _AlphaClipThreshhold;
-			half _Cull;
+			float4 _BaseMap_ST;
+			float4 _EmissionColor;
+			float4 _HeightMap_ST;
+			float4 _BaseColor;
+			float4 _DetailMap_ST;
+			float _OpacityMultiplier;
+			float _BakedMutiplier;
+			float _MonoSHAdjustment;
+			float _EmissionFalloff;
+			float _TriplanarScale;
+			float _RefPlane;
+			float _SidewallSteps;
+			float _MaxSamples;
+			float _MinSamples;
+			float _ParallaxScale;
+			float _AlphaClipThreshold;
+			float _Cull;
 			CBUFFER_END
 
 
@@ -1185,11 +1185,11 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 			    UNITY_TRANSFER_INSTANCE_ID(v, o);
 			    UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-			    half3 ase_worldTangent = TransformObjectToWorldDir(v.ase_tangent.xyz);
+			    float3 ase_worldTangent = TransformObjectToWorldDir(v.ase_tangent.xyz);
 			    o.ase_texcoord1.xyz = ase_worldTangent;
-			    half3 ase_worldNormal = TransformObjectToWorldNormal(v.ase_normal);
+			    float3 ase_worldNormal = TransformObjectToWorldNormal(v.ase_normal);
 			    o.ase_texcoord2.xyz = ase_worldNormal;
-			    half ase_vertexTangentSign = v.ase_tangent.w * ( unity_WorldTransformParams.w >= 0.0 ? 1.0 : -1.0 );
+			    float ase_vertexTangentSign = v.ase_tangent.w * ( unity_WorldTransformParams.w >= 0.0 ? 1.0 : -1.0 );
 			    float3 ase_worldBitangent = cross( ase_worldNormal, ase_worldTangent ) * ase_vertexTangentSign;
 			    o.ase_texcoord3.xyz = ase_worldBitangent;
 			    float3 ase_worldPos = TransformObjectToWorld( (v.vertex).xyz );
@@ -1231,114 +1231,114 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 			{
 			    UNITY_SETUP_INSTANCE_ID(i);
 			    UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
-			    half4 uvs4_BaseMap = i.ase_texcoord;
+			    float4 uvs4_BaseMap = i.ase_texcoord;
 			    uvs4_BaseMap.xy = i.ase_texcoord.xy * _BaseMap_ST.xy + _BaseMap_ST.zw;
 			    #ifdef SHADER_API_MOBILE
-			    half staticSwitch318 = 0.0;
+			    float staticSwitch322 = 0.0;
 			    #else
-			    half staticSwitch318 = _ParallaxScale;
+			    float staticSwitch322 = _ParallaxScale;
 			    #endif
 			    #ifdef _QUESTPARALLAXENABLED_ON
-			    half staticSwitch320 = _ParallaxScale;
+			    float staticSwitch324 = _ParallaxScale;
 			    #else
-			    half staticSwitch320 = staticSwitch318;
+			    float staticSwitch324 = staticSwitch322;
 			    #endif
-			    half3 ase_worldTangent = i.ase_texcoord1.xyz;
-			    half3 ase_worldNormal = i.ase_texcoord2.xyz;
+			    float3 ase_worldTangent = i.ase_texcoord1.xyz;
+			    float3 ase_worldNormal = i.ase_texcoord2.xyz;
 			    float3 ase_worldBitangent = i.ase_texcoord3.xyz;
-			    half3 tanToWorld0 = float3( ase_worldTangent.x, ase_worldBitangent.x, ase_worldNormal.x );
-			    half3 tanToWorld1 = float3( ase_worldTangent.y, ase_worldBitangent.y, ase_worldNormal.y );
-			    half3 tanToWorld2 = float3( ase_worldTangent.z, ase_worldBitangent.z, ase_worldNormal.z );
+			    float3 tanToWorld0 = float3( ase_worldTangent.x, ase_worldBitangent.x, ase_worldNormal.x );
+			    float3 tanToWorld1 = float3( ase_worldTangent.y, ase_worldBitangent.y, ase_worldNormal.y );
+			    float3 tanToWorld2 = float3( ase_worldTangent.z, ase_worldBitangent.z, ase_worldNormal.z );
 			    float3 ase_worldPos = i.ase_texcoord4.xyz;
 			    float3 ase_worldViewDir = ( _WorldSpaceCameraPos.xyz - ase_worldPos );
 			    ase_worldViewDir = normalize(ase_worldViewDir);
-			    half3 ase_tanViewDir =  tanToWorld0 * ase_worldViewDir.x + tanToWorld1 * ase_worldViewDir.y  + tanToWorld2 * ase_worldViewDir.z;
+			    float3 ase_tanViewDir =  tanToWorld0 * ase_worldViewDir.x + tanToWorld1 * ase_worldViewDir.y  + tanToWorld2 * ase_worldViewDir.z;
 			    ase_tanViewDir = normalize(ase_tanViewDir);
 			    #ifdef SHADER_API_MOBILE
-			    half staticSwitch317 = 0.0;
+			    float staticSwitch321 = 0.0;
 			    #else
-			    half staticSwitch317 = _MinSamples;
+			    float staticSwitch321 = _MinSamples;
 			    #endif
 			    #ifdef _QUESTPARALLAXENABLED_ON
-			    half staticSwitch321 = _MinSamples;
+			    float staticSwitch325 = _MinSamples;
 			    #else
-			    half staticSwitch321 = staticSwitch317;
+			    float staticSwitch325 = staticSwitch321;
 			    #endif
 			    #ifdef SHADER_API_MOBILE
-			    half staticSwitch316 = 0.0;
+			    float staticSwitch320 = 0.0;
 			    #else
-			    half staticSwitch316 = _MaxSamples;
+			    float staticSwitch320 = _MaxSamples;
 			    #endif
 			    #ifdef _QUESTPARALLAXENABLED_ON
-			    half staticSwitch322 = _MaxSamples;
+			    float staticSwitch326 = _MaxSamples;
 			    #else
-			    half staticSwitch322 = staticSwitch316;
+			    float staticSwitch326 = staticSwitch320;
 			    #endif
 			    #ifdef SHADER_API_MOBILE
-			    half staticSwitch315 = 0.0;
+			    float staticSwitch319 = 0.0;
 			    #else
-			    half staticSwitch315 = _SidewallSteps;
+			    float staticSwitch319 = _SidewallSteps;
 			    #endif
 			    #ifdef _QUESTPARALLAXENABLED_ON
-			    half staticSwitch323 = _SidewallSteps;
+			    float staticSwitch327 = _SidewallSteps;
 			    #else
-			    half staticSwitch323 = staticSwitch315;
+			    float staticSwitch327 = staticSwitch319;
 			    #endif
 			    #ifdef SHADER_API_MOBILE
-			    half staticSwitch319 = 0.0;
+			    float staticSwitch323 = 0.0;
 			    #else
-			    half staticSwitch319 = _RefPlane;
+			    float staticSwitch323 = _RefPlane;
 			    #endif
 			    #ifdef _QUESTPARALLAXENABLED_ON
-			    half staticSwitch324 = _RefPlane;
+			    float staticSwitch328 = _RefPlane;
 			    #else
-			    half staticSwitch324 = staticSwitch319;
+			    float staticSwitch328 = staticSwitch323;
 			    #endif
-			    half2 OffsetPOM111 = POM( _HeightMap, uvs4_BaseMap.xy, ddx(uvs4_BaseMap.xy), ddy(uvs4_BaseMap.xy), ase_worldNormal, ase_worldViewDir, ase_tanViewDir, (int)staticSwitch321, (int)staticSwitch322, (int)staticSwitch323, staticSwitch320, staticSwitch324, _HeightMap_ST.xy, float2(0,0), 0 );
+			    float2 OffsetPOM111 = POM( _HeightMap, uvs4_BaseMap.xy, ddx(uvs4_BaseMap.xy), ddy(uvs4_BaseMap.xy), ase_worldNormal, ase_worldViewDir, ase_tanViewDir, (int)staticSwitch325, (int)staticSwitch326, (int)staticSwitch327, staticSwitch324, staticSwitch328, _HeightMap_ST.xy, float2(0,0), 0 );
 			    #ifdef SHADER_API_MOBILE
-			    half4 staticSwitch308 = uvs4_BaseMap;
+			    float4 staticSwitch318 = uvs4_BaseMap;
 			    #else
-			    half4 staticSwitch308 = half4( OffsetPOM111, 0.0 , 0.0 );
+			    float4 staticSwitch318 = float4( OffsetPOM111, 0.0 , 0.0 );
 			    #endif
 			    #ifdef _QUESTPARALLAXENABLED_ON
-			    half4 staticSwitch307 = half4( OffsetPOM111, 0.0 , 0.0 );
+			    float4 staticSwitch317 = float4( OffsetPOM111, 0.0 , 0.0 );
 			    #else
-			    half4 staticSwitch307 = staticSwitch308;
+			    float4 staticSwitch317 = staticSwitch318;
 			    #endif
 			    #ifdef _HEIGHTMAPENABLED_ON
-			    half4 staticSwitch112 = staticSwitch307;
+			    float4 staticSwitch112 = staticSwitch317;
 			    #else
-			    half4 staticSwitch112 = uvs4_BaseMap;
+			    float4 staticSwitch112 = uvs4_BaseMap;
 			    #endif
-			    half4 Texture_Coordinates149 = staticSwitch112;
-			    half4 temp_output_17_0 = ( tex2D( _BaseMap, Texture_Coordinates149.xy ) * _BaseColor );
-			    half4 temp_output_2_0_g254 = temp_output_17_0;
+			    float4 Texture_Coordinates149 = staticSwitch112;
+			    float4 temp_output_17_0 = ( tex2D( _BaseMap, Texture_Coordinates149.xy ) * _BaseColor );
+			    float4 temp_output_2_0_g254 = temp_output_17_0;
 			    #ifdef _USEOPACITYMAP_ON
-			    half staticSwitch288 = ( tex2D( _OpacityMap, Texture_Coordinates149.xy ).r * _OpacityMultiplier );
+			    float staticSwitch288 = ( tex2D( _OpacityMap, Texture_Coordinates149.xy ).r * _OpacityMultiplier );
 			    #else
-			    half staticSwitch288 = (temp_output_2_0_g254).a;
+			    float staticSwitch288 = (temp_output_2_0_g254).a;
 			    #endif
-			    half2 appendResult230 = (half2(_TriplanarScale , _TriplanarScale));
-			    half2 TriplanarScale228 = appendResult230;
+			    float2 appendResult230 = (float2(_TriplanarScale , _TriplanarScale));
+			    float2 TriplanarScale228 = appendResult230;
 			    float4 triplanar226 = TriplanarSampling226( _BaseMap, ase_worldPos, ase_worldNormal, 1.0, TriplanarScale228, 1.0, 0 );
-			    half4 temp_output_231_0 = ( triplanar226 * _BaseColor );
-			    half4 temp_output_2_0_g253 = temp_output_231_0;
+			    float4 temp_output_231_0 = ( triplanar226 * _BaseColor );
+			    float4 temp_output_2_0_g253 = temp_output_231_0;
 			    float4 triplanar296 = TriplanarSampling296( _OpacityMap, ase_worldPos, ase_worldNormal, 1.0, TriplanarScale228, 1.0, 0 );
 			    #ifdef _USEOPACITYMAP_ON
-			    half staticSwitch290 = ( triplanar296.x * _OpacityMultiplier );
+			    float staticSwitch290 = ( triplanar296.x * _OpacityMultiplier );
 			    #else
-			    half staticSwitch290 = (temp_output_2_0_g253).w;
+			    float staticSwitch290 = (temp_output_2_0_g253).w;
 			    #endif
 			    #ifdef _TRIPLANARENABLED_ON
-			    half staticSwitch291 = staticSwitch290;
+			    float staticSwitch291 = staticSwitch290;
 			    #else
-			    half staticSwitch291 = staticSwitch288;
+			    float staticSwitch291 = staticSwitch288;
 			    #endif
-			    half Alpha147 = staticSwitch291;
+			    float Alpha147 = staticSwitch291;
 			    
 			
 				half alpha = Alpha147;
-				half alphaclip = ( _AlphaClipThreshhold + ( _Cull * 0.0 ) );
+				half alphaclip = ( _AlphaClipThreshold + ( _Cull * 0.0 ) );
 				half alphaclipthresholdshadow = half(0);
 				#ifdef ASE_DEPTH_WRITE_ON
 				float DepthValue = 0;
@@ -1453,23 +1453,23 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 			// End Injection UNIFORMS from Injection_NormalMap_DepthNormals.hlsl ----------------------------------------------------------
 			
 			CBUFFER_START(UnityPerMaterial)
-				half4 _BaseMap_ST;
-				half4 _EmissionColor;
-				half4 _HeightMap_ST;
-				half4 _BaseColor;
-				half4 _DetailMap_ST;
-				half _OpacityMultiplier;
-				half _BakedMutiplier;
-				half _MonoSHAdjustment;
-				half _EmissionFalloff;
-				half _TriplanarScale;
-				half _RefPlane;
-				half _SidewallSteps;
-				half _MaxSamples;
-				half _MinSamples;
-				half _ParallaxScale;
-				half _AlphaClipThreshhold;
-				half _Cull;
+				float4 _BaseMap_ST;
+				float4 _EmissionColor;
+				float4 _HeightMap_ST;
+				float4 _BaseColor;
+				float4 _DetailMap_ST;
+				float _OpacityMultiplier;
+				float _BakedMutiplier;
+				float _MonoSHAdjustment;
+				float _EmissionFalloff;
+				float _TriplanarScale;
+				float _RefPlane;
+				float _SidewallSteps;
+				float _MaxSamples;
+				float _MinSamples;
+				float _ParallaxScale;
+				float _AlphaClipThreshold;
+				float _Cull;
 				//float4 _BaseMap_ST;
 				//half4 _BaseColor;
 			// Begin Injection MATERIAL_CBUFFER from Injection_NormalMap_CBuffer.hlsl ----------------------------------------------------------
@@ -1560,7 +1560,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 				return uvs.xy + finalTexOffset;
 			}
 			
-			inline half3 MyCustomExpression( half4 In0 )
+			inline float3 MyCustomExpression( half4 In0 )
 			{
 				return UnpackNormal(In0);;
 			}
@@ -1611,11 +1611,11 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 			
 			
-				half3 ase_worldTangent = TransformObjectToWorldDir(v.tangent.xyz);
+				float3 ase_worldTangent = TransformObjectToWorldDir(v.tangent.xyz);
 				o.ase_texcoord3.xyz = ase_worldTangent;
-				half3 ase_worldNormal = TransformObjectToWorldNormal(v.normal);
+				float3 ase_worldNormal = TransformObjectToWorldNormal(v.normal);
 				o.ase_texcoord4.xyz = ase_worldNormal;
-				half ase_vertexTangentSign = v.tangent.w * ( unity_WorldTransformParams.w >= 0.0 ? 1.0 : -1.0 );
+				float ase_vertexTangentSign = v.tangent.w * ( unity_WorldTransformParams.w >= 0.0 ? 1.0 : -1.0 );
 				float3 ase_worldBitangent = cross( ase_worldNormal, ase_worldTangent ) * ase_vertexTangentSign;
 				o.ase_texcoord5.xyz = ase_worldBitangent;
 				float3 ase_worldPos = TransformObjectToWorld( (v.vertex).xyz );
@@ -1666,160 +1666,160 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 			{
 			   UNITY_SETUP_INSTANCE_ID(i);
 			   UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
-			   half4 uvs4_BaseMap = float4(i.uv0.xy,0,0);
+			   float4 uvs4_BaseMap = float4(i.uv0.xy,0,0);
 			   uvs4_BaseMap.xy = float4(i.uv0.xy,0,0).xy * _BaseMap_ST.xy + _BaseMap_ST.zw;
 			   #ifdef SHADER_API_MOBILE
-			   half staticSwitch318 = 0.0;
+			   float staticSwitch322 = 0.0;
 			   #else
-			   half staticSwitch318 = _ParallaxScale;
+			   float staticSwitch322 = _ParallaxScale;
 			   #endif
 			   #ifdef _QUESTPARALLAXENABLED_ON
-			   half staticSwitch320 = _ParallaxScale;
+			   float staticSwitch324 = _ParallaxScale;
 			   #else
-			   half staticSwitch320 = staticSwitch318;
+			   float staticSwitch324 = staticSwitch322;
 			   #endif
-			   half3 ase_worldTangent = i.ase_texcoord3.xyz;
-			   half3 ase_worldNormal = i.ase_texcoord4.xyz;
+			   float3 ase_worldTangent = i.ase_texcoord3.xyz;
+			   float3 ase_worldNormal = i.ase_texcoord4.xyz;
 			   float3 ase_worldBitangent = i.ase_texcoord5.xyz;
-			   half3 tanToWorld0 = float3( ase_worldTangent.x, ase_worldBitangent.x, ase_worldNormal.x );
-			   half3 tanToWorld1 = float3( ase_worldTangent.y, ase_worldBitangent.y, ase_worldNormal.y );
-			   half3 tanToWorld2 = float3( ase_worldTangent.z, ase_worldBitangent.z, ase_worldNormal.z );
+			   float3 tanToWorld0 = float3( ase_worldTangent.x, ase_worldBitangent.x, ase_worldNormal.x );
+			   float3 tanToWorld1 = float3( ase_worldTangent.y, ase_worldBitangent.y, ase_worldNormal.y );
+			   float3 tanToWorld2 = float3( ase_worldTangent.z, ase_worldBitangent.z, ase_worldNormal.z );
 			   float3 ase_worldPos = i.ase_texcoord6.xyz;
 			   float3 ase_worldViewDir = ( _WorldSpaceCameraPos.xyz - ase_worldPos );
 			   ase_worldViewDir = normalize(ase_worldViewDir);
-			   half3 ase_tanViewDir =  tanToWorld0 * ase_worldViewDir.x + tanToWorld1 * ase_worldViewDir.y  + tanToWorld2 * ase_worldViewDir.z;
+			   float3 ase_tanViewDir =  tanToWorld0 * ase_worldViewDir.x + tanToWorld1 * ase_worldViewDir.y  + tanToWorld2 * ase_worldViewDir.z;
 			   ase_tanViewDir = normalize(ase_tanViewDir);
 			   #ifdef SHADER_API_MOBILE
-			   half staticSwitch317 = 0.0;
+			   float staticSwitch321 = 0.0;
 			   #else
-			   half staticSwitch317 = _MinSamples;
+			   float staticSwitch321 = _MinSamples;
 			   #endif
 			   #ifdef _QUESTPARALLAXENABLED_ON
-			   half staticSwitch321 = _MinSamples;
+			   float staticSwitch325 = _MinSamples;
 			   #else
-			   half staticSwitch321 = staticSwitch317;
+			   float staticSwitch325 = staticSwitch321;
 			   #endif
 			   #ifdef SHADER_API_MOBILE
-			   half staticSwitch316 = 0.0;
+			   float staticSwitch320 = 0.0;
 			   #else
-			   half staticSwitch316 = _MaxSamples;
+			   float staticSwitch320 = _MaxSamples;
 			   #endif
 			   #ifdef _QUESTPARALLAXENABLED_ON
-			   half staticSwitch322 = _MaxSamples;
+			   float staticSwitch326 = _MaxSamples;
 			   #else
-			   half staticSwitch322 = staticSwitch316;
+			   float staticSwitch326 = staticSwitch320;
 			   #endif
 			   #ifdef SHADER_API_MOBILE
-			   half staticSwitch315 = 0.0;
+			   float staticSwitch319 = 0.0;
 			   #else
-			   half staticSwitch315 = _SidewallSteps;
+			   float staticSwitch319 = _SidewallSteps;
 			   #endif
 			   #ifdef _QUESTPARALLAXENABLED_ON
-			   half staticSwitch323 = _SidewallSteps;
+			   float staticSwitch327 = _SidewallSteps;
 			   #else
-			   half staticSwitch323 = staticSwitch315;
+			   float staticSwitch327 = staticSwitch319;
 			   #endif
 			   #ifdef SHADER_API_MOBILE
-			   half staticSwitch319 = 0.0;
+			   float staticSwitch323 = 0.0;
 			   #else
-			   half staticSwitch319 = _RefPlane;
+			   float staticSwitch323 = _RefPlane;
 			   #endif
 			   #ifdef _QUESTPARALLAXENABLED_ON
-			   half staticSwitch324 = _RefPlane;
+			   float staticSwitch328 = _RefPlane;
 			   #else
-			   half staticSwitch324 = staticSwitch319;
+			   float staticSwitch328 = staticSwitch323;
 			   #endif
-			   half2 OffsetPOM111 = POM( _HeightMap, uvs4_BaseMap.xy, ddx(uvs4_BaseMap.xy), ddy(uvs4_BaseMap.xy), ase_worldNormal, ase_worldViewDir, ase_tanViewDir, (int)staticSwitch321, (int)staticSwitch322, (int)staticSwitch323, staticSwitch320, staticSwitch324, _HeightMap_ST.xy, float2(0,0), 0 );
+			   float2 OffsetPOM111 = POM( _HeightMap, uvs4_BaseMap.xy, ddx(uvs4_BaseMap.xy), ddy(uvs4_BaseMap.xy), ase_worldNormal, ase_worldViewDir, ase_tanViewDir, (int)staticSwitch325, (int)staticSwitch326, (int)staticSwitch327, staticSwitch324, staticSwitch328, _HeightMap_ST.xy, float2(0,0), 0 );
 			   #ifdef SHADER_API_MOBILE
-			   half4 staticSwitch308 = uvs4_BaseMap;
+			   float4 staticSwitch318 = uvs4_BaseMap;
 			   #else
-			   half4 staticSwitch308 = half4( OffsetPOM111, 0.0 , 0.0 );
+			   float4 staticSwitch318 = float4( OffsetPOM111, 0.0 , 0.0 );
 			   #endif
 			   #ifdef _QUESTPARALLAXENABLED_ON
-			   half4 staticSwitch307 = half4( OffsetPOM111, 0.0 , 0.0 );
+			   float4 staticSwitch317 = float4( OffsetPOM111, 0.0 , 0.0 );
 			   #else
-			   half4 staticSwitch307 = staticSwitch308;
+			   float4 staticSwitch317 = staticSwitch318;
 			   #endif
 			   #ifdef _HEIGHTMAPENABLED_ON
-			   half4 staticSwitch112 = staticSwitch307;
+			   float4 staticSwitch112 = staticSwitch317;
 			   #else
-			   half4 staticSwitch112 = uvs4_BaseMap;
+			   float4 staticSwitch112 = uvs4_BaseMap;
 			   #endif
-			   half4 Texture_Coordinates149 = staticSwitch112;
-			   half4 tex2DNode8 = tex2D( _BumpMap, Texture_Coordinates149.xy );
-			   half4 In02_g219 = tex2DNode8;
-			   half3 localMyCustomExpression2_g219 = MyCustomExpression( In02_g219 );
-			   half3 temp_output_160_0 = localMyCustomExpression2_g219;
-			   half3 lerpResult217 = lerp( temp_output_160_0 , float3( 0,0,1 ) , step( 0.0 , 0.0 ));
+			   float4 Texture_Coordinates149 = staticSwitch112;
+			   float4 tex2DNode8 = tex2D( _BumpMap, Texture_Coordinates149.xy );
+			   float4 In02_g219 = tex2DNode8;
+			   float3 localMyCustomExpression2_g219 = MyCustomExpression( In02_g219 );
+			   float3 temp_output_160_0 = localMyCustomExpression2_g219;
+			   float3 lerpResult217 = lerp( temp_output_160_0 , float3( 0,0,1 ) , step( 0.0 , 0.0 ));
 			   #ifdef _NORMALS_ON
-			   half3 staticSwitch99 = temp_output_160_0;
+			   float3 staticSwitch99 = temp_output_160_0;
 			   #else
-			   half3 staticSwitch99 = lerpResult217;
+			   float3 staticSwitch99 = lerpResult217;
 			   #endif
-			   half2 appendResult230 = (half2(_TriplanarScale , _TriplanarScale));
-			   half2 TriplanarScale228 = appendResult230;
+			   float2 appendResult230 = (float2(_TriplanarScale , _TriplanarScale));
+			   float2 TriplanarScale228 = appendResult230;
 			   float4 triplanar252 = TriplanarSampling252( _BumpMap, ase_worldPos, ase_worldNormal, 1.0, TriplanarScale228, 1.0, 0 );
-			   half4 In02_g246 = triplanar252;
-			   half3 localMyCustomExpression2_g246 = MyCustomExpression( In02_g246 );
-			   half3 temp_output_242_0 = localMyCustomExpression2_g246;
-			   half3 lerpResult245 = lerp( temp_output_242_0 , float3( 0,0,1 ) , step( 0.0 , 0.0 ));
+			   float4 In02_g246 = triplanar252;
+			   float3 localMyCustomExpression2_g246 = MyCustomExpression( In02_g246 );
+			   float3 temp_output_242_0 = localMyCustomExpression2_g246;
+			   float3 lerpResult245 = lerp( temp_output_242_0 , float3( 0,0,1 ) , step( 0.0 , 0.0 ));
 			   #ifdef _NORMALS_ON
-			   half3 staticSwitch247 = temp_output_242_0;
+			   float3 staticSwitch247 = temp_output_242_0;
 			   #else
-			   half3 staticSwitch247 = lerpResult245;
+			   float3 staticSwitch247 = lerpResult245;
 			   #endif
 			   #ifdef _TRIPLANARENABLED_ON
-			   half3 staticSwitch258 = staticSwitch247;
+			   float3 staticSwitch258 = staticSwitch247;
 			   #else
-			   half3 staticSwitch258 = staticSwitch99;
+			   float3 staticSwitch258 = staticSwitch99;
 			   #endif
-			   half4 temp_output_22_0_g255 = half4( staticSwitch258 , 0.0 );
-			   half2 texCoord203 = i.uv0.xy * float2( 1,1 ) + float2( 0,0 );
+			   float4 temp_output_22_0_g255 = float4( staticSwitch258 , 0.0 );
+			   float2 texCoord203 = i.uv0.xy * float2( 1,1 ) + float2( 0,0 );
 			   #ifdef _HEIGHTMAPENABLED_ON
-			   half4 staticSwitch204 = Texture_Coordinates149;
+			   float4 staticSwitch204 = Texture_Coordinates149;
 			   #else
-			   half4 staticSwitch204 = half4( texCoord203, 0.0 , 0.0 );
+			   float4 staticSwitch204 = float4( texCoord203, 0.0 , 0.0 );
 			   #endif
 			   #ifdef _TRIPLANARENABLED_ON
-			   half4 staticSwitch261 = half4( texCoord203, 0.0 , 0.0 );
+			   float4 staticSwitch261 = float4( texCoord203, 0.0 , 0.0 );
 			   #else
-			   half4 staticSwitch261 = staticSwitch204;
+			   float4 staticSwitch261 = staticSwitch204;
 			   #endif
-			   half2 temp_output_218_0_g255 = staticSwitch261.xy;
-			   half4 tex2DNode1_g255 = tex2D( _DetailMap, ( ( temp_output_218_0_g255 * _DetailMap_ST.xy ) + _DetailMap_ST.zw ) );
-			   half2 temp_output_57_0_g255 = (tex2DNode1_g255).ga;
-			   half2 break79_g255 = temp_output_57_0_g255;
-			   half3 appendResult56_g255 = (half3(break79_g255.y , break79_g255.x , 1.0));
-			   half3 temp_cast_17 = (1.0).xxx;
+			   float2 temp_output_218_0_g255 = staticSwitch261.xy;
+			   float4 tex2DNode1_g255 = tex2D( _DetailMap, ( ( temp_output_218_0_g255 * _DetailMap_ST.xy ) + _DetailMap_ST.zw ) );
+			   float2 temp_output_57_0_g255 = (tex2DNode1_g255).ga;
+			   float2 break79_g255 = temp_output_57_0_g255;
+			   float3 appendResult56_g255 = (float3(break79_g255.y , break79_g255.x , 1.0));
+			   float3 temp_cast_17 = (1.0).xxx;
 			   #ifdef _DETAILS_ON
-			   half4 staticSwitch26_g255 = half4( BlendNormal( temp_output_22_0_g255.rgb , ( ( appendResult56_g255 * 2.0 ) - temp_cast_17 ) ) , 0.0 );
+			   float4 staticSwitch26_g255 = float4( BlendNormal( temp_output_22_0_g255.rgb , ( ( appendResult56_g255 * 2.0 ) - temp_cast_17 ) ) , 0.0 );
 			   #else
-			   half4 staticSwitch26_g255 = temp_output_22_0_g255;
+			   float4 staticSwitch26_g255 = temp_output_22_0_g255;
 			   #endif
-			   half4 Normal139 = staticSwitch26_g255;
+			   float4 Normal139 = staticSwitch26_g255;
 			   
-			   half4 temp_output_17_0 = ( tex2D( _BaseMap, Texture_Coordinates149.xy ) * _BaseColor );
-			   half4 temp_output_2_0_g254 = temp_output_17_0;
+			   float4 temp_output_17_0 = ( tex2D( _BaseMap, Texture_Coordinates149.xy ) * _BaseColor );
+			   float4 temp_output_2_0_g254 = temp_output_17_0;
 			   #ifdef _USEOPACITYMAP_ON
-			   half staticSwitch288 = ( tex2D( _OpacityMap, Texture_Coordinates149.xy ).r * _OpacityMultiplier );
+			   float staticSwitch288 = ( tex2D( _OpacityMap, Texture_Coordinates149.xy ).r * _OpacityMultiplier );
 			   #else
-			   half staticSwitch288 = (temp_output_2_0_g254).a;
+			   float staticSwitch288 = (temp_output_2_0_g254).a;
 			   #endif
 			   float4 triplanar226 = TriplanarSampling226( _BaseMap, ase_worldPos, ase_worldNormal, 1.0, TriplanarScale228, 1.0, 0 );
-			   half4 temp_output_231_0 = ( triplanar226 * _BaseColor );
-			   half4 temp_output_2_0_g253 = temp_output_231_0;
+			   float4 temp_output_231_0 = ( triplanar226 * _BaseColor );
+			   float4 temp_output_2_0_g253 = temp_output_231_0;
 			   float4 triplanar296 = TriplanarSampling296( _OpacityMap, ase_worldPos, ase_worldNormal, 1.0, TriplanarScale228, 1.0, 0 );
 			   #ifdef _USEOPACITYMAP_ON
-			   half staticSwitch290 = ( triplanar296.x * _OpacityMultiplier );
+			   float staticSwitch290 = ( triplanar296.x * _OpacityMultiplier );
 			   #else
-			   half staticSwitch290 = (temp_output_2_0_g253).w;
+			   float staticSwitch290 = (temp_output_2_0_g253).w;
 			   #endif
 			   #ifdef _TRIPLANARENABLED_ON
-			   half staticSwitch291 = staticSwitch290;
+			   float staticSwitch291 = staticSwitch290;
 			   #else
-			   half staticSwitch291 = staticSwitch288;
+			   float staticSwitch291 = staticSwitch288;
 			   #endif
-			   half Alpha147 = staticSwitch291;
+			   float Alpha147 = staticSwitch291;
 			   
 			
 			
@@ -1843,7 +1843,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 				normals = half4(EncodeWSNormalForNormalsTex(normalWS),0);
 			// End Injection FRAG_NORMALS from Injection_NormalMap_DepthNormals.hlsl ----------------------------------------------------------
 				half alpha = Alpha147;
-				half alphaclip = ( _AlphaClipThreshhold + ( _Cull * 0.0 ) );
+				half alphaclip = ( _AlphaClipThreshold + ( _Cull * 0.0 ) );
 				half alphaclipthresholdshadow = half(0);
 				#ifdef ASE_DEPTH_WRITE_ON
 				float DepthValue = 0;
@@ -1924,7 +1924,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 			    float4 positionOS   : POSITION;
 			    float3 normalOS     : NORMAL;
 			    float4 ase_texcoord : TEXCOORD0;
-			    half4 ase_tangent : TANGENT;
+			    float4 ase_tangent : TANGENT;
 			    UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -1943,23 +1943,23 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 			sampler2D _HeightMap;
 			sampler2D _OpacityMap;
 			CBUFFER_START( UnityPerMaterial )
-			half4 _BaseMap_ST;
-			half4 _EmissionColor;
-			half4 _HeightMap_ST;
-			half4 _BaseColor;
-			half4 _DetailMap_ST;
-			half _OpacityMultiplier;
-			half _BakedMutiplier;
-			half _MonoSHAdjustment;
-			half _EmissionFalloff;
-			half _TriplanarScale;
-			half _RefPlane;
-			half _SidewallSteps;
-			half _MaxSamples;
-			half _MinSamples;
-			half _ParallaxScale;
-			half _AlphaClipThreshhold;
-			half _Cull;
+			float4 _BaseMap_ST;
+			float4 _EmissionColor;
+			float4 _HeightMap_ST;
+			float4 _BaseColor;
+			float4 _DetailMap_ST;
+			float _OpacityMultiplier;
+			float _BakedMutiplier;
+			float _MonoSHAdjustment;
+			float _EmissionFalloff;
+			float _TriplanarScale;
+			float _RefPlane;
+			float _SidewallSteps;
+			float _MaxSamples;
+			float _MinSamples;
+			float _ParallaxScale;
+			float _AlphaClipThreshold;
+			float _Cull;
 			CBUFFER_END
 
 
@@ -2082,11 +2082,11 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 			{
 			    Varyings output;
 			    UNITY_SETUP_INSTANCE_ID(input);
-			    half3 ase_worldTangent = TransformObjectToWorldDir(input.ase_tangent.xyz);
+			    float3 ase_worldTangent = TransformObjectToWorldDir(input.ase_tangent.xyz);
 			    output.ase_texcoord2.xyz = ase_worldTangent;
-			    half3 ase_worldNormal = TransformObjectToWorldNormal(input.normalOS);
+			    float3 ase_worldNormal = TransformObjectToWorldNormal(input.normalOS);
 			    output.ase_texcoord3.xyz = ase_worldNormal;
-			    half ase_vertexTangentSign = input.ase_tangent.w * ( unity_WorldTransformParams.w >= 0.0 ? 1.0 : -1.0 );
+			    float ase_vertexTangentSign = input.ase_tangent.w * ( unity_WorldTransformParams.w >= 0.0 ? 1.0 : -1.0 );
 			    float3 ase_worldBitangent = cross( ase_worldNormal, ase_worldTangent ) * ase_vertexTangentSign;
 			    output.ase_texcoord4.xyz = ase_worldBitangent;
 			    float3 ase_worldPos = TransformObjectToWorld( (input.positionOS).xyz );
@@ -2130,114 +2130,114 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 			    ) : SV_TARGET
 			{
 			    UNITY_SETUP_INSTANCE_ID( input );
-			    half4 uvs4_BaseMap = input.ase_texcoord1;
+			    float4 uvs4_BaseMap = input.ase_texcoord1;
 			    uvs4_BaseMap.xy = input.ase_texcoord1.xy * _BaseMap_ST.xy + _BaseMap_ST.zw;
 			    #ifdef SHADER_API_MOBILE
-			    half staticSwitch318 = 0.0;
+			    float staticSwitch322 = 0.0;
 			    #else
-			    half staticSwitch318 = _ParallaxScale;
+			    float staticSwitch322 = _ParallaxScale;
 			    #endif
 			    #ifdef _QUESTPARALLAXENABLED_ON
-			    half staticSwitch320 = _ParallaxScale;
+			    float staticSwitch324 = _ParallaxScale;
 			    #else
-			    half staticSwitch320 = staticSwitch318;
+			    float staticSwitch324 = staticSwitch322;
 			    #endif
-			    half3 ase_worldTangent = input.ase_texcoord2.xyz;
-			    half3 ase_worldNormal = input.ase_texcoord3.xyz;
+			    float3 ase_worldTangent = input.ase_texcoord2.xyz;
+			    float3 ase_worldNormal = input.ase_texcoord3.xyz;
 			    float3 ase_worldBitangent = input.ase_texcoord4.xyz;
-			    half3 tanToWorld0 = float3( ase_worldTangent.x, ase_worldBitangent.x, ase_worldNormal.x );
-			    half3 tanToWorld1 = float3( ase_worldTangent.y, ase_worldBitangent.y, ase_worldNormal.y );
-			    half3 tanToWorld2 = float3( ase_worldTangent.z, ase_worldBitangent.z, ase_worldNormal.z );
+			    float3 tanToWorld0 = float3( ase_worldTangent.x, ase_worldBitangent.x, ase_worldNormal.x );
+			    float3 tanToWorld1 = float3( ase_worldTangent.y, ase_worldBitangent.y, ase_worldNormal.y );
+			    float3 tanToWorld2 = float3( ase_worldTangent.z, ase_worldBitangent.z, ase_worldNormal.z );
 			    float3 ase_worldPos = input.ase_texcoord5.xyz;
 			    float3 ase_worldViewDir = ( _WorldSpaceCameraPos.xyz - ase_worldPos );
 			    ase_worldViewDir = normalize(ase_worldViewDir);
-			    half3 ase_tanViewDir =  tanToWorld0 * ase_worldViewDir.x + tanToWorld1 * ase_worldViewDir.y  + tanToWorld2 * ase_worldViewDir.z;
+			    float3 ase_tanViewDir =  tanToWorld0 * ase_worldViewDir.x + tanToWorld1 * ase_worldViewDir.y  + tanToWorld2 * ase_worldViewDir.z;
 			    ase_tanViewDir = normalize(ase_tanViewDir);
 			    #ifdef SHADER_API_MOBILE
-			    half staticSwitch317 = 0.0;
+			    float staticSwitch321 = 0.0;
 			    #else
-			    half staticSwitch317 = _MinSamples;
+			    float staticSwitch321 = _MinSamples;
 			    #endif
 			    #ifdef _QUESTPARALLAXENABLED_ON
-			    half staticSwitch321 = _MinSamples;
+			    float staticSwitch325 = _MinSamples;
 			    #else
-			    half staticSwitch321 = staticSwitch317;
+			    float staticSwitch325 = staticSwitch321;
 			    #endif
 			    #ifdef SHADER_API_MOBILE
-			    half staticSwitch316 = 0.0;
+			    float staticSwitch320 = 0.0;
 			    #else
-			    half staticSwitch316 = _MaxSamples;
+			    float staticSwitch320 = _MaxSamples;
 			    #endif
 			    #ifdef _QUESTPARALLAXENABLED_ON
-			    half staticSwitch322 = _MaxSamples;
+			    float staticSwitch326 = _MaxSamples;
 			    #else
-			    half staticSwitch322 = staticSwitch316;
+			    float staticSwitch326 = staticSwitch320;
 			    #endif
 			    #ifdef SHADER_API_MOBILE
-			    half staticSwitch315 = 0.0;
+			    float staticSwitch319 = 0.0;
 			    #else
-			    half staticSwitch315 = _SidewallSteps;
+			    float staticSwitch319 = _SidewallSteps;
 			    #endif
 			    #ifdef _QUESTPARALLAXENABLED_ON
-			    half staticSwitch323 = _SidewallSteps;
+			    float staticSwitch327 = _SidewallSteps;
 			    #else
-			    half staticSwitch323 = staticSwitch315;
+			    float staticSwitch327 = staticSwitch319;
 			    #endif
 			    #ifdef SHADER_API_MOBILE
-			    half staticSwitch319 = 0.0;
+			    float staticSwitch323 = 0.0;
 			    #else
-			    half staticSwitch319 = _RefPlane;
+			    float staticSwitch323 = _RefPlane;
 			    #endif
 			    #ifdef _QUESTPARALLAXENABLED_ON
-			    half staticSwitch324 = _RefPlane;
+			    float staticSwitch328 = _RefPlane;
 			    #else
-			    half staticSwitch324 = staticSwitch319;
+			    float staticSwitch328 = staticSwitch323;
 			    #endif
-			    half2 OffsetPOM111 = POM( _HeightMap, uvs4_BaseMap.xy, ddx(uvs4_BaseMap.xy), ddy(uvs4_BaseMap.xy), ase_worldNormal, ase_worldViewDir, ase_tanViewDir, (int)staticSwitch321, (int)staticSwitch322, (int)staticSwitch323, staticSwitch320, staticSwitch324, _HeightMap_ST.xy, float2(0,0), 0 );
+			    float2 OffsetPOM111 = POM( _HeightMap, uvs4_BaseMap.xy, ddx(uvs4_BaseMap.xy), ddy(uvs4_BaseMap.xy), ase_worldNormal, ase_worldViewDir, ase_tanViewDir, (int)staticSwitch325, (int)staticSwitch326, (int)staticSwitch327, staticSwitch324, staticSwitch328, _HeightMap_ST.xy, float2(0,0), 0 );
 			    #ifdef SHADER_API_MOBILE
-			    half4 staticSwitch308 = uvs4_BaseMap;
+			    float4 staticSwitch318 = uvs4_BaseMap;
 			    #else
-			    half4 staticSwitch308 = half4( OffsetPOM111, 0.0 , 0.0 );
+			    float4 staticSwitch318 = float4( OffsetPOM111, 0.0 , 0.0 );
 			    #endif
 			    #ifdef _QUESTPARALLAXENABLED_ON
-			    half4 staticSwitch307 = half4( OffsetPOM111, 0.0 , 0.0 );
+			    float4 staticSwitch317 = float4( OffsetPOM111, 0.0 , 0.0 );
 			    #else
-			    half4 staticSwitch307 = staticSwitch308;
+			    float4 staticSwitch317 = staticSwitch318;
 			    #endif
 			    #ifdef _HEIGHTMAPENABLED_ON
-			    half4 staticSwitch112 = staticSwitch307;
+			    float4 staticSwitch112 = staticSwitch317;
 			    #else
-			    half4 staticSwitch112 = uvs4_BaseMap;
+			    float4 staticSwitch112 = uvs4_BaseMap;
 			    #endif
-			    half4 Texture_Coordinates149 = staticSwitch112;
-			    half4 temp_output_17_0 = ( tex2D( _BaseMap, Texture_Coordinates149.xy ) * _BaseColor );
-			    half4 temp_output_2_0_g254 = temp_output_17_0;
+			    float4 Texture_Coordinates149 = staticSwitch112;
+			    float4 temp_output_17_0 = ( tex2D( _BaseMap, Texture_Coordinates149.xy ) * _BaseColor );
+			    float4 temp_output_2_0_g254 = temp_output_17_0;
 			    #ifdef _USEOPACITYMAP_ON
-			    half staticSwitch288 = ( tex2D( _OpacityMap, Texture_Coordinates149.xy ).r * _OpacityMultiplier );
+			    float staticSwitch288 = ( tex2D( _OpacityMap, Texture_Coordinates149.xy ).r * _OpacityMultiplier );
 			    #else
-			    half staticSwitch288 = (temp_output_2_0_g254).a;
+			    float staticSwitch288 = (temp_output_2_0_g254).a;
 			    #endif
-			    half2 appendResult230 = (half2(_TriplanarScale , _TriplanarScale));
-			    half2 TriplanarScale228 = appendResult230;
+			    float2 appendResult230 = (float2(_TriplanarScale , _TriplanarScale));
+			    float2 TriplanarScale228 = appendResult230;
 			    float4 triplanar226 = TriplanarSampling226( _BaseMap, ase_worldPos, ase_worldNormal, 1.0, TriplanarScale228, 1.0, 0 );
-			    half4 temp_output_231_0 = ( triplanar226 * _BaseColor );
-			    half4 temp_output_2_0_g253 = temp_output_231_0;
+			    float4 temp_output_231_0 = ( triplanar226 * _BaseColor );
+			    float4 temp_output_2_0_g253 = temp_output_231_0;
 			    float4 triplanar296 = TriplanarSampling296( _OpacityMap, ase_worldPos, ase_worldNormal, 1.0, TriplanarScale228, 1.0, 0 );
 			    #ifdef _USEOPACITYMAP_ON
-			    half staticSwitch290 = ( triplanar296.x * _OpacityMultiplier );
+			    float staticSwitch290 = ( triplanar296.x * _OpacityMultiplier );
 			    #else
-			    half staticSwitch290 = (temp_output_2_0_g253).w;
+			    float staticSwitch290 = (temp_output_2_0_g253).w;
 			    #endif
 			    #ifdef _TRIPLANARENABLED_ON
-			    half staticSwitch291 = staticSwitch290;
+			    float staticSwitch291 = staticSwitch290;
 			    #else
-			    half staticSwitch291 = staticSwitch288;
+			    float staticSwitch291 = staticSwitch288;
 			    #endif
-			    half Alpha147 = staticSwitch291;
+			    float Alpha147 = staticSwitch291;
 			    
 
 				half alpha = Alpha147;
-				half alphaclip = ( _AlphaClipThreshhold + ( _Cull * 0.0 ) );
+				half alphaclip = ( _AlphaClipThreshold + ( _Cull * 0.0 ) );
 				half alphaclipthresholdshadow = half(0);
 				#ifdef ASE_DEPTH_WRITE_ON
 				float DepthValue = 0;
@@ -2344,23 +2344,23 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 			// End Injection UNIFORMS from Injection_Emission_Meta.hlsl ----------------------------------------------------------
 
 			CBUFFER_START(UnityPerMaterial)
-				half4 _BaseMap_ST;
-				half4 _EmissionColor;
-				half4 _HeightMap_ST;
-				half4 _BaseColor;
-				half4 _DetailMap_ST;
-				half _OpacityMultiplier;
-				half _BakedMutiplier;
-				half _MonoSHAdjustment;
-				half _EmissionFalloff;
-				half _TriplanarScale;
-				half _RefPlane;
-				half _SidewallSteps;
-				half _MaxSamples;
-				half _MinSamples;
-				half _ParallaxScale;
-				half _AlphaClipThreshhold;
-				half _Cull;
+				float4 _BaseMap_ST;
+				float4 _EmissionColor;
+				float4 _HeightMap_ST;
+				float4 _BaseColor;
+				float4 _DetailMap_ST;
+				float _OpacityMultiplier;
+				float _BakedMutiplier;
+				float _MonoSHAdjustment;
+				float _EmissionFalloff;
+				float _TriplanarScale;
+				float _RefPlane;
+				float _SidewallSteps;
+				float _MaxSamples;
+				float _MinSamples;
+				float _ParallaxScale;
+				float _AlphaClipThreshold;
+				float _Cull;
 				//float4 _BaseMap_ST;
 				//half4 _BaseColor;
 			// Begin Injection MATERIAL_CBUFFER from Injection_NormalMap_CBuffer.hlsl ----------------------------------------------------------
@@ -2395,8 +2395,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 				float4 uv1 : TEXCOORD1;
 				float4 uv2 : TEXCOORD2;
 				float4 uv3 : TEXCOORD3;
-				half4 ase_tangent : TANGENT;
-				half3 ase_normal : NORMAL;
+				float4 ase_tangent : TANGENT;
+				float3 ase_normal : NORMAL;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 
@@ -2521,7 +2521,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 				return xNorm * projNormal.x + yNorm * projNormal.y + zNorm * projNormal.z;
 			}
 			
-			inline half3 MyCustomExpression( half4 In0 )
+			inline float3 MyCustomExpression( half4 In0 )
 			{
 				return UnpackNormal(In0);;
 			}
@@ -2538,7 +2538,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 				return xNorm * projNormal.x + yNorm * projNormal.y + zNorm * projNormal.z;
 			}
 			
-			inline half MyCustomExpression217_g255( half detailSmooth, half smoothness )
+			inline float MyCustomExpression217_g255( float detailSmooth, float smoothness )
 			{
 				return smoothness * (2.0 * detailSmooth);
 			}
@@ -2562,11 +2562,11 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 				UNITY_SETUP_INSTANCE_ID(v);
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-				half3 ase_worldTangent = TransformObjectToWorldDir(v.ase_tangent.xyz);
+				float3 ase_worldTangent = TransformObjectToWorldDir(v.ase_tangent.xyz);
 				o.ase_texcoord3.xyz = ase_worldTangent;
-				half3 ase_worldNormal = TransformObjectToWorldNormal(v.ase_normal);
+				float3 ase_worldNormal = TransformObjectToWorldNormal(v.ase_normal);
 				o.ase_texcoord4.xyz = ase_worldNormal;
-				half ase_vertexTangentSign = v.ase_tangent.w * ( unity_WorldTransformParams.w >= 0.0 ? 1.0 : -1.0 );
+				float ase_vertexTangentSign = v.ase_tangent.w * ( unity_WorldTransformParams.w >= 0.0 ? 1.0 : -1.0 );
 				float3 ase_worldBitangent = cross( ase_worldNormal, ase_worldTangent ) * ase_vertexTangentSign;
 				o.ase_texcoord5.xyz = ase_worldBitangent;
 				float3 ase_worldPos = TransformObjectToWorld( (v.vertex).xyz );
@@ -2603,251 +2603,251 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 			{
 				UNITY_SETUP_INSTANCE_ID(i);
 				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
-				half4 uvs4_BaseMap = float4(i.uv,0,0);
+				float4 uvs4_BaseMap = float4(i.uv,0,0);
 				uvs4_BaseMap.xy = float4(i.uv,0,0).xy * _BaseMap_ST.xy + _BaseMap_ST.zw;
 				#ifdef SHADER_API_MOBILE
-				half staticSwitch318 = 0.0;
+				float staticSwitch322 = 0.0;
 				#else
-				half staticSwitch318 = _ParallaxScale;
+				float staticSwitch322 = _ParallaxScale;
 				#endif
 				#ifdef _QUESTPARALLAXENABLED_ON
-				half staticSwitch320 = _ParallaxScale;
+				float staticSwitch324 = _ParallaxScale;
 				#else
-				half staticSwitch320 = staticSwitch318;
+				float staticSwitch324 = staticSwitch322;
 				#endif
-				half3 ase_worldTangent = i.ase_texcoord3.xyz;
-				half3 ase_worldNormal = i.ase_texcoord4.xyz;
+				float3 ase_worldTangent = i.ase_texcoord3.xyz;
+				float3 ase_worldNormal = i.ase_texcoord4.xyz;
 				float3 ase_worldBitangent = i.ase_texcoord5.xyz;
-				half3 tanToWorld0 = float3( ase_worldTangent.x, ase_worldBitangent.x, ase_worldNormal.x );
-				half3 tanToWorld1 = float3( ase_worldTangent.y, ase_worldBitangent.y, ase_worldNormal.y );
-				half3 tanToWorld2 = float3( ase_worldTangent.z, ase_worldBitangent.z, ase_worldNormal.z );
+				float3 tanToWorld0 = float3( ase_worldTangent.x, ase_worldBitangent.x, ase_worldNormal.x );
+				float3 tanToWorld1 = float3( ase_worldTangent.y, ase_worldBitangent.y, ase_worldNormal.y );
+				float3 tanToWorld2 = float3( ase_worldTangent.z, ase_worldBitangent.z, ase_worldNormal.z );
 				float3 ase_worldPos = i.ase_texcoord6.xyz;
 				float3 ase_worldViewDir = ( _WorldSpaceCameraPos.xyz - ase_worldPos );
 				ase_worldViewDir = normalize(ase_worldViewDir);
-				half3 ase_tanViewDir =  tanToWorld0 * ase_worldViewDir.x + tanToWorld1 * ase_worldViewDir.y  + tanToWorld2 * ase_worldViewDir.z;
+				float3 ase_tanViewDir =  tanToWorld0 * ase_worldViewDir.x + tanToWorld1 * ase_worldViewDir.y  + tanToWorld2 * ase_worldViewDir.z;
 				ase_tanViewDir = normalize(ase_tanViewDir);
 				#ifdef SHADER_API_MOBILE
-				half staticSwitch317 = 0.0;
+				float staticSwitch321 = 0.0;
 				#else
-				half staticSwitch317 = _MinSamples;
+				float staticSwitch321 = _MinSamples;
 				#endif
 				#ifdef _QUESTPARALLAXENABLED_ON
-				half staticSwitch321 = _MinSamples;
+				float staticSwitch325 = _MinSamples;
 				#else
-				half staticSwitch321 = staticSwitch317;
+				float staticSwitch325 = staticSwitch321;
 				#endif
 				#ifdef SHADER_API_MOBILE
-				half staticSwitch316 = 0.0;
+				float staticSwitch320 = 0.0;
 				#else
-				half staticSwitch316 = _MaxSamples;
+				float staticSwitch320 = _MaxSamples;
 				#endif
 				#ifdef _QUESTPARALLAXENABLED_ON
-				half staticSwitch322 = _MaxSamples;
+				float staticSwitch326 = _MaxSamples;
 				#else
-				half staticSwitch322 = staticSwitch316;
+				float staticSwitch326 = staticSwitch320;
 				#endif
 				#ifdef SHADER_API_MOBILE
-				half staticSwitch315 = 0.0;
+				float staticSwitch319 = 0.0;
 				#else
-				half staticSwitch315 = _SidewallSteps;
+				float staticSwitch319 = _SidewallSteps;
 				#endif
 				#ifdef _QUESTPARALLAXENABLED_ON
-				half staticSwitch323 = _SidewallSteps;
+				float staticSwitch327 = _SidewallSteps;
 				#else
-				half staticSwitch323 = staticSwitch315;
+				float staticSwitch327 = staticSwitch319;
 				#endif
 				#ifdef SHADER_API_MOBILE
-				half staticSwitch319 = 0.0;
+				float staticSwitch323 = 0.0;
 				#else
-				half staticSwitch319 = _RefPlane;
+				float staticSwitch323 = _RefPlane;
 				#endif
 				#ifdef _QUESTPARALLAXENABLED_ON
-				half staticSwitch324 = _RefPlane;
+				float staticSwitch328 = _RefPlane;
 				#else
-				half staticSwitch324 = staticSwitch319;
+				float staticSwitch328 = staticSwitch323;
 				#endif
-				half2 OffsetPOM111 = POM( _HeightMap, uvs4_BaseMap.xy, ddx(uvs4_BaseMap.xy), ddy(uvs4_BaseMap.xy), ase_worldNormal, ase_worldViewDir, ase_tanViewDir, (int)staticSwitch321, (int)staticSwitch322, (int)staticSwitch323, staticSwitch320, staticSwitch324, _HeightMap_ST.xy, float2(0,0), 0 );
+				float2 OffsetPOM111 = POM( _HeightMap, uvs4_BaseMap.xy, ddx(uvs4_BaseMap.xy), ddy(uvs4_BaseMap.xy), ase_worldNormal, ase_worldViewDir, ase_tanViewDir, (int)staticSwitch325, (int)staticSwitch326, (int)staticSwitch327, staticSwitch324, staticSwitch328, _HeightMap_ST.xy, float2(0,0), 0 );
 				#ifdef SHADER_API_MOBILE
-				half4 staticSwitch308 = uvs4_BaseMap;
+				float4 staticSwitch318 = uvs4_BaseMap;
 				#else
-				half4 staticSwitch308 = half4( OffsetPOM111, 0.0 , 0.0 );
+				float4 staticSwitch318 = float4( OffsetPOM111, 0.0 , 0.0 );
 				#endif
 				#ifdef _QUESTPARALLAXENABLED_ON
-				half4 staticSwitch307 = half4( OffsetPOM111, 0.0 , 0.0 );
+				float4 staticSwitch317 = float4( OffsetPOM111, 0.0 , 0.0 );
 				#else
-				half4 staticSwitch307 = staticSwitch308;
+				float4 staticSwitch317 = staticSwitch318;
 				#endif
 				#ifdef _HEIGHTMAPENABLED_ON
-				half4 staticSwitch112 = staticSwitch307;
+				float4 staticSwitch112 = staticSwitch317;
 				#else
-				half4 staticSwitch112 = uvs4_BaseMap;
+				float4 staticSwitch112 = uvs4_BaseMap;
 				#endif
-				half4 Texture_Coordinates149 = staticSwitch112;
-				half4 temp_output_17_0 = ( tex2D( _BaseMap, Texture_Coordinates149.xy ) * _BaseColor );
-				half2 appendResult230 = (half2(_TriplanarScale , _TriplanarScale));
-				half2 TriplanarScale228 = appendResult230;
+				float4 Texture_Coordinates149 = staticSwitch112;
+				float4 temp_output_17_0 = ( tex2D( _BaseMap, Texture_Coordinates149.xy ) * _BaseColor );
+				float2 appendResult230 = (float2(_TriplanarScale , _TriplanarScale));
+				float2 TriplanarScale228 = appendResult230;
 				float4 triplanar226 = TriplanarSampling226( _BaseMap, ase_worldPos, ase_worldNormal, 1.0, TriplanarScale228, 1.0, 0 );
-				half4 temp_output_231_0 = ( triplanar226 * _BaseColor );
+				float4 temp_output_231_0 = ( triplanar226 * _BaseColor );
 				#ifdef _TRIPLANARENABLED_ON
-				half4 staticSwitch225 = temp_output_231_0;
+				float4 staticSwitch225 = temp_output_231_0;
 				#else
-				half4 staticSwitch225 = temp_output_17_0;
+				float4 staticSwitch225 = temp_output_17_0;
 				#endif
-				half4 temp_output_21_0_g255 = staticSwitch225;
-				half4 temp_output_109_0_g256 = round( temp_output_21_0_g255 );
-				half2 texCoord203 = i.uv * float2( 1,1 ) + float2( 0,0 );
+				float4 temp_output_21_0_g255 = staticSwitch225;
+				float4 temp_output_109_0_g256 = round( temp_output_21_0_g255 );
+				float2 texCoord203 = i.uv * float2( 1,1 ) + float2( 0,0 );
 				#ifdef _HEIGHTMAPENABLED_ON
-				half4 staticSwitch204 = Texture_Coordinates149;
+				float4 staticSwitch204 = Texture_Coordinates149;
 				#else
-				half4 staticSwitch204 = half4( texCoord203, 0.0 , 0.0 );
+				float4 staticSwitch204 = float4( texCoord203, 0.0 , 0.0 );
 				#endif
 				#ifdef _TRIPLANARENABLED_ON
-				half4 staticSwitch261 = half4( texCoord203, 0.0 , 0.0 );
+				float4 staticSwitch261 = float4( texCoord203, 0.0 , 0.0 );
 				#else
-				half4 staticSwitch261 = staticSwitch204;
+				float4 staticSwitch261 = staticSwitch204;
 				#endif
-				half2 temp_output_218_0_g255 = staticSwitch261.xy;
-				half4 tex2DNode1_g255 = tex2D( _DetailMap, ( ( temp_output_218_0_g255 * _DetailMap_ST.xy ) + _DetailMap_ST.zw ) );
+				float2 temp_output_218_0_g255 = staticSwitch261.xy;
+				float4 tex2DNode1_g255 = tex2D( _DetailMap, ( ( temp_output_218_0_g255 * _DetailMap_ST.xy ) + _DetailMap_ST.zw ) );
 				#ifdef _DETAILS_ON
-				half4 staticSwitch16_g255 = ( ( temp_output_109_0_g256 * ( 1.0 - ( ( 1.0 - temp_output_21_0_g255 ) * ( 1.0 - (tex2DNode1_g255.r).xxxx ) * 2.0 ) ) ) + ( ( 1.0 - temp_output_109_0_g256 ) * ( temp_output_21_0_g255 * (tex2DNode1_g255.r).xxxx * 2.0 ) ) );
+				float4 staticSwitch16_g255 = ( ( temp_output_109_0_g256 * ( 1.0 - ( ( 1.0 - temp_output_21_0_g255 ) * ( 1.0 - (tex2DNode1_g255.r).xxxx ) * 2.0 ) ) ) + ( ( 1.0 - temp_output_109_0_g256 ) * ( temp_output_21_0_g255 * (tex2DNode1_g255.r).xxxx * 2.0 ) ) );
 				#else
-				half4 staticSwitch16_g255 = temp_output_21_0_g255;
+				float4 staticSwitch16_g255 = temp_output_21_0_g255;
 				#endif
-				half4 Albedo138 = staticSwitch16_g255;
+				float4 Albedo138 = staticSwitch16_g255;
 				
-				half4 color104 = IsGammaSpace() ? half4(0,0,0,0) : half4(0,0,0,0);
-				half dotResult45 = dot( ase_worldViewDir , ase_worldNormal );
-				half4 temp_output_29_0 = ( tex2D( _EmissionMap, Texture_Coordinates149.xy ) * _EmissionColor * saturate( pow( abs( dotResult45 ) , _EmissionFalloff ) ) );
+				float4 color104 = IsGammaSpace() ? float4(0,0,0,0) : float4(0,0,0,0);
+				float dotResult45 = dot( ase_worldViewDir , ase_worldNormal );
+				float4 temp_output_29_0 = ( tex2D( _EmissionMap, Texture_Coordinates149.xy ) * _EmissionColor * saturate( pow( abs( dotResult45 ) , _EmissionFalloff ) ) );
 				#ifdef _EMISSION_ON
-				half4 staticSwitch103 = temp_output_29_0;
+				float4 staticSwitch103 = temp_output_29_0;
 				#else
-				half4 staticSwitch103 = color104;
+				float4 staticSwitch103 = color104;
 				#endif
-				half4 color276 = IsGammaSpace() ? half4(0,0,0,0) : half4(0,0,0,0);
+				float4 color276 = IsGammaSpace() ? float4(0,0,0,0) : float4(0,0,0,0);
 				float4 triplanar281 = TriplanarSampling281( _EmissionMap, ase_worldPos, ase_worldNormal, 1.0, TriplanarScale228, 1.0, 0 );
-				half dotResult268 = dot( ase_worldViewDir , ase_worldNormal );
-				half4 temp_output_275_0 = ( triplanar281 * _EmissionColor * saturate( pow( abs( dotResult268 ) , _EmissionFalloff ) ) );
+				float dotResult268 = dot( ase_worldViewDir , ase_worldNormal );
+				float4 temp_output_275_0 = ( triplanar281 * _EmissionColor * saturate( pow( abs( dotResult268 ) , _EmissionFalloff ) ) );
 				#ifdef _EMISSION_ON
-				half4 staticSwitch278 = temp_output_275_0;
+				float4 staticSwitch278 = temp_output_275_0;
 				#else
-				half4 staticSwitch278 = color276;
+				float4 staticSwitch278 = color276;
 				#endif
 				#ifdef _TRIPLANARENABLED_ON
-				half4 staticSwitch264 = staticSwitch278;
+				float4 staticSwitch264 = staticSwitch278;
 				#else
-				half4 staticSwitch264 = staticSwitch103;
+				float4 staticSwitch264 = staticSwitch103;
 				#endif
-				half3 temp_output_13_0_g263 = staticSwitch264.rgb;
-				half4 tex2DNode9 = tex2D( _MetallicGlossMap, Texture_Coordinates149.xy );
+				float3 temp_output_13_0_g263 = staticSwitch264.rgb;
+				float4 tex2DNode9 = tex2D( _MetallicGlossMap, Texture_Coordinates149.xy );
 				float4 triplanar253 = TriplanarSampling253( _MetallicGlossMap, ase_worldPos, ase_worldNormal, 1.0, TriplanarScale228, 1.0, 0 );
 				#ifdef _TRIPLANARENABLED_ON
-				half staticSwitch255 = triplanar253.y;
+				float staticSwitch255 = triplanar253.y;
 				#else
-				half staticSwitch255 = tex2DNode9.g;
+				float staticSwitch255 = tex2DNode9.g;
 				#endif
-				half Ambient_Occlusion133 = staticSwitch255;
+				float Ambient_Occlusion133 = staticSwitch255;
 				float localBakerySpecMonoSHFull4_g264 = ( 0.0 );
-				half4 tex2DNode8 = tex2D( _BumpMap, Texture_Coordinates149.xy );
-				half4 In02_g219 = tex2DNode8;
-				half3 localMyCustomExpression2_g219 = MyCustomExpression( In02_g219 );
-				half3 temp_output_160_0 = localMyCustomExpression2_g219;
-				half3 lerpResult217 = lerp( temp_output_160_0 , float3( 0,0,1 ) , step( 0.0 , 0.0 ));
+				float4 tex2DNode8 = tex2D( _BumpMap, Texture_Coordinates149.xy );
+				float4 In02_g219 = tex2DNode8;
+				float3 localMyCustomExpression2_g219 = MyCustomExpression( In02_g219 );
+				float3 temp_output_160_0 = localMyCustomExpression2_g219;
+				float3 lerpResult217 = lerp( temp_output_160_0 , float3( 0,0,1 ) , step( 0.0 , 0.0 ));
 				#ifdef _NORMALS_ON
-				half3 staticSwitch99 = temp_output_160_0;
+				float3 staticSwitch99 = temp_output_160_0;
 				#else
-				half3 staticSwitch99 = lerpResult217;
+				float3 staticSwitch99 = lerpResult217;
 				#endif
 				float4 triplanar252 = TriplanarSampling252( _BumpMap, ase_worldPos, ase_worldNormal, 1.0, TriplanarScale228, 1.0, 0 );
-				half4 In02_g246 = triplanar252;
-				half3 localMyCustomExpression2_g246 = MyCustomExpression( In02_g246 );
-				half3 temp_output_242_0 = localMyCustomExpression2_g246;
-				half3 lerpResult245 = lerp( temp_output_242_0 , float3( 0,0,1 ) , step( 0.0 , 0.0 ));
+				float4 In02_g246 = triplanar252;
+				float3 localMyCustomExpression2_g246 = MyCustomExpression( In02_g246 );
+				float3 temp_output_242_0 = localMyCustomExpression2_g246;
+				float3 lerpResult245 = lerp( temp_output_242_0 , float3( 0,0,1 ) , step( 0.0 , 0.0 ));
 				#ifdef _NORMALS_ON
-				half3 staticSwitch247 = temp_output_242_0;
+				float3 staticSwitch247 = temp_output_242_0;
 				#else
-				half3 staticSwitch247 = lerpResult245;
+				float3 staticSwitch247 = lerpResult245;
 				#endif
 				#ifdef _TRIPLANARENABLED_ON
-				half3 staticSwitch258 = staticSwitch247;
+				float3 staticSwitch258 = staticSwitch247;
 				#else
-				half3 staticSwitch258 = staticSwitch99;
+				float3 staticSwitch258 = staticSwitch99;
 				#endif
-				half4 temp_output_22_0_g255 = half4( staticSwitch258 , 0.0 );
-				half2 temp_output_57_0_g255 = (tex2DNode1_g255).ga;
-				half2 break79_g255 = temp_output_57_0_g255;
-				half3 appendResult56_g255 = (half3(break79_g255.y , break79_g255.x , 1.0));
-				half3 temp_cast_28 = (1.0).xxx;
+				float4 temp_output_22_0_g255 = float4( staticSwitch258 , 0.0 );
+				float2 temp_output_57_0_g255 = (tex2DNode1_g255).ga;
+				float2 break79_g255 = temp_output_57_0_g255;
+				float3 appendResult56_g255 = (float3(break79_g255.y , break79_g255.x , 1.0));
+				float3 temp_cast_28 = (1.0).xxx;
 				#ifdef _DETAILS_ON
-				half4 staticSwitch26_g255 = half4( BlendNormal( temp_output_22_0_g255.rgb , ( ( appendResult56_g255 * 2.0 ) - temp_cast_28 ) ) , 0.0 );
+				float4 staticSwitch26_g255 = float4( BlendNormal( temp_output_22_0_g255.rgb , ( ( appendResult56_g255 * 2.0 ) - temp_cast_28 ) ) , 0.0 );
 				#else
-				half4 staticSwitch26_g255 = temp_output_22_0_g255;
+				float4 staticSwitch26_g255 = temp_output_22_0_g255;
 				#endif
-				half4 Normal139 = staticSwitch26_g255;
-				float3 tanNormal26_g264 = Normal139.rgb;
-				half3 worldNormal26_g264 = float3(dot(tanToWorld0,tanNormal26_g264), dot(tanToWorld1,tanNormal26_g264), dot(tanToWorld2,tanNormal26_g264));
-				float3 normalWorld4_g264 = worldNormal26_g264;
+				float4 Normal139 = staticSwitch26_g255;
+				float3 mapNormal16_g266 = Normal139.rgb;
+				float3 normalizeResult18_g266 = normalize( ( ( ase_worldTangent * mapNormal16_g266.x ) + ( ase_worldBitangent * mapNormal16_g266.y ) + ( ase_worldNormal * mapNormal16_g266.z ) ) );
+				float3 normalWorld4_g264 = normalizeResult18_g266;
 				float2 lightmapUV4_g264 = (i.ase_texcoord7.xy*(unity_LightmapST).xy + (unity_LightmapST).zw);
-				half3 normalizeResult2_g264 = normalize( ase_worldViewDir );
+				float3 normalizeResult2_g264 = normalize( ase_worldViewDir );
 				float3 viewDir4_g264 = normalizeResult2_g264;
 				#ifdef _TRIPLANARENABLED_ON
-				half staticSwitch256 = saturate( ( ( triplanar252.b + triplanar253.b ) - 1.0 ) );
+				float staticSwitch256 = saturate( ( ( triplanar252.b + triplanar253.b ) - 1.0 ) );
 				#else
-				half staticSwitch256 = saturate( ( ( tex2DNode8.b + tex2DNode9.b ) - 1.0 ) );
+				float staticSwitch256 = saturate( ( ( tex2DNode8.b + tex2DNode9.b ) - 1.0 ) );
 				#endif
-				half temp_output_23_0_g255 = staticSwitch256;
-				half detailSmooth217_g255 = tex2DNode1_g255.b;
-				half smoothness217_g255 = temp_output_23_0_g255;
-				half localMyCustomExpression217_g255 = MyCustomExpression217_g255( detailSmooth217_g255 , smoothness217_g255 );
+				float temp_output_23_0_g255 = staticSwitch256;
+				float detailSmooth217_g255 = tex2DNode1_g255.b;
+				float smoothness217_g255 = temp_output_23_0_g255;
+				float localMyCustomExpression217_g255 = MyCustomExpression217_g255( detailSmooth217_g255 , smoothness217_g255 );
 				#ifdef _DETAILS_ON
-				half staticSwitch17_g255 = localMyCustomExpression217_g255;
+				float staticSwitch17_g255 = localMyCustomExpression217_g255;
 				#else
-				half staticSwitch17_g255 = temp_output_23_0_g255;
+				float staticSwitch17_g255 = temp_output_23_0_g255;
 				#endif
-				half Smoothness134 = staticSwitch17_g255;
+				float Smoothness134 = staticSwitch17_g255;
 				float smoothness4_g264 = Smoothness134;
-				half3 temp_output_9_0_g263 = Albedo138.rgb;
+				float3 temp_output_9_0_g263 = Albedo138.rgb;
 				float3 albedo4_g264 = temp_output_9_0_g263;
 				#ifdef _TRIPLANARENABLED_ON
-				half staticSwitch254 = triplanar253.r;
+				float staticSwitch254 = triplanar253.r;
 				#else
-				half staticSwitch254 = tex2DNode9.r;
+				float staticSwitch254 = tex2DNode9.r;
 				#endif
-				half Metallic132 = staticSwitch254;
+				float Metallic132 = staticSwitch254;
 				float metalness4_g264 = Metallic132;
 				float3 diffuseSH4_g264 = float3( 0,0,0 );
 				float3 specularSH4_g264 = float3( 0,0,0 );
 				BakerySpecMonoSHFull_float( normalWorld4_g264 , lightmapUV4_g264 , viewDir4_g264 , smoothness4_g264 , albedo4_g264 , metalness4_g264 , diffuseSH4_g264 , specularSH4_g264 );
 				#ifdef _MONOSHENABLED_ON
-				half3 staticSwitch30_g263 = ( ( temp_output_13_0_g263 + ( Ambient_Occlusion133 * ( diffuseSH4_g264 * temp_output_9_0_g263 ) ) ) + ( specularSH4_g264 * _MonoSHAdjustment ) );
+				float3 staticSwitch30_g263 = ( ( temp_output_13_0_g263 + ( Ambient_Occlusion133 * ( diffuseSH4_g264 * temp_output_9_0_g263 ) ) ) + ( specularSH4_g264 * _MonoSHAdjustment ) );
 				#else
-				half3 staticSwitch30_g263 = temp_output_13_0_g263;
+				float3 staticSwitch30_g263 = temp_output_13_0_g263;
 				#endif
 				
 				#ifdef _TRIPLANARENABLED_ON
-				half4 staticSwitch265 = ( temp_output_275_0 * _BakedMutiplier );
+				float4 staticSwitch265 = ( temp_output_275_0 * _BakedMutiplier );
 				#else
-				half4 staticSwitch265 = ( temp_output_29_0 * _BakedMutiplier );
+				float4 staticSwitch265 = ( temp_output_29_0 * _BakedMutiplier );
 				#endif
 				
-				half4 temp_output_2_0_g254 = temp_output_17_0;
+				float4 temp_output_2_0_g254 = temp_output_17_0;
 				#ifdef _USEOPACITYMAP_ON
-				half staticSwitch288 = ( tex2D( _OpacityMap, Texture_Coordinates149.xy ).r * _OpacityMultiplier );
+				float staticSwitch288 = ( tex2D( _OpacityMap, Texture_Coordinates149.xy ).r * _OpacityMultiplier );
 				#else
-				half staticSwitch288 = (temp_output_2_0_g254).a;
+				float staticSwitch288 = (temp_output_2_0_g254).a;
 				#endif
-				half4 temp_output_2_0_g253 = temp_output_231_0;
+				float4 temp_output_2_0_g253 = temp_output_231_0;
 				float4 triplanar296 = TriplanarSampling296( _OpacityMap, ase_worldPos, ase_worldNormal, 1.0, TriplanarScale228, 1.0, 0 );
 				#ifdef _USEOPACITYMAP_ON
-				half staticSwitch290 = ( triplanar296.x * _OpacityMultiplier );
+				float staticSwitch290 = ( triplanar296.x * _OpacityMultiplier );
 				#else
-				half staticSwitch290 = (temp_output_2_0_g253).w;
+				float staticSwitch290 = (temp_output_2_0_g253).w;
 				#endif
 				#ifdef _TRIPLANARENABLED_ON
-				half staticSwitch291 = staticSwitch290;
+				float staticSwitch291 = staticSwitch290;
 				#else
-				half staticSwitch291 = staticSwitch288;
+				float staticSwitch291 = staticSwitch288;
 				#endif
-				half Alpha147 = staticSwitch291;
+				float Alpha147 = staticSwitch291;
 				
 
 				MetaInput metaInput = (MetaInput)0;
@@ -2882,7 +2882,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 				#endif
 			
 				half alpha = Alpha147;
-				half alphaclip = ( _AlphaClipThreshhold + ( _Cull * 0.0 ) );
+				half alphaclip = ( _AlphaClipThreshold + ( _Cull * 0.0 ) );
 				half alphaclipthresholdshadow = half(0);
 				#if defined(_ALPHATEST_ON)
 					clip(alpha - alphaclip);
@@ -3024,42 +3024,42 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Alpha Clip"
 	
 
 	CustomEditor "UnityEditor.ShaderGraphLitGUI"
-	Fallback "SLZ/LitMAS/LitMAS Standard"
+	Fallback "Hidden/InternalErrorShader"
 	
 }
 /*ASEBEGIN
 Version=19603
-Node;AmplifyShaderEditor.CommentaryNode;115;-720,-816;Inherit;False;1653.5;835.4;;27;325;324;323;322;321;320;319;318;317;316;315;308;149;112;307;111;113;4;3;2;1;108;105;110;109;106;107;Parallax Mapping;1,1,1,1;0;0
-Node;AmplifyShaderEditor.RangedFloatNode;107;-672,-336;Inherit;False;Property;_RefPlane;Ref Plane;32;0;Create;True;0;0;0;False;0;False;0;0;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;106;-672,-592;Inherit;False;Property;_ParallaxScale;Scale;27;0;Create;False;0;0;0;False;0;False;0.02;0;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;109;-672,-528;Inherit;False;Property;_MinSamples;Min Samples;29;0;Create;True;0;0;0;False;0;False;8;0;1;128;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;110;-672,-464;Inherit;False;Property;_MaxSamples;Max Samples;30;0;Create;True;0;0;0;False;0;False;16;16;1;128;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;105;-672,-400;Inherit;False;Property;_SidewallSteps;Sidewall Steps;31;0;Create;True;0;0;0;False;0;False;2;2;0;10;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;325;-656,-256;Inherit;False;Constant;_ZeroConstLol;ZeroConstLol;27;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;315;-384,-416;Inherit;False;Property;_SHADER_API_MOBILE2;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;316;-384,-512;Inherit;False;Property;_SHADER_API_MOBILE3;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;317;-384,-608;Inherit;False;Property;_SHADER_API_MOBILE4;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;318;-384,-704;Inherit;False;Property;_SHADER_API_MOBILE5;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;319;-384,-320;Inherit;False;Property;_SHADER_API_MOBILE1;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.TexturePropertyNode;108;-624,-768;Inherit;True;Property;_HeightMap;Height Map;28;0;Create;True;1;Parallax Occlusion Mapping;0;0;False;0;False;None;None;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
-Node;AmplifyShaderEditor.TextureCoordinatesNode;113;272,-208;Inherit;False;0;221;4;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.StaticSwitch;321;-64,-608;Inherit;False;Property;_Keyword11;Keyword 10;26;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;307;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;322;-64,-512;Inherit;False;Property;_Keyword12;Keyword 10;26;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;307;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;323;-64,-416;Inherit;False;Property;_Keyword13;Keyword 10;26;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;307;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;324;-64,-320;Inherit;False;Property;_Keyword14;Keyword 10;26;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;307;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;320;-64,-704;Inherit;False;Property;_Keyword10;Keyword 10;26;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;307;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.ParallaxOcclusionMappingNode;111;256,-704;Inherit;False;0;8;False;;16;False;;2;0.022;0;False;1,1;False;0,0;11;0;FLOAT2;0,0;False;1;SAMPLER2D;;False;7;SAMPLERSTATE;;False;2;FLOAT;0.02;False;3;FLOAT3;0,0,0;False;8;INT;0;False;9;INT;0;False;10;INT;0;False;4;FLOAT;0;False;5;FLOAT2;0,0;False;6;FLOAT;0;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.CommentaryNode;115;-672,-848;Inherit;False;1731.2;809.4;;23;149;112;317;318;111;113;106;108;107;109;110;105;319;320;321;322;323;324;325;326;327;328;329;Parallax Mapping;1,1,1,1;0;0
+Node;AmplifyShaderEditor.RangedFloatNode;107;-624,-368;Inherit;False;Property;_RefPlane;Ref Plane;35;0;Create;True;0;0;0;False;0;False;0;0;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;329;-624,-272;Inherit;False;Constant;_ZeroConstLol;ZeroConstLol;27;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;105;-624,-432;Inherit;False;Property;_SidewallSteps;Sidewall Steps;34;0;Create;True;0;0;0;False;0;False;2;2;0;10;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;110;-624,-496;Inherit;False;Property;_MaxSamples;Max Samples;33;0;Create;True;0;0;0;False;0;False;16;16;1;128;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;109;-624,-560;Inherit;False;Property;_MinSamples;Min Samples;32;0;Create;True;0;0;0;False;0;False;8;0;1;128;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;106;-624,-624;Inherit;False;Property;_ParallaxScale;Scale;30;0;Create;False;0;0;0;False;0;False;0.02;0;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;319;-320,-496;Inherit;False;Property;_SHADER_API_MOBILE2;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;320;-320,-592;Inherit;False;Property;_SHADER_API_MOBILE3;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;321;-320,-688;Inherit;False;Property;_SHADER_API_MOBILE4;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;322;-320,-784;Inherit;False;Property;_SHADER_API_MOBILE5;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;323;-320,-400;Inherit;False;Property;_SHADER_API_MOBILE1;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.TexturePropertyNode;108;-576,-800;Inherit;True;Property;_HeightMap;Height Map;31;0;Create;True;1;Parallax Occlusion Mapping;0;0;False;0;False;None;None;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
+Node;AmplifyShaderEditor.TextureCoordinatesNode;113;-432,-272;Inherit;False;0;221;4;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.StaticSwitch;324;-48,-784;Inherit;False;Property;_Keyword10;Keyword 10;29;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;317;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;325;-48,-688;Inherit;False;Property;_Keyword11;Keyword 10;29;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;317;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;326;-48,-592;Inherit;False;Property;_Keyword12;Keyword 10;29;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;317;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;327;-48,-496;Inherit;False;Property;_Keyword13;Keyword 10;29;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;317;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;328;-48,-400;Inherit;False;Property;_Keyword14;Keyword 10;29;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;317;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.ParallaxOcclusionMappingNode;111;272,-768;Inherit;False;0;8;False;;16;False;;2;0.022;0;False;1,1;False;0,0;11;0;FLOAT2;0,0;False;1;SAMPLER2D;;False;7;SAMPLERSTATE;;False;2;FLOAT;0.02;False;3;FLOAT3;0,0,0;False;8;INT;0;False;9;INT;0;False;10;INT;0;False;4;FLOAT;0;False;5;FLOAT2;0,0;False;6;FLOAT;0;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.CommentaryNode;236;-2720,-864;Inherit;False;580;187;;3;228;227;230;Triplanar Settings;1,1,1,1;0;0
-Node;AmplifyShaderEditor.StaticSwitch;308;544,-720;Inherit;False;Property;_SHADER_API_MOBILE;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.RangedFloatNode;227;-2672,-816;Inherit;False;Property;_TriplanarScale;Scale;24;0;Create;False;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;307;512,-592;Inherit;False;Property;_QuestParallaxEnabled;Quest Parallax Enabled;26;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.StaticSwitch;318;608,-752;Inherit;False;Property;_SHADER_API_MOBILE;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.RangedFloatNode;227;-2672,-816;Inherit;False;Property;_TriplanarScale;Scale;27;0;Create;False;0;0;0;False;0;False;1;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;317;688,-624;Inherit;False;Property;_QuestParallaxEnabled;Quest Parallax Enabled;29;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.DynamicAppendNode;230;-2528,-816;Inherit;False;FLOAT2;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.StaticSwitch;112;400,-400;Inherit;False;Property;_HeightmapEnabled;Parallax Enabled;25;0;Create;False;0;0;0;False;4;Space(30);Header(Parallax Occlusion Mapping);Space(10);Toggle;False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.StaticSwitch;112;800,-464;Inherit;False;Property;_HeightmapEnabled;Parallax Enabled;28;0;Create;False;0;0;0;False;4;Space(30);Header(Parallax Occlusion Mapping);Space(10);Toggle;False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.CommentaryNode;260;-3472,-96;Inherit;False;299;661;;3;237;238;221;Base Textures;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;259;-2624,1088;Inherit;False;1349.054;575.71;;11;241;242;244;245;246;253;252;257;240;243;247;Normal Triplanar;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;49;-2576,320;Inherit;False;1237.2;711.9001;;11;42;40;41;99;9;8;151;160;217;218;219;Normal Standard;1,1,1,1;0;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;228;-2384,-816;Inherit;False;TriplanarScale;-1;True;1;0;FLOAT2;0,0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.RegisterLocalVarNode;149;480,-208;Inherit;False;Texture Coordinates;-1;True;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode;149;576,-288;Inherit;False;Texture Coordinates;-1;True;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.CommentaryNode;282;-304,1712;Inherit;False;1204;859;;12;266;267;268;269;271;273;275;276;281;279;278;283;Emission Triplanar;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;52;-528,512;Inherit;False;1472.8;1054.2;;15;35;103;14;104;29;11;12;48;47;13;46;45;44;43;153;Emission Standard;1,1,1,1;0;0
 Node;AmplifyShaderEditor.GetLocalVarNode;151;-2560,624;Inherit;False;149;Texture Coordinates;1;0;OBJECT;;False;1;FLOAT4;0
@@ -3118,7 +3118,7 @@ Node;AmplifyShaderEditor.StaticSwitch;99;-1696,432;Inherit;False;Property;_Norma
 Node;AmplifyShaderEditor.PowerNode;47;224,1088;Inherit;False;False;2;0;FLOAT;0;False;1;FLOAT;1;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;153;-496,704;Inherit;False;149;Texture Coordinates;1;0;OBJECT;;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.PowerNode;271;208,2240;Inherit;False;False;2;0;FLOAT;0;False;1;FLOAT;1;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;204;-448,176;Inherit;False;Property;_Keyword0;Keyword 0;25;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;112;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.StaticSwitch;204;-448,176;Inherit;False;Property;_Keyword0;Keyword 0;28;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;112;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.StaticSwitch;247;-1616,1152;Inherit;False;Property;_Normals1;Normal Map Enabled;6;0;Create;False;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;99;True;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.GetLocalVarNode;283;-240,1824;Inherit;False;228;TriplanarScale;1;0;OBJECT;;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.TexturePropertyNode;263;-896,1280;Inherit;True;Property;_EmissionMap;Emission Map;10;1;[NoScaleOffset];Create;False;0;0;0;False;0;False;None;None;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
@@ -3129,23 +3129,23 @@ Node;AmplifyShaderEditor.FunctionNode;159;-1856,-304;Inherit;False;Alpha Split;-
 Node;AmplifyShaderEditor.SaturateNode;48;400,1088;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.ColorNode;12;-176,880;Inherit;False;Property;_EmissionColor;Emission Color;11;1;[HDR];Create;False;0;0;0;True;0;False;1,1,1,1;0,0,0,1;True;True;0;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
 Node;AmplifyShaderEditor.SaturateNode;273;384,2240;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;261;-336,320;Inherit;False;Property;_Keyword5;Keyword 0;23;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;225;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.StaticSwitch;256;-1040,720;Inherit;False;Property;_Keyword3;Keyword 1;23;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;225;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;258;-1120,464;Inherit;False;Property;_Keyword4;Keyword 1;23;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;225;True;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.StaticSwitch;261;-336,320;Inherit;False;Property;_Keyword5;Keyword 0;26;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;225;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.StaticSwitch;256;-1040,720;Inherit;False;Property;_Keyword3;Keyword 1;26;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;225;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;258;-1120,464;Inherit;False;Property;_Keyword4;Keyword 1;26;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;225;True;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.SamplerNode;11;-240,688;Inherit;True;Property;_EmissionMapSample;Emission Map;10;1;[NoScaleOffset];Create;False;0;0;0;True;0;False;221;None;None;True;0;False;white;Auto;False;Instance;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
 Node;AmplifyShaderEditor.TriplanarNode;281;-208,1968;Inherit;True;Spherical;World;False;EmissionTriplanar;_EmissionTriplanar;white;-1;None;Mid Texture 3;_MidTexture3;white;-1;None;Bot Texture 3;_BotTexture3;white;-1;None;Triplanar Sampler;Tangent;10;0;SAMPLER2D;;False;5;FLOAT;1;False;1;SAMPLER2D;;False;6;FLOAT;0;False;2;SAMPLER2D;;False;7;FLOAT;0;False;9;FLOAT3;0,0,0;False;8;FLOAT;1;False;3;FLOAT2;1,1;False;4;FLOAT;1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.StaticSwitch;225;-1456,-256;Inherit;False;Property;_TriplanarEnabled;Triplanar Enabled;23;0;Create;True;0;0;0;False;3;Space(15);Header(Triplanar);Space(10);False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.StaticSwitch;288;-1088,-1392;Inherit;False;Property;_UseOpacityMap;Use Opacity Map;2;0;Create;True;0;0;0;False;3;Space(30);Header(Alpha);Space(10);False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;225;-1456,-256;Inherit;False;Property;_TriplanarEnabled;Triplanar Enabled;26;0;Create;True;0;0;0;False;3;Space(15);Header(Triplanar);Space(10);False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.StaticSwitch;290;-1008,-832;Inherit;False;Property;_Keyword8;Keyword 8;2;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;288;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.CommentaryNode;96;1088,-480;Inherit;False;1043.86;646.9494;It's set up this way because otherwise, these properties get ignored.;4;77;55;69;67;Surface Inputs + Alpha Clip Threshold;1,1,1,1;0;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;29;512,720;Inherit;False;3;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;FLOAT;0;False;1;COLOR;0
 Node;AmplifyShaderEditor.ColorNode;104;48,608;Inherit;False;Constant;_EmptyEmissive;EmptyEmissive;19;1;[HDR];Create;True;0;0;0;False;0;False;0,0,0,0;0,0,0,0;True;True;0;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;275;496,1872;Inherit;False;3;3;0;FLOAT4;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;FLOAT;0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.ColorNode;276;32,1760;Inherit;False;Constant;_EmptyEmissive1;EmptyEmissive;19;1;[HDR];Create;True;0;0;0;False;0;False;0,0,0,0;0,0,0,0;True;True;0;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
-Node;AmplifyShaderEditor.StaticSwitch;254;-1184,928;Inherit;False;Property;_Keyword1;Keyword 1;23;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;225;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;255;-1184,1024;Inherit;False;Property;_Keyword2;Keyword 1;23;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;225;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;254;-1184,928;Inherit;False;Property;_Keyword1;Keyword 1;26;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;225;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;255;-1184,1024;Inherit;False;Property;_Keyword2;Keyword 1;26;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;225;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.FunctionNode;202;-80,160;Inherit;False;Detail Map;14;;255;7eb669e8a4269ac43a3c284ddafaf020;0;4;21;COLOR;1,1,1,1;False;22;COLOR;0,0,1,0;False;23;FLOAT;0.5;False;218;FLOAT2;0,0;False;3;COLOR;0;COLOR;25;FLOAT;24
-Node;AmplifyShaderEditor.StaticSwitch;291;-816,-1024;Inherit;False;Property;_Keyword9;Keyword 9;23;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;225;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.CommentaryNode;96;1328,-160;Inherit;False;564.4475;280.7469;It's set up this way because otherwise, these properties get ignored.;4;69;67;77;330;Surface Properties;1,1,1,1;0;0
+Node;AmplifyShaderEditor.StaticSwitch;288;-1088,-1392;Inherit;False;Property;_UseOpacityMap;Use Opacity Map;2;0;Create;True;0;0;0;False;3;Space(30);Header(Alpha);Space(10);False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;291;-816,-1024;Inherit;False;Property;_Keyword9;Keyword 9;26;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;225;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.CommentaryNode;98;1088,240;Inherit;False;622;370;;5;136;135;137;140;141;Mono SH;1,1,1,1;0;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;138;240,144;Inherit;False;Albedo;-1;True;1;0;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;134;240,304;Inherit;False;Smoothness;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
@@ -3155,7 +3155,7 @@ Node;AmplifyShaderEditor.RegisterLocalVarNode;132;-848,928;Inherit;False;Metalli
 Node;AmplifyShaderEditor.StaticSwitch;103;672,624;Inherit;False;Property;_Emission;Emission Enable;9;0;Create;False;0;0;0;False;4;Space(30);Header(Emissions);Space(10);Toggle;False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.RangedFloatNode;14;448,1408;Inherit;False;Property;_BakedMutiplier;Emission Baked Mutiplier;13;0;Create;False;0;0;0;True;0;False;1;1;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.StaticSwitch;278;672,1808;Inherit;False;Property;_Emission1;Emission Enable;9;0;Create;False;0;0;0;False;4;Space(30);Header(Emissions);Space(10);Toggle;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;103;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.RangedFloatNode;67;1184,-256;Inherit;False;Property;_Cull;Cull Side;33;2;[HideInInspector];[Enum];Create;False;0;0;1;UnityEngine.Rendering.CullMode;False;0;False;0;2;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;67;1376,-16;Inherit;False;Property;_Cull;Cull Side;36;2;[HideInInspector];[Enum];Create;False;0;0;1;UnityEngine.Rendering.CullMode;False;0;False;0;2;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;147;-528,-1024;Inherit;False;Alpha;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;135;1104,400;Inherit;False;134;Smoothness;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;136;1104,464;Inherit;False;132;Metallic;1;0;OBJECT;;False;1;FLOAT;0
@@ -3164,59 +3164,59 @@ Node;AmplifyShaderEditor.GetLocalVarNode;140;1104,272;Inherit;False;138;Albedo;1
 Node;AmplifyShaderEditor.GetLocalVarNode;141;1104,336;Inherit;False;139;Normal;1;0;OBJECT;;False;1;COLOR;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;35;736,1392;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;1;COLOR;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;279;720,2096;Inherit;False;2;2;0;FLOAT4;0,0,0,0;False;1;FLOAT;0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.StaticSwitch;264;1104,752;Inherit;False;Property;_Keyword6;Keyword 1;23;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;225;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.RangedFloatNode;55;1216,-432;Inherit;False;Property;_AlphaClipThreshhold;Alpha Clip Threshold;5;0;Create;False;0;0;0;False;0;False;0.5;0;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;69;1376,-256;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;264;1104,752;Inherit;False;Property;_Keyword6;Keyword 1;26;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;225;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;69;1600,0;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;330;1360,-96;Inherit;False;Property;_AlphaClipThreshold;Alpha Clip Threshold;5;0;Create;True;0;0;0;False;0;False;0.5;0.5;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;148;1968,464;Inherit;False;147;Alpha;1;0;OBJECT;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleAddOpNode;77;1536,-432;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;142;1968,144;Inherit;False;138;Albedo;1;0;OBJECT;;False;1;COLOR;0
 Node;AmplifyShaderEditor.GetLocalVarNode;143;1968,208;Inherit;False;139;Normal;1;0;OBJECT;;False;1;COLOR;0
 Node;AmplifyShaderEditor.GetLocalVarNode;144;1968,336;Inherit;False;134;Smoothness;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;145;1968,272;Inherit;False;132;Metallic;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;146;1904,400;Inherit;False;133;Ambient Occlusion;1;0;OBJECT;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;265;1104,864;Inherit;False;Property;_Keyword7;Keyword 1;23;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;225;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.StaticSwitch;265;1104,864;Inherit;False;Property;_Keyword7;Keyword 1;26;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;225;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.FunctionNode;306;1344,304;Inherit;False;BakeryMonoSH;20;;263;29c9468cd28079b448a58bef1fb32cb5;0;6;8;FLOAT3;0,0,0;False;9;FLOAT3;0,0,0;False;10;FLOAT;0;False;11;FLOAT;0;False;12;FLOAT;0;False;13;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;1;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;14;New Amplify Shader;623634af11bd9ab448550ee777f3493e;True;DepthOnly;0;1;DepthOnly;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;False;False;False;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;1;Lightmode=DepthOnly;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;2;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;14;New Amplify Shader;623634af11bd9ab448550ee777f3493e;True;DepthNormals;0;2;DepthNormals;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;Lightmode=DepthNormals;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;3;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;14;New Amplify Shader;623634af11bd9ab448550ee777f3493e;True;ShadowCaster;0;3;ShadowCaster;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;False;False;False;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=ShadowCaster;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;4;0,0;Float;False;False;-1;2;ASEMaterialInspector;0;14;New Amplify Shader;623634af11bd9ab448550ee777f3493e;True;Meta;0;4;Meta;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;0;2272,208;Half;False;True;-1;2;UnityEditor.ShaderGraphLitGUI;0;14;Mabel/LitMAS Plus/LitMAS+ Alpha Clip;623634af11bd9ab448550ee777f3493e;True;Forward;0;0;Forward;14;True;True;1;1;True;_BlendSrc;0;True;_BlendDst;0;0;True;_BlendSrc;0;True;_BlendDst;False;False;False;False;False;False;False;False;False;False;False;True;True;0;True;_Cull;True;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;_ZWrite;True;3;False;;True;True;0;False;;0;False;;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;False;False;False;True;1;Lightmode=UniversalForward;True;7;False;0;SLZ/LitMAS/LitMAS Standard;0;0;Standard;24;Workflow;1;0;Surface;0;638653224173708965;Two Sided;1;0;Cast Shadows;1;0;  Use Shadow Threshold;0;638653221954285157;GPU Instancing;0;638652274030427203;Built-in Fog;1;0;Lightmaps;1;0;Volumetrics;1;0;Decals;0;0;Write Depth;0;638652273881089517;  Early Z (broken);0;0;Vertex Position,InvertActionOnDeselection;1;0;Emission;1;0;PC Reflection Probe;3;0;PC Receive Shadows;1;0;PC Vertex Lights;0;0;PC SSAO;1;0;Q Reflection Probe;0;0;Q Receive Shadows;0;0;Q Vertex Lights;1;638612450725392458;Q SSAO;0;0;Environment Reflections;1;0;Meta Pass;1;0;0;5;True;True;True;True;True;False;;False;0
-WireConnection;315;1;105;0
-WireConnection;315;0;325;0
-WireConnection;316;1;110;0
-WireConnection;316;0;325;0
-WireConnection;317;1;109;0
-WireConnection;317;0;325;0
-WireConnection;318;1;106;0
-WireConnection;318;0;325;0
-WireConnection;319;1;107;0
-WireConnection;319;0;325;0
-WireConnection;321;1;317;0
-WireConnection;321;0;109;0
-WireConnection;322;1;316;0
-WireConnection;322;0;110;0
-WireConnection;323;1;315;0
-WireConnection;323;0;105;0
-WireConnection;324;1;319;0
-WireConnection;324;0;107;0
-WireConnection;320;1;318;0
-WireConnection;320;0;106;0
+Node;AmplifyShaderEditor.SimpleAddOpNode;77;1760,-80;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;312;2272,208;Float;False;True;-1;2;UnityEditor.ShaderGraphLitGUI;0;14;Mabel/LitMAS Plus/LitMAS+ Alpha Clip;623634af11bd9ab448550ee777f3493e;True;Forward;0;0;Forward;14;False;True;1;1;False;_BlendSrc;0;False;_BlendDst;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;True;True;0;True;_Cull;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;_ZWrite;True;3;False;;True;True;0;False;;0;False;;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;False;False;False;True;1;Lightmode=UniversalForward;True;7;False;0;Hidden/InternalErrorShader;0;0;Standard;24;Workflow;1;0;Surface;0;638658712301982385;Two Sided;1;0;Cast Shadows;1;0;  Use Shadow Threshold;0;0;GPU Instancing;0;0;Built-in Fog;1;0;Lightmaps;1;0;Volumetrics;1;0;Decals;0;0;Write Depth;0;0;  Early Z (broken);0;0;Vertex Position,InvertActionOnDeselection;1;0;Emission;1;0;PC Reflection Probe;3;0;PC Receive Shadows;1;0;PC Vertex Lights;0;0;PC SSAO;1;0;Q Reflection Probe;0;0;Q Receive Shadows;0;0;Q Vertex Lights;1;0;Q SSAO;0;0;Environment Reflections;1;0;Meta Pass;1;0;0;5;True;True;True;True;True;False;;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;313;2272,208;Float;False;False;-1;2;UnityEditor.ShaderGraphLitGUI;0;1;New Amplify Shader;623634af11bd9ab448550ee777f3493e;True;DepthOnly;0;1;DepthOnly;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;False;False;False;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;1;Lightmode=DepthOnly;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;314;2272,208;Float;False;False;-1;2;UnityEditor.ShaderGraphLitGUI;0;1;New Amplify Shader;623634af11bd9ab448550ee777f3493e;True;DepthNormals;0;2;DepthNormals;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;Lightmode=DepthNormals;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;315;2272,208;Float;False;False;-1;2;UnityEditor.ShaderGraphLitGUI;0;1;New Amplify Shader;623634af11bd9ab448550ee777f3493e;True;ShadowCaster;0;3;ShadowCaster;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;False;False;False;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=ShadowCaster;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;316;2272,208;Float;False;False;-1;2;UnityEditor.ShaderGraphLitGUI;0;1;New Amplify Shader;623634af11bd9ab448550ee777f3493e;True;Meta;0;4;Meta;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
+WireConnection;319;1;105;0
+WireConnection;319;0;329;0
+WireConnection;320;1;110;0
+WireConnection;320;0;329;0
+WireConnection;321;1;109;0
+WireConnection;321;0;329;0
+WireConnection;322;1;106;0
+WireConnection;322;0;329;0
+WireConnection;323;1;107;0
+WireConnection;323;0;329;0
+WireConnection;324;1;322;0
+WireConnection;324;0;106;0
+WireConnection;325;1;321;0
+WireConnection;325;0;109;0
+WireConnection;326;1;320;0
+WireConnection;326;0;110;0
+WireConnection;327;1;319;0
+WireConnection;327;0;105;0
+WireConnection;328;1;323;0
+WireConnection;328;0;107;0
 WireConnection;111;0;113;0
 WireConnection;111;1;108;0
 WireConnection;111;7;108;1
-WireConnection;111;2;320;0
-WireConnection;111;8;321;0
-WireConnection;111;9;322;0
-WireConnection;111;10;323;0
-WireConnection;111;4;324;0
-WireConnection;308;1;111;0
-WireConnection;308;0;113;0
-WireConnection;307;1;308;0
-WireConnection;307;0;111;0
+WireConnection;111;2;324;0
+WireConnection;111;8;325;0
+WireConnection;111;9;326;0
+WireConnection;111;10;327;0
+WireConnection;111;4;328;0
+WireConnection;318;1;111;0
+WireConnection;318;0;113;0
+WireConnection;317;1;318;0
+WireConnection;317;0;111;0
 WireConnection;230;0;227;0
 WireConnection;230;1;227;0
 WireConnection;112;1;113;0
-WireConnection;112;0;307;0
+WireConnection;112;0;317;0
 WireConnection;228;0;230;0
 WireConnection;149;0;112;0
 WireConnection;253;0;238;0
@@ -3291,8 +3291,6 @@ WireConnection;281;0;263;0
 WireConnection;281;3;283;0
 WireConnection;225;1;17;0
 WireConnection;225;0;231;0
-WireConnection;288;1;159;6
-WireConnection;288;0;301;0
 WireConnection;290;1;292;6
 WireConnection;290;0;302;0
 WireConnection;29;0;11;0
@@ -3309,6 +3307,8 @@ WireConnection;202;21;225;0
 WireConnection;202;22;258;0
 WireConnection;202;23;256;0
 WireConnection;202;218;261;0
+WireConnection;288;1;159;6
+WireConnection;288;0;301;0
 WireConnection;291;1;288;0
 WireConnection;291;0;290;0
 WireConnection;138;0;202;0
@@ -3328,8 +3328,6 @@ WireConnection;279;1;14;0
 WireConnection;264;1;103;0
 WireConnection;264;0;278;0
 WireConnection;69;0;67;0
-WireConnection;77;0;55;0
-WireConnection;77;1;69;0
 WireConnection;265;1;35;0
 WireConnection;265;0;279;0
 WireConnection;306;8;141;0
@@ -3338,14 +3336,16 @@ WireConnection;306;10;135;0
 WireConnection;306;11;136;0
 WireConnection;306;12;137;0
 WireConnection;306;13;264;0
-WireConnection;0;0;142;0
-WireConnection;0;1;143;0
-WireConnection;0;2;306;0
-WireConnection;0;3;265;0
-WireConnection;0;4;145;0
-WireConnection;0;6;144;0
-WireConnection;0;7;146;0
-WireConnection;0;8;148;0
-WireConnection;0;9;77;0
+WireConnection;77;0;330;0
+WireConnection;77;1;69;0
+WireConnection;312;0;142;0
+WireConnection;312;1;143;0
+WireConnection;312;2;306;0
+WireConnection;312;3;265;0
+WireConnection;312;4;145;0
+WireConnection;312;6;144;0
+WireConnection;312;7;146;0
+WireConnection;312;8;148;0
+WireConnection;312;9;77;0
 ASEEND*/
-//CHKSM=7C963EE85729640B3C1D501E0AC050B38F5B2E0D
+//CHKSM=6EB78A8910A0EC890C928F75CDE3134A9BF49B9C

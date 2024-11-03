@@ -4,10 +4,6 @@
   "displayName": "Mabel's Shaders",
   "description": "Various shaders for SLZ URP",
   "unity": "2021.3",
-  "dependencies": {
-    "com.unity.render-pipelines.universal": "8148.0.7-4",
-    "com.unity.render-pipelines.core": "8148.0.7-5"
-  },
   "keywords": [
     "slz",
     "shader",

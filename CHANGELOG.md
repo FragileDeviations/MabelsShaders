@@ -1,3 +1,9 @@
+# v1.3.0 - MAS Type Swapping
+## Changed Shaders
+### LitMAS+
+* Added ability to change what packed format to use for the MAS map.
+* This includes: MAS support, HDRP MASK support, RMA support, and ORM support.
+
 # v1.2.0 - Bright Spots In MonoSH Fix
 ## Changed Shaders
 ### LitMAS+

@@ -1,3 +1,8 @@
+# v1.5.0 - Emission Falloff Bake Toggle
+## Changed Shaders
+### LitMAS+
+* Added ability to disable using emission falloff in the bake
+
 # v1.4.0 - VertexBlend
 ## Added Shaders
 * VertexBlend - Credit to Bryan Bones for the original shader, I ported it to Amplify and cleaned it up by their request, and they allowed me to include it in this package.

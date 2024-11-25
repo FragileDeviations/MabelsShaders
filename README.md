@@ -7,11 +7,15 @@
 * LitMAS+ Alpha Clip
 * LitMAS+ Transparent
 * LitMAS+ Fade
+* LitMAS Triplanar+ Opaque
+* LitMAS Triplanar+ Alpha Clip
+* LitMAS Triplanar+ Fade
+* LitMAS Triplanar+ Transparent 
 ### Difference from LitMAS
 * Bakery MonoSH Lightmap Support
 * Parallax Occlusion Mapping
 * Opacity Map Support
-* Triplanar Option Without Needing Extra Shader
+* Multiple MetallicGlossMap format support (MAS, MASK, RMA, ORM)
 
 ## Outline
 * Outline Lit

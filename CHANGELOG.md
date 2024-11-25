@@ -1,3 +1,13 @@
+# v1.6.0 - LitMAS+ Optimizations
+## Changed Shaders
+### LitMAS+
+* Removed triplanar properties from LitMAS+, helping reduce amount of variants and, well, properties
+* Made Triplanar its own shader
+## Added Shaders
+### LitMAS Triplanar+
+* LitMAS+, but triplanar.
+* No heightmap support due to the way triplanar works.
+
 # v1.5.0 - Emission Falloff Bake Toggle
 ## Changed Shaders
 ### LitMAS+

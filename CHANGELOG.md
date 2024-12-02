@@ -1,3 +1,12 @@
+# v1.6.1 - Transparency Bake Fix
+## Changed Shaders
+### LitMAS+
+* Removed Opacity Map feature, it causes issue with baking
+* Fixed transparent baking not working properly
+## Known Issue
+### LitMAS+
+* Transparency does not bake properly still if you don't have a base texture. It uses the base texture's alpha. Use either the included dummy transparent textures, or make your own, rather than using the base color's alpha.
+
 # v1.6.0 - LitMAS+ Optimizations
 ## Changed Shaders
 ### LitMAS+

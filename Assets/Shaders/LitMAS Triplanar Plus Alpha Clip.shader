@@ -9,10 +9,7 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 		[Header(Triplanar Settings)][Space(10)]_TriplanarScale("Scale", Float) = 1
 		[NoScaleOffset][Space(30)][Header(Base Color)][Space(10)][MainTexture]_BaseMap("BaseMap", 2D) = "white" {}
 		[MainColor]_BaseColor("BaseColor", Color) = (1,1,1,1)
-		[Space(30)][Header(Alpha)][Space(10)][Toggle(_USEOPACITYMAP_ON)] _UseOpacityMap("Use Opacity Map", Float) = 0
-		[NoScaleOffset]_OpacityMap("Opacity Map", 2D) = "white" {}
-		_OpacityMultiplier("Opacity Multiplier", Range( 0 , 1)) = 1
-		_AlphaClipThreshold("Alpha Clip Threshold", Range( 0 , 1)) = 0.5
+		_Cutoff("Alpha Clip Threshold", Range( 0 , 1)) = 0.5
 		[Toggle][Space(30)][Header(PBR)][Space(10)][Toggle(_NORMALS_ON)] _Normals("Normal Map Enabled", Float) = 0
 		[NoScaleOffset][Normal]_BumpMap("Normal Map", 2D) = "bump" {}
 		[KeywordEnum(MAS,MASK,RMA,ORM)] _MapType("Map Type", Float) = 0
@@ -41,7 +38,7 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 		LOD 0
 
 		
-		Tags { "RenderPipeline"="UniversalPipeline" "RenderType"="Opaque" "Queue"="Geometry" }
+		Tags { "RenderPipeline"="UniversalPipeline" "RenderType"="TransparentCutout" "Queue"="Geometry" }
 		
 		Blend One Zero
 		ZWrite On
@@ -223,7 +220,6 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 			#pragma shader_feature_local _EMISSION_ON
 			#pragma shader_feature_local _MAPTYPE_MAS _MAPTYPE_MASK _MAPTYPE_RMA _MAPTYPE_ORM
 			#pragma shader_feature_local _USEFALLOFFINBAKE_ON
-			#pragma shader_feature_local _USEOPACITYMAP_ON
 
 					
 			struct VertIn
@@ -285,8 +281,7 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 				float _EmissionFalloff;
 				float _MonoSHAdjustment;
 				float _BakedMutiplier;
-				float _OpacityMultiplier;
-				float _AlphaClipThreshold;
+				float _Cutoff;
 				float _Cull;
 				//float4 _BaseMap_ST;
 				//half4 _BaseColor;
@@ -311,7 +306,6 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 			sampler2D _BumpMap;
 			sampler2D _EmissionMap;
 			sampler2D _MetallicGlossMap;
-			sampler2D _OpacityMap;
 
 			
 			inline float4 TriplanarSampling353( sampler2D topTexMap, float3 worldPos, float3 worldNormal, float falloff, float2 tiling, float3 normalScale, float3 index )
@@ -370,18 +364,6 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 			inline float MyCustomExpression217_g255( float detailSmooth, float smoothness )
 			{
 				return smoothness * (2.0 * detailSmooth);
-			}
-			
-			inline float4 TriplanarSampling369( sampler2D topTexMap, float3 worldPos, float3 worldNormal, float falloff, float2 tiling, float3 normalScale, float3 index )
-			{
-				float3 projNormal = ( pow( abs( worldNormal ), falloff ) );
-				projNormal /= ( projNormal.x + projNormal.y + projNormal.z ) + 0.00001;
-				float3 nsign = sign( worldNormal );
-				half4 xNorm; half4 yNorm; half4 zNorm;
-				xNorm = tex2D( topTexMap, tiling * worldPos.zy * float2(  nsign.x, 1.0 ) );
-				yNorm = tex2D( topTexMap, tiling * worldPos.xz * float2(  nsign.y, 1.0 ) );
-				zNorm = tex2D( topTexMap, tiling * worldPos.xy * float2( -nsign.z, 1.0 ) );
-				return xNorm * projNormal.x + yNorm * projNormal.y + zNorm * projNormal.z;
 			}
 			
 			
@@ -536,7 +518,7 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 				#else
 				float4 staticSwitch103 = color104;
 				#endif
-				float3 temp_output_13_0_g263 = staticSwitch103.rgb;
+				float3 temp_output_13_0_g268 = staticSwitch103.rgb;
 				float4 triplanar358 = TriplanarSampling358( _MetallicGlossMap, i.wPos.xyz, ase_worldNormal, 1.0, TriplanarScale356, 1.0, 0 );
 				float4 appendResult338 = (float4(triplanar358.r , triplanar358.g , triplanar358.a , 1.0));
 				float4 appendResult341 = (float4(triplanar358.g , triplanar358.b , ( 1.0 - triplanar358.r ) , 1.0));
@@ -554,15 +536,15 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 				#endif
 				float4 break332 = staticSwitch330;
 				float Ambient_Occlusion133 = break332.y;
-				float localBakerySpecMonoSHFull4_g264 = ( 0.0 );
+				float localBakerySpecMonoSHFull4_g269 = ( 0.0 );
 				float3 ase_worldTangent = i.ase_texcoord8.xyz;
-				float3 mapNormal16_g266 = Normal139.rgb;
+				float3 mapNormal16_g271 = Normal139.rgb;
 				float3 ase_worldBitangent = i.ase_texcoord9.xyz;
-				float3 normalizeResult18_g266 = normalize( ( ( ase_worldTangent * mapNormal16_g266.x ) + ( ase_worldBitangent * mapNormal16_g266.y ) + ( ase_worldNormal * mapNormal16_g266.z ) ) );
-				float3 normalWorld4_g264 = normalizeResult18_g266;
-				float2 lightmapUV4_g264 = (i.ase_texcoord10.xy*(unity_LightmapST).xy + (unity_LightmapST).zw);
-				float3 normalizeResult2_g264 = normalize( ase_worldViewDir );
-				float3 viewDir4_g264 = normalizeResult2_g264;
+				float3 normalizeResult18_g271 = normalize( ( ( ase_worldTangent * mapNormal16_g271.x ) + ( ase_worldBitangent * mapNormal16_g271.y ) + ( ase_worldNormal * mapNormal16_g271.z ) ) );
+				float3 normalWorld4_g269 = normalizeResult18_g271;
+				float2 lightmapUV4_g269 = (i.ase_texcoord10.xy*(unity_LightmapST).xy + (unity_LightmapST).zw);
+				float3 normalizeResult2_g269 = normalize( ase_worldViewDir );
+				float3 viewDir4_g269 = normalizeResult2_g269;
 				float temp_output_23_0_g255 = saturate( ( ( triplanar359.b + break332.z ) - 1.0 ) );
 				float detailSmooth217_g255 = tex2DNode1_g255.b;
 				float smoothness217_g255 = temp_output_23_0_g255;
@@ -573,18 +555,18 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 				float staticSwitch17_g255 = temp_output_23_0_g255;
 				#endif
 				float Smoothness134 = staticSwitch17_g255;
-				float smoothness4_g264 = Smoothness134;
-				float3 temp_output_9_0_g263 = Albedo138.rgb;
-				float3 albedo4_g264 = temp_output_9_0_g263;
+				float smoothness4_g269 = Smoothness134;
+				float3 temp_output_9_0_g268 = Albedo138.rgb;
+				float3 albedo4_g269 = temp_output_9_0_g268;
 				float Metallic132 = break332.x;
-				float metalness4_g264 = Metallic132;
-				float3 diffuseSH4_g264 = float3( 0,0,0 );
-				float3 specularSH4_g264 = float3( 0,0,0 );
-				BakerySpecMonoSHFull_float( normalWorld4_g264 , lightmapUV4_g264 , viewDir4_g264 , smoothness4_g264 , albedo4_g264 , metalness4_g264 , diffuseSH4_g264 , specularSH4_g264 );
+				float metalness4_g269 = Metallic132;
+				float3 diffuseSH4_g269 = float3( 0,0,0 );
+				float3 specularSH4_g269 = float3( 0,0,0 );
+				BakerySpecMonoSHFull_float( normalWorld4_g269 , lightmapUV4_g269 , viewDir4_g269 , smoothness4_g269 , albedo4_g269 , metalness4_g269 , diffuseSH4_g269 , specularSH4_g269 );
 				#ifdef _MONOSHENABLED_ON
-				float3 staticSwitch30_g263 = ( ( temp_output_13_0_g263 + ( Ambient_Occlusion133 * ( diffuseSH4_g264 * temp_output_9_0_g263 ) ) ) + ( specularSH4_g264 * _MonoSHAdjustment ) );
+				float3 staticSwitch30_g268 = ( ( temp_output_13_0_g268 + ( Ambient_Occlusion133 * ( diffuseSH4_g269 * temp_output_9_0_g268 ) ) ) + ( specularSH4_g269 * _MonoSHAdjustment ) );
 				#else
-				float3 staticSwitch30_g263 = temp_output_13_0_g263;
+				float3 staticSwitch30_g268 = temp_output_13_0_g268;
 				#endif
 				
 				#ifdef _USEFALLOFFINBAKE_ON
@@ -594,13 +576,7 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 				#endif
 				
 				float4 temp_output_2_0_g267 = temp_output_17_0;
-				float4 triplanar369 = TriplanarSampling369( _OpacityMap, i.wPos.xyz, ase_worldNormal, 1.0, TriplanarScale356, 1.0, 0 );
-				#ifdef _USEOPACITYMAP_ON
-				float staticSwitch367 = ( triplanar369.x * _OpacityMultiplier );
-				#else
-				float staticSwitch367 = (temp_output_2_0_g267).w;
-				#endif
-				float Alpha368 = staticSwitch367;
+				float Alpha368 = (temp_output_2_0_g267).w;
 				
 			
 			//--------------------------------------------------------------------------------------------------------------------------
@@ -630,7 +606,7 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 			
 				half3 albedo3 = Albedo138.rgb;
 				half3 normalTS = Normal139.rgb;
-				half3 emission = staticSwitch30_g263;
+				half3 emission = staticSwitch30_g268;
 				half3 emissionbaked = staticSwitch350.xyz;
 			
 			// Begin Injection NORMAL_MAP from Injection_NormalMaps.hlsl ----------------------------------------------------------
@@ -645,7 +621,7 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 				half smoothness = Smoothness134;
 				half ao = Ambient_Occlusion133;
 				half alpha = Alpha368;
-				half alphaclip = ( _AlphaClipThreshold + ( _Cull * 0.0 ) );
+				half alphaclip = ( _Cutoff + ( _Cull * 0.0 ) );
 				half alphaclipthresholdshadow = half(0);
 				#ifdef ASE_DEPTH_WRITE_ON
 				float DepthValue = 0;
@@ -826,8 +802,7 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderGraphFunctions.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Packing.hlsl"
 
-			#pragma shader_feature_local _USEOPACITYMAP_ON
-
+			
 
 			struct appdata
 			{
@@ -847,7 +822,6 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 			    UNITY_VERTEX_OUTPUT_STEREO
 			};
 			sampler2D _BaseMap;
-			sampler2D _OpacityMap;
 			CBUFFER_START( UnityPerMaterial )
 			float4 _BaseColor;
 			float4 _DetailMap_ST;
@@ -856,25 +830,12 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 			float _EmissionFalloff;
 			float _MonoSHAdjustment;
 			float _BakedMutiplier;
-			float _OpacityMultiplier;
-			float _AlphaClipThreshold;
+			float _Cutoff;
 			float _Cull;
 			CBUFFER_END
 
 
 			inline float4 TriplanarSampling353( sampler2D topTexMap, float3 worldPos, float3 worldNormal, float falloff, float2 tiling, float3 normalScale, float3 index )
-			{
-				float3 projNormal = ( pow( abs( worldNormal ), falloff ) );
-				projNormal /= ( projNormal.x + projNormal.y + projNormal.z ) + 0.00001;
-				float3 nsign = sign( worldNormal );
-				half4 xNorm; half4 yNorm; half4 zNorm;
-				xNorm = tex2D( topTexMap, tiling * worldPos.zy * float2(  nsign.x, 1.0 ) );
-				yNorm = tex2D( topTexMap, tiling * worldPos.xz * float2(  nsign.y, 1.0 ) );
-				zNorm = tex2D( topTexMap, tiling * worldPos.xy * float2( -nsign.z, 1.0 ) );
-				return xNorm * projNormal.x + yNorm * projNormal.y + zNorm * projNormal.z;
-			}
-			
-			inline float4 TriplanarSampling369( sampler2D topTexMap, float3 worldPos, float3 worldNormal, float falloff, float2 tiling, float3 normalScale, float3 index )
 			{
 				float3 projNormal = ( pow( abs( worldNormal ), falloff ) );
 				projNormal /= ( projNormal.x + projNormal.y + projNormal.z ) + 0.00001;
@@ -939,17 +900,11 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 			    float4 triplanar353 = TriplanarSampling353( _BaseMap, ase_worldPos, ase_worldNormal, 1.0, TriplanarScale356, 1.0, 0 );
 			    float4 temp_output_17_0 = ( triplanar353 * _BaseColor );
 			    float4 temp_output_2_0_g267 = temp_output_17_0;
-			    float4 triplanar369 = TriplanarSampling369( _OpacityMap, ase_worldPos, ase_worldNormal, 1.0, TriplanarScale356, 1.0, 0 );
-			    #ifdef _USEOPACITYMAP_ON
-			    float staticSwitch367 = ( triplanar369.x * _OpacityMultiplier );
-			    #else
-			    float staticSwitch367 = (temp_output_2_0_g267).w;
-			    #endif
-			    float Alpha368 = staticSwitch367;
+			    float Alpha368 = (temp_output_2_0_g267).w;
 			    
 			
 				half alpha = Alpha368;
-				half alphaclip = ( _AlphaClipThreshold + ( _Cull * 0.0 ) );
+				half alphaclip = ( _Cutoff + ( _Cull * 0.0 ) );
 				half alphaclipthresholdshadow = half(0);
 				#ifdef ASE_DEPTH_WRITE_ON
 				float DepthValue = 0;
@@ -1022,7 +977,6 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 			#define ASE_NEEDS_VERT_NORMAL
 			#pragma shader_feature_local_fragment _DETAILS_ON
 			#pragma shader_feature_local _NORMALS_ON
-			#pragma shader_feature_local _USEOPACITYMAP_ON
 
 					
 			struct appdata
@@ -1065,8 +1019,7 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 				float _EmissionFalloff;
 				float _MonoSHAdjustment;
 				float _BakedMutiplier;
-				float _OpacityMultiplier;
-				float _AlphaClipThreshold;
+				float _Cutoff;
 				float _Cull;
 				//float4 _BaseMap_ST;
 				//half4 _BaseColor;
@@ -1089,7 +1042,6 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 			sampler2D _BumpMap;
 			sampler2D _DetailMap;
 			sampler2D _BaseMap;
-			sampler2D _OpacityMap;
 
 				
 			inline float4 TriplanarSampling359( sampler2D topTexMap, float3 worldPos, float3 worldNormal, float falloff, float2 tiling, float3 normalScale, float3 index )
@@ -1110,18 +1062,6 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 			}
 			
 			inline float4 TriplanarSampling353( sampler2D topTexMap, float3 worldPos, float3 worldNormal, float falloff, float2 tiling, float3 normalScale, float3 index )
-			{
-				float3 projNormal = ( pow( abs( worldNormal ), falloff ) );
-				projNormal /= ( projNormal.x + projNormal.y + projNormal.z ) + 0.00001;
-				float3 nsign = sign( worldNormal );
-				half4 xNorm; half4 yNorm; half4 zNorm;
-				xNorm = tex2D( topTexMap, tiling * worldPos.zy * float2(  nsign.x, 1.0 ) );
-				yNorm = tex2D( topTexMap, tiling * worldPos.xz * float2(  nsign.y, 1.0 ) );
-				zNorm = tex2D( topTexMap, tiling * worldPos.xy * float2( -nsign.z, 1.0 ) );
-				return xNorm * projNormal.x + yNorm * projNormal.y + zNorm * projNormal.z;
-			}
-			
-			inline float4 TriplanarSampling369( sampler2D topTexMap, float3 worldPos, float3 worldNormal, float falloff, float2 tiling, float3 normalScale, float3 index )
 			{
 				float3 projNormal = ( pow( abs( worldNormal ), falloff ) );
 				projNormal /= ( projNormal.x + projNormal.y + projNormal.z ) + 0.00001;
@@ -1223,13 +1163,7 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 			   float4 triplanar353 = TriplanarSampling353( _BaseMap, ase_worldPos, ase_worldNormal, 1.0, TriplanarScale356, 1.0, 0 );
 			   float4 temp_output_17_0 = ( triplanar353 * _BaseColor );
 			   float4 temp_output_2_0_g267 = temp_output_17_0;
-			   float4 triplanar369 = TriplanarSampling369( _OpacityMap, ase_worldPos, ase_worldNormal, 1.0, TriplanarScale356, 1.0, 0 );
-			   #ifdef _USEOPACITYMAP_ON
-			   float staticSwitch367 = ( triplanar369.x * _OpacityMultiplier );
-			   #else
-			   float staticSwitch367 = (temp_output_2_0_g267).w;
-			   #endif
-			   float Alpha368 = staticSwitch367;
+			   float Alpha368 = (temp_output_2_0_g267).w;
 			   
 			
 			
@@ -1253,7 +1187,7 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 				normals = half4(EncodeWSNormalForNormalsTex(normalWS),0);
 			// End Injection FRAG_NORMALS from Injection_NormalMap_DepthNormals.hlsl ----------------------------------------------------------
 				half alpha = Alpha368;
-				half alphaclip = ( _AlphaClipThreshold + ( _Cull * 0.0 ) );
+				half alphaclip = ( _Cutoff + ( _Cull * 0.0 ) );
 				half alphaclipthresholdshadow = half(0);
 				#ifdef ASE_DEPTH_WRITE_ON
 				float DepthValue = 0;
@@ -1318,7 +1252,6 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 			//#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/SLZExtentions.hlsl"
 
 			#define ASE_NEEDS_VERT_NORMAL
-			#pragma shader_feature_local _USEOPACITYMAP_ON
 
 			// Shadow Casting Light geometric parameters. These variables are used when applying the shadow Normal Bias and are set by UnityEngine.Rendering.Universal.ShadowUtils.SetupShadowCasterConstantBuffer in com.unity.render-pipelines.universal/Runtime/ShadowUtils.cs
 			// For Directional lights, _LightDirection is used when applying shadow Normal Bias.
@@ -1343,7 +1276,6 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 			};
 
 			sampler2D _BaseMap;
-			sampler2D _OpacityMap;
 			CBUFFER_START( UnityPerMaterial )
 			float4 _BaseColor;
 			float4 _DetailMap_ST;
@@ -1352,25 +1284,12 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 			float _EmissionFalloff;
 			float _MonoSHAdjustment;
 			float _BakedMutiplier;
-			float _OpacityMultiplier;
-			float _AlphaClipThreshold;
+			float _Cutoff;
 			float _Cull;
 			CBUFFER_END
 
 
 			inline float4 TriplanarSampling353( sampler2D topTexMap, float3 worldPos, float3 worldNormal, float falloff, float2 tiling, float3 normalScale, float3 index )
-			{
-				float3 projNormal = ( pow( abs( worldNormal ), falloff ) );
-				projNormal /= ( projNormal.x + projNormal.y + projNormal.z ) + 0.00001;
-				float3 nsign = sign( worldNormal );
-				half4 xNorm; half4 yNorm; half4 zNorm;
-				xNorm = tex2D( topTexMap, tiling * worldPos.zy * float2(  nsign.x, 1.0 ) );
-				yNorm = tex2D( topTexMap, tiling * worldPos.xz * float2(  nsign.y, 1.0 ) );
-				zNorm = tex2D( topTexMap, tiling * worldPos.xy * float2( -nsign.z, 1.0 ) );
-				return xNorm * projNormal.x + yNorm * projNormal.y + zNorm * projNormal.z;
-			}
-			
-			inline float4 TriplanarSampling369( sampler2D topTexMap, float3 worldPos, float3 worldNormal, float falloff, float2 tiling, float3 normalScale, float3 index )
 			{
 				float3 projNormal = ( pow( abs( worldNormal ), falloff ) );
 				projNormal /= ( projNormal.x + projNormal.y + projNormal.z ) + 0.00001;
@@ -1459,17 +1378,11 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 			    float4 triplanar353 = TriplanarSampling353( _BaseMap, ase_worldPos, ase_worldNormal, 1.0, TriplanarScale356, 1.0, 0 );
 			    float4 temp_output_17_0 = ( triplanar353 * _BaseColor );
 			    float4 temp_output_2_0_g267 = temp_output_17_0;
-			    float4 triplanar369 = TriplanarSampling369( _OpacityMap, ase_worldPos, ase_worldNormal, 1.0, TriplanarScale356, 1.0, 0 );
-			    #ifdef _USEOPACITYMAP_ON
-			    float staticSwitch367 = ( triplanar369.x * _OpacityMultiplier );
-			    #else
-			    float staticSwitch367 = (temp_output_2_0_g267).w;
-			    #endif
-			    float Alpha368 = staticSwitch367;
+			    float Alpha368 = (temp_output_2_0_g267).w;
 			    
 
 				half alpha = Alpha368;
-				half alphaclip = ( _AlphaClipThreshold + ( _Cull * 0.0 ) );
+				half alphaclip = ( _Cutoff + ( _Cull * 0.0 ) );
 				half alphaclipthresholdshadow = half(0);
 				#ifdef ASE_DEPTH_WRITE_ON
 				float DepthValue = 0;
@@ -1564,7 +1477,6 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 			#pragma shader_feature_local _MAPTYPE_MAS _MAPTYPE_MASK _MAPTYPE_RMA _MAPTYPE_ORM
 			#pragma shader_feature_local _NORMALS_ON
 			#pragma shader_feature_local _USEFALLOFFINBAKE_ON
-			#pragma shader_feature_local _USEOPACITYMAP_ON
 
 
 			//TEXTURE2D(_BaseMap);
@@ -1582,8 +1494,7 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 				float _EmissionFalloff;
 				float _MonoSHAdjustment;
 				float _BakedMutiplier;
-				float _OpacityMultiplier;
-				float _AlphaClipThreshold;
+				float _Cutoff;
 				float _Cull;
 				//float4 _BaseMap_ST;
 				//half4 _BaseColor;
@@ -1608,7 +1519,6 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 			sampler2D _EmissionMap;
 			sampler2D _MetallicGlossMap;
 			sampler2D _BumpMap;
-			sampler2D _OpacityMap;
 
 
 			struct appdata
@@ -1701,18 +1611,6 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 				return smoothness * (2.0 * detailSmooth);
 			}
 			
-			inline float4 TriplanarSampling369( sampler2D topTexMap, float3 worldPos, float3 worldNormal, float falloff, float2 tiling, float3 normalScale, float3 index )
-			{
-				float3 projNormal = ( pow( abs( worldNormal ), falloff ) );
-				projNormal /= ( projNormal.x + projNormal.y + projNormal.z ) + 0.00001;
-				float3 nsign = sign( worldNormal );
-				half4 xNorm; half4 yNorm; half4 zNorm;
-				xNorm = tex2D( topTexMap, tiling * worldPos.zy * float2(  nsign.x, 1.0 ) );
-				yNorm = tex2D( topTexMap, tiling * worldPos.xz * float2(  nsign.y, 1.0 ) );
-				zNorm = tex2D( topTexMap, tiling * worldPos.xy * float2( -nsign.z, 1.0 ) );
-				return xNorm * projNormal.x + yNorm * projNormal.y + zNorm * projNormal.z;
-			}
-			
 
 			v2f vert(appdata v  )
 			{
@@ -1791,7 +1689,7 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 				#else
 				float4 staticSwitch103 = color104;
 				#endif
-				float3 temp_output_13_0_g263 = staticSwitch103.rgb;
+				float3 temp_output_13_0_g268 = staticSwitch103.rgb;
 				float4 triplanar358 = TriplanarSampling358( _MetallicGlossMap, ase_worldPos, ase_worldNormal, 1.0, TriplanarScale356, 1.0, 0 );
 				float4 appendResult338 = (float4(triplanar358.r , triplanar358.g , triplanar358.a , 1.0));
 				float4 appendResult341 = (float4(triplanar358.g , triplanar358.b , ( 1.0 - triplanar358.r ) , 1.0));
@@ -1809,7 +1707,7 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 				#endif
 				float4 break332 = staticSwitch330;
 				float Ambient_Occlusion133 = break332.y;
-				float localBakerySpecMonoSHFull4_g264 = ( 0.0 );
+				float localBakerySpecMonoSHFull4_g269 = ( 0.0 );
 				float3 ase_worldTangent = i.ase_texcoord5.xyz;
 				float4 triplanar359 = TriplanarSampling359( _BumpMap, ase_worldPos, ase_worldNormal, 1.0, TriplanarScale356, 1.0, 0 );
 				float4 In02_g219 = triplanar359;
@@ -1832,13 +1730,13 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 				float4 staticSwitch26_g255 = temp_output_22_0_g255;
 				#endif
 				float4 Normal139 = staticSwitch26_g255;
-				float3 mapNormal16_g266 = Normal139.rgb;
+				float3 mapNormal16_g271 = Normal139.rgb;
 				float3 ase_worldBitangent = i.ase_texcoord6.xyz;
-				float3 normalizeResult18_g266 = normalize( ( ( ase_worldTangent * mapNormal16_g266.x ) + ( ase_worldBitangent * mapNormal16_g266.y ) + ( ase_worldNormal * mapNormal16_g266.z ) ) );
-				float3 normalWorld4_g264 = normalizeResult18_g266;
-				float2 lightmapUV4_g264 = (i.ase_texcoord7.xy*(unity_LightmapST).xy + (unity_LightmapST).zw);
-				float3 normalizeResult2_g264 = normalize( ase_worldViewDir );
-				float3 viewDir4_g264 = normalizeResult2_g264;
+				float3 normalizeResult18_g271 = normalize( ( ( ase_worldTangent * mapNormal16_g271.x ) + ( ase_worldBitangent * mapNormal16_g271.y ) + ( ase_worldNormal * mapNormal16_g271.z ) ) );
+				float3 normalWorld4_g269 = normalizeResult18_g271;
+				float2 lightmapUV4_g269 = (i.ase_texcoord7.xy*(unity_LightmapST).xy + (unity_LightmapST).zw);
+				float3 normalizeResult2_g269 = normalize( ase_worldViewDir );
+				float3 viewDir4_g269 = normalizeResult2_g269;
 				float temp_output_23_0_g255 = saturate( ( ( triplanar359.b + break332.z ) - 1.0 ) );
 				float detailSmooth217_g255 = tex2DNode1_g255.b;
 				float smoothness217_g255 = temp_output_23_0_g255;
@@ -1849,18 +1747,18 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 				float staticSwitch17_g255 = temp_output_23_0_g255;
 				#endif
 				float Smoothness134 = staticSwitch17_g255;
-				float smoothness4_g264 = Smoothness134;
-				float3 temp_output_9_0_g263 = Albedo138.rgb;
-				float3 albedo4_g264 = temp_output_9_0_g263;
+				float smoothness4_g269 = Smoothness134;
+				float3 temp_output_9_0_g268 = Albedo138.rgb;
+				float3 albedo4_g269 = temp_output_9_0_g268;
 				float Metallic132 = break332.x;
-				float metalness4_g264 = Metallic132;
-				float3 diffuseSH4_g264 = float3( 0,0,0 );
-				float3 specularSH4_g264 = float3( 0,0,0 );
-				BakerySpecMonoSHFull_float( normalWorld4_g264 , lightmapUV4_g264 , viewDir4_g264 , smoothness4_g264 , albedo4_g264 , metalness4_g264 , diffuseSH4_g264 , specularSH4_g264 );
+				float metalness4_g269 = Metallic132;
+				float3 diffuseSH4_g269 = float3( 0,0,0 );
+				float3 specularSH4_g269 = float3( 0,0,0 );
+				BakerySpecMonoSHFull_float( normalWorld4_g269 , lightmapUV4_g269 , viewDir4_g269 , smoothness4_g269 , albedo4_g269 , metalness4_g269 , diffuseSH4_g269 , specularSH4_g269 );
 				#ifdef _MONOSHENABLED_ON
-				float3 staticSwitch30_g263 = ( ( temp_output_13_0_g263 + ( Ambient_Occlusion133 * ( diffuseSH4_g264 * temp_output_9_0_g263 ) ) ) + ( specularSH4_g264 * _MonoSHAdjustment ) );
+				float3 staticSwitch30_g268 = ( ( temp_output_13_0_g268 + ( Ambient_Occlusion133 * ( diffuseSH4_g269 * temp_output_9_0_g268 ) ) ) + ( specularSH4_g269 * _MonoSHAdjustment ) );
 				#else
-				float3 staticSwitch30_g263 = temp_output_13_0_g263;
+				float3 staticSwitch30_g268 = temp_output_13_0_g268;
 				#endif
 				
 				#ifdef _USEFALLOFFINBAKE_ON
@@ -1870,13 +1768,7 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 				#endif
 				
 				float4 temp_output_2_0_g267 = temp_output_17_0;
-				float4 triplanar369 = TriplanarSampling369( _OpacityMap, ase_worldPos, ase_worldNormal, 1.0, TriplanarScale356, 1.0, 0 );
-				#ifdef _USEOPACITYMAP_ON
-				float staticSwitch367 = ( triplanar369.x * _OpacityMultiplier );
-				#else
-				float staticSwitch367 = (temp_output_2_0_g267).w;
-				#endif
-				float Alpha368 = staticSwitch367;
+				float Alpha368 = (temp_output_2_0_g267).w;
 				
 
 				MetaInput metaInput = (MetaInput)0;
@@ -1902,7 +1794,7 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 				//metaInput.Emission = emission.rgb;
 			
 				metaInput.Albedo = Albedo138.rgb;
-				half3 emission = staticSwitch30_g263;
+				half3 emission = staticSwitch30_g268;
 				half3 bakedemission = staticSwitch350.xyz;
 				metaInput.Emission = bakedemission.rgb;
 				#ifdef EDITOR_VISUALIZATION
@@ -1911,7 +1803,7 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 				#endif
 			
 				half alpha = Alpha368;
-				half alphaclip = ( _AlphaClipThreshold + ( _Cull * 0.0 ) );
+				half alphaclip = ( _Cutoff + ( _Cull * 0.0 ) );
 				half alphaclipthresholdshadow = half(0);
 				#if defined(_ALPHATEST_ON)
 					clip(alpha - alphaclip);
@@ -2058,14 +1950,14 @@ Shader "Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip"
 }
 /*ASEBEGIN
 Version=19603
-Node;AmplifyShaderEditor.CommentaryNode;357;-1488,-880;Inherit;False;628;187;;3;355;354;356;Triplanar Settings;1,1,1,1;0;0
-Node;AmplifyShaderEditor.RangedFloatNode;354;-1424,-832;Inherit;False;Property;_TriplanarScale;Scale;0;0;Create;False;0;0;0;False;2;Header(Triplanar Settings);Space(10);False;1;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.DynamicAppendNode;355;-1248,-832;Inherit;False;FLOAT2;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.CommentaryNode;357;-1136,-352;Inherit;False;628;187;;3;355;354;356;Triplanar Settings;1,1,1,1;0;0
+Node;AmplifyShaderEditor.RangedFloatNode;354;-1072,-304;Inherit;False;Property;_TriplanarScale;Scale;0;0;Create;False;0;0;0;False;2;Header(Triplanar Settings);Space(10);False;1;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.DynamicAppendNode;355;-896,-304;Inherit;False;FLOAT2;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.CommentaryNode;260;-2832,-64;Inherit;False;299;661;;3;237;238;221;Base Textures;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;49;-2432,368;Inherit;False;1381.337;789.3565;;20;358;338;340;341;339;342;330;132;133;40;99;42;217;41;218;160;332;219;151;359;Normal Standard;1,1,1,1;0;0
-Node;AmplifyShaderEditor.RegisterLocalVarNode;356;-1088,-816;Inherit;False;TriplanarScale;-1;True;1;0;FLOAT2;0,0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.TexturePropertyNode;238;-2784,384;Inherit;True;Property;_MetallicGlossMap;MAS;10;1;[NoScaleOffset];Create;False;0;0;0;False;0;False;75f1fbacfa73385419ec8d7700a107ea;75f1fbacfa73385419ec8d7700a107ea;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
+Node;AmplifyShaderEditor.RegisterLocalVarNode;356;-736,-288;Inherit;False;TriplanarScale;-1;True;1;0;FLOAT2;0,0;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.GetLocalVarNode;151;-2400,672;Inherit;False;356;TriplanarScale;1;0;OBJECT;;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.TexturePropertyNode;238;-2784,384;Inherit;True;Property;_MetallicGlossMap;MAS;7;1;[NoScaleOffset];Create;False;0;0;0;False;0;False;75f1fbacfa73385419ec8d7700a107ea;75f1fbacfa73385419ec8d7700a107ea;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
 Node;AmplifyShaderEditor.TriplanarNode;358;-2416,800;Inherit;True;Spherical;World;False;MASTriplanarSample;_MASTriplanarSample;white;-1;None;Mid Texture 1;_MidTexture1;white;-1;None;Bot Texture 1;_BotTexture1;white;-1;None;Triplanar Sampler;Tangent;10;0;SAMPLER2D;;False;5;FLOAT;1;False;1;SAMPLER2D;;False;6;FLOAT;0;False;2;SAMPLER2D;;False;7;FLOAT;0;False;9;FLOAT3;0,0,0;False;8;FLOAT;1;False;3;FLOAT2;1,1;False;4;FLOAT;1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.OneMinusNode;339;-2128,1008;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.OneMinusNode;340;-1952,976;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
@@ -2073,9 +1965,9 @@ Node;AmplifyShaderEditor.DynamicAppendNode;342;-1792,816;Inherit;False;FLOAT4;4;
 Node;AmplifyShaderEditor.DynamicAppendNode;341;-1792,960;Inherit;False;FLOAT4;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;1;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.DynamicAppendNode;338;-2048,832;Inherit;False;FLOAT4;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;1;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.CommentaryNode;52;-528,512;Inherit;False;1472.8;1054.2;;19;35;103;14;104;29;12;48;47;13;46;45;44;43;153;350;351;352;263;360;Emission;1,1,1,1;0;0
-Node;AmplifyShaderEditor.TexturePropertyNode;237;-2784,192;Inherit;True;Property;_BumpMap;Normal Map;8;2;[NoScaleOffset];[Normal];Create;False;0;0;0;False;0;False;None;None;False;bump;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
-Node;AmplifyShaderEditor.StaticSwitch;330;-1600,720;Inherit;False;Property;_MapType;Map Type;9;0;Create;True;0;0;0;False;0;False;0;0;0;True;;KeywordEnum;4;MAS;MASK;RMA;ORM;Create;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.CommentaryNode;50;-2304,-400;Inherit;False;987.9999;522.3;;5;17;6;206;353;370;BaseMap Standard;1,1,1,1;0;0
+Node;AmplifyShaderEditor.TexturePropertyNode;237;-2784,192;Inherit;True;Property;_BumpMap;Normal Map;5;2;[NoScaleOffset];[Normal];Create;False;0;0;0;False;0;False;None;None;False;bump;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
+Node;AmplifyShaderEditor.StaticSwitch;330;-1600,720;Inherit;False;Property;_MapType;Map Type;6;0;Create;True;0;0;0;False;0;False;0;0;0;True;;KeywordEnum;4;MAS;MASK;RMA;ORM;Create;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.CommentaryNode;50;-2304,-400;Inherit;False;987.9999;522.3;;6;17;6;206;353;370;368;BaseMap Standard;1,1,1,1;0;0
 Node;AmplifyShaderEditor.WorldNormalVector;43;-240,1232;Inherit;False;False;1;0;FLOAT3;0,0,1;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
 Node;AmplifyShaderEditor.ViewDirInputsCoordNode;44;-240,1088;Inherit;False;World;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
 Node;AmplifyShaderEditor.RangedFloatNode;219;-2016,496;Inherit;False;Constant;_ZeroConst;ZeroConst;25;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
@@ -2087,44 +1979,37 @@ Node;AmplifyShaderEditor.DotProductOpNode;45;-48,1088;Inherit;False;2;0;FLOAT3;0
 Node;AmplifyShaderEditor.SimpleAddOpNode;41;-1376,624;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;206;-2272,-224;Inherit;False;356;TriplanarScale;1;0;OBJECT;;False;1;FLOAT2;0
 Node;AmplifyShaderEditor.TexturePropertyNode;221;-2784,0;Inherit;True;Property;_BaseMap;BaseMap;1;1;[NoScaleOffset];Create;True;0;0;0;False;4;Space(30);Header(Base Color);Space(10);MainTexture;False;None;None;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
-Node;AmplifyShaderEditor.CommentaryNode;361;-368,-528;Inherit;False;1064;460;;6;368;367;366;365;363;362;Opacity Standard;1,1,1,1;0;0
 Node;AmplifyShaderEditor.CommentaryNode;208;-373,64;Inherit;False;843;353;;5;203;139;134;138;202;Detail Map;1,1,1,1;0;0
 Node;AmplifyShaderEditor.LerpOp;217;-1712,464;Inherit;False;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,1;False;2;FLOAT;0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.AbsOpNode;46;80,1088;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;13;32,1184;Inherit;False;Property;_EmissionFalloff;Emission Falloff;15;0;Create;False;0;0;0;True;0;False;1;1;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;13;32,1184;Inherit;False;Property;_EmissionFalloff;Emission Falloff;12;0;Create;False;0;0;0;True;0;False;1;1;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleSubtractOpNode;42;-1264,656;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;1;False;1;FLOAT;0
-Node;AmplifyShaderEditor.ColorNode;6;-2016,-96;Inherit;False;Property;_BaseColor;BaseColor;2;0;Create;False;0;0;0;True;1;MainColor;False;1,1,1,1;1,1,1,1;True;True;0;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
 Node;AmplifyShaderEditor.TriplanarNode;353;-2064,-320;Inherit;True;Spherical;World;False;BaseMapTriplanarSample;_BaseMapTriplanarSample;white;1;None;Mid Texture 0;_MidTexture0;white;-1;None;Bot Texture 0;_BotTexture0;white;-1;None;Triplanar Sampler;Tangent;10;0;SAMPLER2D;;False;5;FLOAT;1;False;1;SAMPLER2D;;False;6;FLOAT;0;False;2;SAMPLER2D;;False;7;FLOAT;0;False;9;FLOAT3;0,0,0;False;8;FLOAT;1;False;3;FLOAT2;1,1;False;4;FLOAT;1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.GetLocalVarNode;362;-336,-448;Inherit;False;356;TriplanarScale;1;0;OBJECT;;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.TexturePropertyNode;363;-336,-336;Inherit;True;Property;_OpacityMap;Opacity Map;4;1;[NoScaleOffset];Create;True;0;0;0;False;0;False;None;None;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
-Node;AmplifyShaderEditor.StaticSwitch;99;-1424,480;Inherit;False;Property;_Normals;Normal Map Enabled;7;0;Create;False;0;0;0;False;4;Toggle;Space(30);Header(PBR);Space(10);False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.ColorNode;6;-2016,-96;Inherit;False;Property;_BaseColor;BaseColor;2;0;Create;False;0;0;0;True;1;MainColor;False;1,1,1,1;1,1,1,1;True;True;0;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
+Node;AmplifyShaderEditor.StaticSwitch;99;-1424,480;Inherit;False;Property;_Normals;Normal Map Enabled;4;0;Create;False;0;0;0;False;4;Toggle;Space(30);Header(PBR);Space(10);False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.PowerNode;47;224,1088;Inherit;False;False;2;0;FLOAT;0;False;1;FLOAT;1;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SaturateNode;40;-1232,816;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;17;-1552,-240;Inherit;False;2;2;0;FLOAT4;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.TexturePropertyNode;263;-496,896;Inherit;True;Property;_EmissionMap;Emission Map;12;1;[NoScaleOffset];Create;False;0;0;0;False;0;False;None;None;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
+Node;AmplifyShaderEditor.TexturePropertyNode;263;-496,896;Inherit;True;Property;_EmissionMap;Emission Map;9;1;[NoScaleOffset];Create;False;0;0;0;False;0;False;None;None;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
 Node;AmplifyShaderEditor.TextureCoordinatesNode;203;-336,240;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.GetLocalVarNode;153;-432,592;Inherit;False;356;TriplanarScale;1;0;OBJECT;;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.TriplanarNode;369;-64,-480;Inherit;True;Spherical;World;False;OpacityTriplanarSample;_OpacityTriplanarSample;white;0;None;Mid Texture 4;_MidTexture4;white;-1;None;Bot Texture 4;_BotTexture4;white;-1;None;Triplanar Sampler;Tangent;10;0;SAMPLER2D;;False;5;FLOAT;1;False;1;SAMPLER2D;;False;6;FLOAT;0;False;2;SAMPLER2D;;False;7;FLOAT;0;False;9;FLOAT3;0,0,0;False;8;FLOAT;1;False;3;FLOAT2;1,1;False;4;FLOAT;1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.RangedFloatNode;365;-80,-272;Inherit;False;Property;_OpacityMultiplier;Opacity Multiplier;5;0;Create;True;0;0;0;False;0;False;1;1;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.SaturateNode;48;400,1088;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.FunctionNode;202;-80,160;Inherit;False;Detail Map;17;;255;7eb669e8a4269ac43a3c284ddafaf020;0;4;21;COLOR;1,1,1,1;False;22;COLOR;0,0,1,0;False;23;FLOAT;0.5;False;218;FLOAT2;0,0;False;3;COLOR;0;COLOR;25;FLOAT;24
-Node;AmplifyShaderEditor.ColorNode;12;-176,880;Inherit;False;Property;_EmissionColor;Emission Color;13;1;[HDR];Create;False;0;0;0;True;0;False;1,1,1,1;0,0,0,1;True;True;0;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
+Node;AmplifyShaderEditor.FunctionNode;202;-80,160;Inherit;False;Detail Map;14;;255;7eb669e8a4269ac43a3c284ddafaf020;0;4;21;COLOR;1,1,1,1;False;22;COLOR;0,0,1,0;False;23;FLOAT;0.5;False;218;FLOAT2;0,0;False;3;COLOR;0;COLOR;25;FLOAT;24
+Node;AmplifyShaderEditor.ColorNode;12;-176,880;Inherit;False;Property;_EmissionColor;Emission Color;10;1;[HDR];Create;False;0;0;0;True;0;False;1,1,1,1;0,0,0,1;True;True;0;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
 Node;AmplifyShaderEditor.TriplanarNode;360;-320,672;Inherit;True;Spherical;World;False;EmissionTriplanarSample;_EmissionTriplanarSample;white;-1;None;Mid Texture 3;_MidTexture3;white;-1;None;Bot Texture 3;_BotTexture3;white;-1;None;Triplanar Sampler;Tangent;10;0;SAMPLER2D;;False;5;FLOAT;1;False;1;SAMPLER2D;;False;6;FLOAT;0;False;2;SAMPLER2D;;False;7;FLOAT;0;False;9;FLOAT3;0,0,0;False;8;FLOAT;1;False;3;FLOAT2;1,1;False;4;FLOAT;1;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.CommentaryNode;96;1360,-96;Inherit;False;564.4475;280.7469;It's set up this way because otherwise, these properties get ignored.;4;69;67;371;372;Surface Properties;1,1,1,1;0;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;366;320,-192;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.FunctionNode;370;-1552,-48;Inherit;False;Alpha Split;-1;;267;07dab7960105b86429ac8eebd729ed6d;0;1;2;FLOAT4;0,0,0,0;False;2;FLOAT3;0;FLOAT;6
 Node;AmplifyShaderEditor.ColorNode;104;48,608;Inherit;False;Constant;_EmptyEmissive;EmptyEmissive;19;1;[HDR];Create;True;0;0;0;False;0;False;0,0,0,0;0,0,0,0;True;True;0;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;29;512,720;Inherit;False;3;3;0;FLOAT4;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;FLOAT;0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;351;256,896;Inherit;False;2;2;0;FLOAT4;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.RangedFloatNode;14;304,1344;Inherit;False;Property;_BakedMutiplier;Emission Baked Mutiplier;16;0;Create;False;0;0;0;True;0;False;1;1;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;14;304,1344;Inherit;False;Property;_BakedMutiplier;Emission Baked Mutiplier;13;0;Create;False;0;0;0;True;0;False;1;1;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.CommentaryNode;98;1088,224;Inherit;False;622;370;;6;136;135;137;140;141;306;Mono SH;1,1,1,1;0;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;138;240,144;Inherit;False;Albedo;-1;True;1;0;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;134;240,304;Inherit;False;Smoothness;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;139;272,224;Inherit;False;Normal;-1;True;1;0;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;133;-1312,992;Inherit;False;Ambient Occlusion;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;132;-1296,912;Inherit;False;Metallic;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;67;1424,0;Inherit;False;Property;_Cull;Cull Side;29;2;[HideInInspector];[Enum];Create;False;0;0;1;UnityEngine.Rendering.CullMode;False;0;False;0;2;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;367;336,-384;Inherit;False;Property;_UseOpacityMap;Use Opacity Map;3;0;Create;True;0;0;0;False;3;Space(30);Header(Alpha);Space(10);False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;67;1424,0;Inherit;False;Property;_Cull;Cull Side;26;2;[HideInInspector];[Enum];Create;False;0;0;1;UnityEngine.Rendering.CullMode;False;0;False;0;2;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;35;736,1392;Inherit;False;2;2;0;FLOAT4;0,0,0,0;False;1;FLOAT;0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;352;480,928;Inherit;False;2;2;0;FLOAT4;0,0,0,0;False;1;FLOAT;0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.GetLocalVarNode;135;1104,384;Inherit;False;134;Smoothness;1;0;OBJECT;;False;1;FLOAT;0
@@ -2132,20 +2017,20 @@ Node;AmplifyShaderEditor.GetLocalVarNode;136;1104,448;Inherit;False;132;Metallic
 Node;AmplifyShaderEditor.GetLocalVarNode;137;1104,512;Inherit;False;133;Ambient Occlusion;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;140;1104,256;Inherit;False;138;Albedo;1;0;OBJECT;;False;1;COLOR;0
 Node;AmplifyShaderEditor.GetLocalVarNode;141;1104,320;Inherit;False;139;Normal;1;0;OBJECT;;False;1;COLOR;0
-Node;AmplifyShaderEditor.StaticSwitch;103;672,624;Inherit;False;Property;_Emission;Emission Enable;11;0;Create;False;0;0;0;False;4;Space(30);Header(Emissions);Space(10);Toggle;False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.StaticSwitch;103;672,624;Inherit;False;Property;_Emission;Emission Enable;8;0;Create;False;0;0;0;False;4;Space(30);Header(Emissions);Space(10);Toggle;False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;69;1616,-16;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RegisterLocalVarNode;368;480,-192;Inherit;False;Alpha;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;371;1472,96;Inherit;False;Property;_AlphaClipThreshold;Alpha Clip Threshold;6;0;Create;True;0;0;0;False;0;False;0.5;0;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;350;656,928;Inherit;False;Property;_UseFalloffInBake;Use Falloff In Bake;14;0;Create;True;0;0;0;False;0;False;0;1;1;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode;368;-1536,48;Inherit;False;Alpha;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;371;1472,96;Inherit;False;Property;_Cutoff;Alpha Clip Threshold;3;0;Create;False;0;0;0;False;0;False;0.5;0;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch;350;656,928;Inherit;False;Property;_UseFalloffInBake;Use Falloff In Bake;11;0;Create;True;0;0;0;False;0;False;0;1;1;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.GetLocalVarNode;142;1968,144;Inherit;False;138;Albedo;1;0;OBJECT;;False;1;COLOR;0
 Node;AmplifyShaderEditor.GetLocalVarNode;143;1968,208;Inherit;False;139;Normal;1;0;OBJECT;;False;1;COLOR;0
 Node;AmplifyShaderEditor.GetLocalVarNode;144;1968,336;Inherit;False;134;Smoothness;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;145;1968,272;Inherit;False;132;Metallic;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;146;1904,400;Inherit;False;133;Ambient Occlusion;1;0;OBJECT;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.FunctionNode;306;1344,304;Inherit;False;BakeryMonoSH;23;;263;29c9468cd28079b448a58bef1fb32cb5;0;6;8;FLOAT3;0,0,0;False;9;FLOAT3;0,0,0;False;10;FLOAT;0;False;11;FLOAT;0;False;12;FLOAT;0;False;13;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.FunctionNode;306;1344,304;Inherit;False;BakeryMonoSH;20;;268;29c9468cd28079b448a58bef1fb32cb5;0;6;8;FLOAT3;0,0,0;False;9;FLOAT3;0,0,0;False;10;FLOAT;0;False;11;FLOAT;0;False;12;FLOAT;0;False;13;FLOAT3;0,0,0;False;1;FLOAT3;0
 Node;AmplifyShaderEditor.SimpleAddOpNode;372;1792,80;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;373;1968,464;Inherit;False;368;Alpha;1;0;OBJECT;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;312;2272,208;Float;False;True;-1;2;UnityEditor.ShaderGraphLitGUI;0;14;Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip;623634af11bd9ab448550ee777f3493e;True;Forward;0;0;Forward;14;False;True;1;1;False;_BlendSrc;0;False;_BlendDst;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;True;True;0;True;_Cull;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;_ZWrite;True;3;False;;True;True;0;False;;0;False;;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;False;False;False;True;1;Lightmode=UniversalForward;True;7;False;0;Hidden/InternalErrorShader;0;0;Standard;24;Workflow;1;0;Surface;0;638667038353389929;Two Sided;1;0;Cast Shadows;1;0;  Use Shadow Threshold;0;0;GPU Instancing;0;0;Built-in Fog;1;0;Lightmaps;1;0;Volumetrics;1;0;Decals;0;0;Write Depth;0;0;  Early Z (broken);0;0;Vertex Position,InvertActionOnDeselection;1;0;Emission;1;0;PC Reflection Probe;3;0;PC Receive Shadows;1;0;PC Vertex Lights;0;0;PC SSAO;1;0;Q Reflection Probe;0;0;Q Receive Shadows;0;0;Q Vertex Lights;1;0;Q SSAO;0;0;Environment Reflections;1;0;Meta Pass;1;0;0;5;True;True;True;True;True;False;;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;312;2272,208;Float;False;True;-1;2;UnityEditor.ShaderGraphLitGUI;0;14;Mabel/LitMAS Plus/LitMAS Triplanar+ Alpha Clip;623634af11bd9ab448550ee777f3493e;True;Forward;0;0;Forward;14;False;True;1;1;False;_BlendSrc;0;False;_BlendDst;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;True;True;0;True;_Cull;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;_ZWrite;True;3;False;;True;True;0;False;;0;False;;True;3;RenderPipeline=UniversalPipeline;RenderType=TransparentCutout=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;False;False;False;True;1;Lightmode=UniversalForward;True;7;False;0;Hidden/InternalErrorShader;0;0;Standard;24;Workflow;1;0;Surface;0;638667038353389929;Two Sided;1;0;Cast Shadows;1;0;  Use Shadow Threshold;0;0;GPU Instancing;0;0;Built-in Fog;1;0;Lightmaps;1;0;Volumetrics;1;0;Decals;0;0;Write Depth;0;0;  Early Z (broken);0;0;Vertex Position,InvertActionOnDeselection;1;0;Emission;1;0;PC Reflection Probe;3;0;PC Receive Shadows;1;0;PC Vertex Lights;0;0;PC SSAO;1;0;Q Reflection Probe;0;0;Q Receive Shadows;0;0;Q Vertex Lights;1;0;Q SSAO;0;0;Environment Reflections;1;0;Meta Pass;1;0;0;5;True;True;True;True;True;False;;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;313;2272,208;Float;False;False;-1;2;UnityEditor.ShaderGraphLitGUI;0;1;New Amplify Shader;623634af11bd9ab448550ee777f3493e;True;DepthOnly;0;1;DepthOnly;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;False;False;False;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;1;Lightmode=DepthOnly;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;314;2272,208;Float;False;False;-1;2;UnityEditor.ShaderGraphLitGUI;0;1;New Amplify Shader;623634af11bd9ab448550ee777f3493e;True;DepthNormals;0;2;DepthNormals;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;Lightmode=DepthNormals;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;315;2272,208;Float;False;False;-1;2;UnityEditor.ShaderGraphLitGUI;0;1;New Amplify Shader;623634af11bd9ab448550ee777f3493e;True;ShadowCaster;0;3;ShadowCaster;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;False;False;False;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=ShadowCaster;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
@@ -2192,8 +2077,6 @@ WireConnection;47;1;13;0
 WireConnection;40;0;42;0
 WireConnection;17;0;353;0
 WireConnection;17;1;6;0
-WireConnection;369;0;363;0
-WireConnection;369;3;362;0
 WireConnection;48;0;47;0
 WireConnection;202;21;17;0
 WireConnection;202;22;99;0
@@ -2201,8 +2084,6 @@ WireConnection;202;23;40;0
 WireConnection;202;218;203;0
 WireConnection;360;0;263;0
 WireConnection;360;3;153;0
-WireConnection;366;0;369;1
-WireConnection;366;1;365;0
 WireConnection;370;2;17;0
 WireConnection;29;0;360;0
 WireConnection;29;1;12;0
@@ -2214,8 +2095,6 @@ WireConnection;134;0;202;24
 WireConnection;139;0;202;25
 WireConnection;133;0;332;1
 WireConnection;132;0;332;0
-WireConnection;367;1;370;6
-WireConnection;367;0;366;0
 WireConnection;35;0;29;0
 WireConnection;35;1;14;0
 WireConnection;352;0;351;0
@@ -2223,7 +2102,7 @@ WireConnection;352;1;14;0
 WireConnection;103;1;104;0
 WireConnection;103;0;29;0
 WireConnection;69;0;67;0
-WireConnection;368;0;367;0
+WireConnection;368;0;370;6
 WireConnection;350;1;352;0
 WireConnection;350;0;35;0
 WireConnection;306;8;141;0
@@ -2244,4 +2123,4 @@ WireConnection;312;7;146;0
 WireConnection;312;8;373;0
 WireConnection;312;9;372;0
 ASEEND*/
-//CHKSM=5AC2A32AB63E17A0E41A012E6AC5AA30ADDE752B
+//CHKSM=D540BBF445A3CC90E3F689AE3A52C8BE92C822D8

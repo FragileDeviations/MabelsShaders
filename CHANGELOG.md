@@ -1,3 +1,7 @@
+# v1.7.0 - Fractal UVs
+## Added Shaders
+* Fractal - Original shader done by Coolkidstan, original original shader done by Zulubo.
+
 # v1.6.1 - Transparency Bake Fix
 ## Changed Shaders
 ### LitMAS+

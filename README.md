@@ -33,3 +33,14 @@
 * Set the texture fields
 ### Credits
 * Bryan Bones, for the original shadergraph. They asked I port it to Amplify, and gave me permission to include it here.
+
+## Fractal
+* Fractal Opaque
+* Fractal Transparent
+* Fractal Fade
+* Fractal Alpha Clip
+### Function
+* Attempts to hide obvious tiling in textures. Best used on terrain textures like dirt or rocks.
+### Credits
+* Coolkidstan, for the ASE port of Zulubo's Fractal UVs
+* Zulubo, for the original Fractal UV shader

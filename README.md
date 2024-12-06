@@ -14,8 +14,9 @@
 ### Difference from LitMAS
 * Bakery MonoSH Lightmap Support
 * Parallax Occlusion Mapping
-* Opacity Map Support
+* Alpha Clip Support
 * Multiple MetallicGlossMap format support (MAS, MASK, RMA, ORM)
+* Non-Linear Light Probe SH, fixing blue spots on light probes
 
 ## Outline
 * Outline Lit
@@ -44,3 +45,7 @@
 ### Credits
 * Coolkidstan, for the ASE port of Zulubo's Fractal UVs
 * Zulubo, for the original Fractal UV shader
+
+## SLZ Decal
+### Function
+* Literally just Mod2x but with Parallax mapping

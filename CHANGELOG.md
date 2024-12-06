@@ -1,6 +1,17 @@
+# v1.8.0 - SLZDecal, Non-Linear Probes
+## Added Shaders
+### SLZ Decal
+* SLZ's Mod2x, but with Parallax mapping
+## Changed Shaders
+### LitMAS+
+* Added Non-Linear Probe SH to fix bad light probes
+### VertexBlend
+* Added Non-Linear Probe SH to fix bad light probes
+
 # v1.7.0 - Fractal UVs
 ## Added Shaders
-* Fractal - Original shader done by Coolkidstan, original original shader done by Zulubo.
+### Fractal
+* Original shader done by Coolkidstan, original original shader done by Zulubo.
 
 # v1.6.1 - Transparency Bake Fix
 ## Changed Shaders

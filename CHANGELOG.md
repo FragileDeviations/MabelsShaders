@@ -1,3 +1,8 @@
+# v1.8.1 - Non-Linear Probe Toggle
+## Changed Shaders
+### LitMAS+
+* Added option to disable non-linear light probe SH
+
 # v1.8.0 - SLZDecal, Non-Linear Probes
 ## Added Shaders
 ### SLZ Decal

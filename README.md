@@ -49,3 +49,8 @@
 ## SLZ Decal
 ### Function
 * Literally just Mod2x but with Parallax mapping
+
+## SLZ Toon
+### Difference from SLZ Anime
+* Emissive map support
+* No specular highlights, a real toon shader wouldn't be reflective

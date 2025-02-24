@@ -1,3 +1,8 @@
+# v1.9.0 - SLZ Toon
+## Added Shaders
+### SLZ Toon
+* Modified version of SLZ Anime with Emission map and no specular reflections
+
 # v1.8.1 - Non-Linear Probe Toggle
 ## Changed Shaders
 ### LitMAS+

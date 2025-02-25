@@ -1,3 +1,8 @@
+# v1.9.1 - Shader Name Fix
+## Changed Shaders
+### Fractal Fade
+* Fixed name, used to be set to Fractal Transparent by mistake
+
 # v1.9.0 - SLZ Toon
 ## Added Shaders
 ### SLZ Toon

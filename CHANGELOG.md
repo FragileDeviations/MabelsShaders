@@ -1,3 +1,8 @@
+# v1.9.2 - Posespace Fix
+## Changed Shaders
+### SLZ Toon
+* Made specular input take posespace impacts into account, only impacts will be reflective
+
 # v1.9.1 - Shader Name Fix
 ## Changed Shaders
 ### Fractal Fade

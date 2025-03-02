@@ -1,3 +1,8 @@
+# v1.9.3 - Outline Thickness Fix
+## Changed Shaders
+### Outline Lit/Unlit
+* Fixed outline thickness handling to not just be black and white, grey values are now allowed
+
 # v1.9.2 - Posespace Fix
 ## Changed Shaders
 ### SLZ Toon

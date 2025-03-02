@@ -252,6 +252,8 @@ Shader "Mabel/Outline/Outline Unlit"
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
 				float3 normalizeResult44 = normalize( v.ase_normal );
+				float2 uv_ThicknessMap = v.ase_texcoord.xy * _ThicknessMap_ST.xy + _ThicknessMap_ST.zw;
+				float4 tex2DNode32 = tex2Dlod( _ThicknessMap, float4( uv_ThicknessMap, 0, 0.0) );
 				float3 ase_objectScale = float3( length( GetObjectToWorldMatrix()[ 0 ].xyz ), length( GetObjectToWorldMatrix()[ 1 ].xyz ), length( GetObjectToWorldMatrix()[ 2 ].xyz ) );
 				
 				o.ase_texcoord3.xy = v.ase_texcoord.xy;
@@ -263,7 +265,7 @@ Shader "Mabel/Outline/Outline Unlit"
 				#else
 					float3 defaultVertexValue = float3(0, 0, 0);
 				#endif
-				float3 vertexValue = ( ( normalizeResult44 * ( _Thickness / ase_objectScale ) ) + v.vertex.xyz );
+				float3 vertexValue = ( ( normalizeResult44 * ( ( _Thickness * tex2DNode32.rgb ) / ase_objectScale ) ) + v.vertex.xyz );
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					v.vertex.xyz = vertexValue;
 				#else
@@ -388,12 +390,13 @@ Shader "Mabel/Outline/Outline Unlit"
 					#endif
 				#endif
 				float2 uv_ThicknessMap = IN.ase_texcoord3.xy * _ThicknessMap_ST.xy + _ThicknessMap_ST.zw;
+				float4 tex2DNode32 = tex2D( _ThicknessMap, uv_ThicknessMap );
 				
 				half3 BakedAlbedo = 0;
 				half3 BakedEmission = 0;
 				half3 Color = _Color;
-				half Alpha = tex2D( _ThicknessMap, uv_ThicknessMap ).rgb.x;
-				half AlphaClipThreshold = 0.5;
+				half Alpha = tex2DNode32.rgb.x;
+				half AlphaClipThreshold = 0.1;
 				half AlphaClipThresholdShadow = 0.5;
 
 				#ifdef _ALPHATEST_ON
@@ -513,6 +516,8 @@ Shader "Mabel/Outline/Outline Unlit"
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
 				float3 normalizeResult44 = normalize( v.ase_normal );
+				float2 uv_ThicknessMap = v.ase_texcoord.xy * _ThicknessMap_ST.xy + _ThicknessMap_ST.zw;
+				float4 tex2DNode32 = tex2Dlod( _ThicknessMap, float4( uv_ThicknessMap, 0, 0.0) );
 				float3 ase_objectScale = float3( length( GetObjectToWorldMatrix()[ 0 ].xyz ), length( GetObjectToWorldMatrix()[ 1 ].xyz ), length( GetObjectToWorldMatrix()[ 2 ].xyz ) );
 				
 				o.ase_texcoord2.xy = v.ase_texcoord.xy;
@@ -524,7 +529,7 @@ Shader "Mabel/Outline/Outline Unlit"
 				#else
 					float3 defaultVertexValue = float3(0, 0, 0);
 				#endif
-				float3 vertexValue = ( ( normalizeResult44 * ( _Thickness / ase_objectScale ) ) + v.vertex.xyz );
+				float3 vertexValue = ( ( normalizeResult44 * ( ( _Thickness * tex2DNode32.rgb ) / ase_objectScale ) ) + v.vertex.xyz );
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					v.vertex.xyz = vertexValue;
 				#else
@@ -648,9 +653,10 @@ Shader "Mabel/Outline/Outline Unlit"
 				#endif
 
 				float2 uv_ThicknessMap = IN.ase_texcoord2.xy * _ThicknessMap_ST.xy + _ThicknessMap_ST.zw;
+				float4 tex2DNode32 = tex2D( _ThicknessMap, uv_ThicknessMap );
 				
-				float Alpha = tex2D( _ThicknessMap, uv_ThicknessMap ).rgb.x;
-				float AlphaClipThreshold = 0.5;
+				float Alpha = tex2DNode32.rgb.x;
+				float AlphaClipThreshold = 0.1;
 
 				#ifdef _ALPHATEST_ON
 					clip(Alpha - AlphaClipThreshold);
@@ -760,6 +766,8 @@ Shader "Mabel/Outline/Outline Unlit"
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
 				float3 normalizeResult44 = normalize( v.ase_normal );
+				float2 uv_ThicknessMap = v.ase_texcoord.xy * _ThicknessMap_ST.xy + _ThicknessMap_ST.zw;
+				float4 tex2DNode32 = tex2Dlod( _ThicknessMap, float4( uv_ThicknessMap, 0, 0.0) );
 				float3 ase_objectScale = float3( length( GetObjectToWorldMatrix()[ 0 ].xyz ), length( GetObjectToWorldMatrix()[ 1 ].xyz ), length( GetObjectToWorldMatrix()[ 2 ].xyz ) );
 				
 				o.ase_texcoord3.xy = v.ase_texcoord.xy;
@@ -771,7 +779,7 @@ Shader "Mabel/Outline/Outline Unlit"
 				#else
 					float3 defaultVertexValue = float3(0, 0, 0);
 				#endif
-				float3 vertexValue = ( ( normalizeResult44 * ( _Thickness / ase_objectScale ) ) + v.vertex.xyz );
+				float3 vertexValue = ( ( normalizeResult44 * ( ( _Thickness * tex2DNode32.rgb ) / ase_objectScale ) ) + v.vertex.xyz );
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					v.vertex.xyz = vertexValue;
 				#else
@@ -896,12 +904,13 @@ Shader "Mabel/Outline/Outline Unlit"
 					#endif
 				#endif
 				float2 uv_ThicknessMap = IN.ase_texcoord3.xy * _ThicknessMap_ST.xy + _ThicknessMap_ST.zw;
+				float4 tex2DNode32 = tex2D( _ThicknessMap, uv_ThicknessMap );
 				
 				float3 BakedAlbedo = 0;
 				float3 BakedEmission = 0;
 				float3 Color = _Color;
-				float Alpha = tex2D( _ThicknessMap, uv_ThicknessMap ).rgb.x;
-				float AlphaClipThreshold = 0.5;
+				float Alpha = tex2DNode32.rgb.x;
+				float AlphaClipThreshold = 0.1;
 				float AlphaClipThresholdShadow = 0.5;
 
 				#ifdef _ALPHATEST_ON
@@ -1028,6 +1037,8 @@ Shader "Mabel/Outline/Outline Unlit"
 
 
 				float3 normalizeResult44 = normalize( v.ase_normal );
+				float2 uv_ThicknessMap = v.ase_texcoord.xy * _ThicknessMap_ST.xy + _ThicknessMap_ST.zw;
+				float4 tex2DNode32 = tex2Dlod( _ThicknessMap, float4( uv_ThicknessMap, 0, 0.0) );
 				float3 ase_objectScale = float3( length( GetObjectToWorldMatrix()[ 0 ].xyz ), length( GetObjectToWorldMatrix()[ 1 ].xyz ), length( GetObjectToWorldMatrix()[ 2 ].xyz ) );
 				
 				o.ase_texcoord.xy = v.ase_texcoord.xy;
@@ -1039,7 +1050,7 @@ Shader "Mabel/Outline/Outline Unlit"
 				#else
 					float3 defaultVertexValue = float3(0, 0, 0);
 				#endif
-				float3 vertexValue = ( ( normalizeResult44 * ( _Thickness / ase_objectScale ) ) + v.vertex.xyz );
+				float3 vertexValue = ( ( normalizeResult44 * ( ( _Thickness * tex2DNode32.rgb ) / ase_objectScale ) ) + v.vertex.xyz );
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					v.vertex.xyz = vertexValue;
 				#else
@@ -1136,9 +1147,10 @@ Shader "Mabel/Outline/Outline Unlit"
 			{
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
 				float2 uv_ThicknessMap = IN.ase_texcoord.xy * _ThicknessMap_ST.xy + _ThicknessMap_ST.zw;
+				float4 tex2DNode32 = tex2D( _ThicknessMap, uv_ThicknessMap );
 				
-				surfaceDescription.Alpha = tex2D( _ThicknessMap, uv_ThicknessMap ).rgb.x;
-				surfaceDescription.AlphaClipThreshold = 0.5;
+				surfaceDescription.Alpha = tex2DNode32.rgb.x;
+				surfaceDescription.AlphaClipThreshold = 0.1;
 
 
 				#if _ALPHATEST_ON
@@ -1253,6 +1265,8 @@ Shader "Mabel/Outline/Outline Unlit"
 
 
 				float3 normalizeResult44 = normalize( v.ase_normal );
+				float2 uv_ThicknessMap = v.ase_texcoord.xy * _ThicknessMap_ST.xy + _ThicknessMap_ST.zw;
+				float4 tex2DNode32 = tex2Dlod( _ThicknessMap, float4( uv_ThicknessMap, 0, 0.0) );
 				float3 ase_objectScale = float3( length( GetObjectToWorldMatrix()[ 0 ].xyz ), length( GetObjectToWorldMatrix()[ 1 ].xyz ), length( GetObjectToWorldMatrix()[ 2 ].xyz ) );
 				
 				o.ase_texcoord.xy = v.ase_texcoord.xy;
@@ -1264,7 +1278,7 @@ Shader "Mabel/Outline/Outline Unlit"
 				#else
 					float3 defaultVertexValue = float3(0, 0, 0);
 				#endif
-				float3 vertexValue = ( ( normalizeResult44 * ( _Thickness / ase_objectScale ) ) + v.vertex.xyz );
+				float3 vertexValue = ( ( normalizeResult44 * ( ( _Thickness * tex2DNode32.rgb ) / ase_objectScale ) ) + v.vertex.xyz );
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					v.vertex.xyz = vertexValue;
 				#else
@@ -1361,9 +1375,10 @@ Shader "Mabel/Outline/Outline Unlit"
 			{
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
 				float2 uv_ThicknessMap = IN.ase_texcoord.xy * _ThicknessMap_ST.xy + _ThicknessMap_ST.zw;
+				float4 tex2DNode32 = tex2D( _ThicknessMap, uv_ThicknessMap );
 				
-				surfaceDescription.Alpha = tex2D( _ThicknessMap, uv_ThicknessMap ).rgb.x;
-				surfaceDescription.AlphaClipThreshold = 0.5;
+				surfaceDescription.Alpha = tex2DNode32.rgb.x;
+				surfaceDescription.AlphaClipThreshold = 0.1;
 
 
 				#if _ALPHATEST_ON
@@ -1482,6 +1497,8 @@ Shader "Mabel/Outline/Outline Unlit"
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
 				float3 normalizeResult44 = normalize( v.ase_normal );
+				float2 uv_ThicknessMap = v.ase_texcoord.xy * _ThicknessMap_ST.xy + _ThicknessMap_ST.zw;
+				float4 tex2DNode32 = tex2Dlod( _ThicknessMap, float4( uv_ThicknessMap, 0, 0.0) );
 				float3 ase_objectScale = float3( length( GetObjectToWorldMatrix()[ 0 ].xyz ), length( GetObjectToWorldMatrix()[ 1 ].xyz ), length( GetObjectToWorldMatrix()[ 2 ].xyz ) );
 				
 				o.ase_texcoord1.xy = v.ase_texcoord.xy;
@@ -1493,7 +1510,7 @@ Shader "Mabel/Outline/Outline Unlit"
 				#else
 					float3 defaultVertexValue = float3(0, 0, 0);
 				#endif
-				float3 vertexValue = ( ( normalizeResult44 * ( _Thickness / ase_objectScale ) ) + v.vertex.xyz );
+				float3 vertexValue = ( ( normalizeResult44 * ( ( _Thickness * tex2DNode32.rgb ) / ase_objectScale ) ) + v.vertex.xyz );
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					v.vertex.xyz = vertexValue;
 				#else
@@ -1594,9 +1611,10 @@ Shader "Mabel/Outline/Outline Unlit"
 			{
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
 				float2 uv_ThicknessMap = IN.ase_texcoord1.xy * _ThicknessMap_ST.xy + _ThicknessMap_ST.zw;
+				float4 tex2DNode32 = tex2D( _ThicknessMap, uv_ThicknessMap );
 				
-				surfaceDescription.Alpha = tex2D( _ThicknessMap, uv_ThicknessMap ).rgb.x;
-				surfaceDescription.AlphaClipThreshold = 0.5;
+				surfaceDescription.Alpha = tex2DNode32.rgb.x;
+				surfaceDescription.AlphaClipThreshold = 0.1;
 
 				#if _ALPHATEST_ON
 					clip(surfaceDescription.Alpha - surfaceDescription.AlphaClipThreshold);
@@ -1712,6 +1730,8 @@ Shader "Mabel/Outline/Outline Unlit"
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
 				float3 normalizeResult44 = normalize( v.ase_normal );
+				float2 uv_ThicknessMap = v.ase_texcoord.xy * _ThicknessMap_ST.xy + _ThicknessMap_ST.zw;
+				float4 tex2DNode32 = tex2Dlod( _ThicknessMap, float4( uv_ThicknessMap, 0, 0.0) );
 				float3 ase_objectScale = float3( length( GetObjectToWorldMatrix()[ 0 ].xyz ), length( GetObjectToWorldMatrix()[ 1 ].xyz ), length( GetObjectToWorldMatrix()[ 2 ].xyz ) );
 				
 				o.ase_texcoord1.xy = v.ase_texcoord.xy;
@@ -1723,7 +1743,7 @@ Shader "Mabel/Outline/Outline Unlit"
 				#else
 					float3 defaultVertexValue = float3(0, 0, 0);
 				#endif
-				float3 vertexValue = ( ( normalizeResult44 * ( _Thickness / ase_objectScale ) ) + v.vertex.xyz );
+				float3 vertexValue = ( ( normalizeResult44 * ( ( _Thickness * tex2DNode32.rgb ) / ase_objectScale ) ) + v.vertex.xyz );
 				#ifdef ASE_ABSOLUTE_VERTEX_POS
 					v.vertex.xyz = vertexValue;
 				#else
@@ -1823,9 +1843,10 @@ Shader "Mabel/Outline/Outline Unlit"
 			{
 				SurfaceDescription surfaceDescription = (SurfaceDescription)0;
 				float2 uv_ThicknessMap = IN.ase_texcoord1.xy * _ThicknessMap_ST.xy + _ThicknessMap_ST.zw;
+				float4 tex2DNode32 = tex2D( _ThicknessMap, uv_ThicknessMap );
 				
-				surfaceDescription.Alpha = tex2D( _ThicknessMap, uv_ThicknessMap ).rgb.x;
-				surfaceDescription.AlphaClipThreshold = 0.5;
+				surfaceDescription.Alpha = tex2DNode32.rgb.x;
+				surfaceDescription.AlphaClipThreshold = 0.1;
 				
 				#if _ALPHATEST_ON
 					clip(surfaceDescription.Alpha - surfaceDescription.AlphaClipThreshold);
@@ -1851,17 +1872,18 @@ Shader "Mabel/Outline/Outline Unlit"
 }
 /*ASEBEGIN
 Version=19603
-Node;AmplifyShaderEditor.RangedFloatNode;33;-1072,464;Inherit;False;Property;_Thickness;Thickness;1;0;Create;True;0;0;0;False;0;False;0.1;0.1;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.ObjectScaleNode;46;-1120,592;Inherit;False;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
-Node;AmplifyShaderEditor.NormalVertexDataNode;36;-1152,288;Inherit;False;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.SimpleDivideOpNode;48;-902.913,596.0657;Inherit;False;2;0;FLOAT;0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.NormalizeNode;44;-944,352;Inherit;False;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;38;-784,416;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.PosVertexDataNode;40;-752,640;Inherit;False;0;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.RangedFloatNode;31;-576,192;Inherit;False;Constant;_AlphaClipThreshold;AlphaClipThreshold;2;0;Create;True;0;0;0;False;0;False;0.5;0;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.SamplerNode;32;-576,0;Inherit;True;Property;_ThicknessMap;Thickness Map;2;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
-Node;AmplifyShaderEditor.SimpleAddOpNode;39;-640,416;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.RangedFloatNode;33;-976,496;Inherit;False;Property;_Thickness;Thickness;1;0;Create;True;0;0;0;False;0;False;0.1;0.1;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.SamplerNode;32;-848,0;Inherit;True;Property;_ThicknessMap;Thickness Map;2;0;Create;True;0;0;0;False;0;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
+Node;AmplifyShaderEditor.ObjectScaleNode;46;-960,608;Inherit;False;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
+Node;AmplifyShaderEditor.NormalVertexDataNode;36;-992,304;Inherit;False;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;61;-800,496;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.SimpleDivideOpNode;48;-736,608;Inherit;False;2;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.NormalizeNode;44;-784,368;Inherit;False;False;1;0;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode;38;-624,432;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.PosVertexDataNode;40;-592,656;Inherit;False;0;0;5;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
 Node;AmplifyShaderEditor.ColorNode;10;-560,-400;Inherit;False;Property;_Color;Color;0;0;Create;True;0;0;0;False;0;False;0,0,0,0;0,0,0,0;True;False;0;6;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
+Node;AmplifyShaderEditor.SimpleAddOpNode;39;-384,432;Inherit;False;2;2;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.RangedFloatNode;31;-784,192;Inherit;False;Constant;_AlphaClipThreshold;AlphaClipThreshold;2;0;Create;True;0;0;0;False;0;False;0.1;0;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;49;0,-32;Float;False;False;-1;2;UnityEditor.ShaderGraphUnlitGUI;0;1;New Amplify Shader;2992e84f91cbeb14eab234972e07ea9d;True;ExtraPrePass;0;0;ExtraPrePass;5;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;False;False;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;7;True;12;all;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;0;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;50;0,-32;Float;False;True;-1;2;UnityEditor.ShaderGraphUnlitGUI;0;13;Mabel/Outline/Outline Unlit;2992e84f91cbeb14eab234972e07ea9d;True;Forward;0;1;Forward;8;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;1;False;;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;False;False;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;7;True;12;all;0;False;True;1;1;False;;0;False;;1;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;1;LightMode=UniversalForwardOnly;False;False;0;Hidden/InternalErrorShader;0;0;Standard;23;Surface;0;0;  Blend;0;0;Two Sided;2;638633206164996936;Cast Shadows;0;638633205754282981;  Use Shadow Threshold;0;0;Receive Shadows;0;638633205749189380;GPU Instancing;1;0;LOD CrossFade;0;0;Built-in Fog;1;638633205796178154;Volumetrics;1;638633205792205511;DOTS Instancing;0;0;Meta Pass;0;0;Extra Pre Pass;0;0;Tessellation;0;0;  Phong;0;0;  Strength;0.5,False,;0;  Type;0;0;  Tess;16,False,;0;  Min;10,False,;0;  Max;25,False,;0;  Edge Length;16,False,;0;  Max Displacement;25,False,;0;Vertex Position,InvertActionOnDeselection;0;638633206145671288;0;10;False;True;False;True;False;True;True;True;True;True;False;;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;51;0,-32;Float;False;False;-1;2;UnityEditor.ShaderGraphUnlitGUI;0;1;New Amplify Shader;2992e84f91cbeb14eab234972e07ea9d;True;ShadowCaster;0;2;ShadowCaster;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;False;False;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;7;True;12;all;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;False;False;True;False;False;False;False;0;False;;False;False;False;False;False;False;False;False;False;True;1;False;;True;3;False;;False;True;1;LightMode=ShadowCaster;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
@@ -1872,7 +1894,9 @@ Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;55;0,-32;Float;False;False;
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;56;0,-32;Float;False;False;-1;2;UnityEditor.ShaderGraphUnlitGUI;0;1;New Amplify Shader;2992e84f91cbeb14eab234972e07ea9d;True;ScenePickingPass;0;7;ScenePickingPass;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;False;False;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;7;True;12;all;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Picking;False;True;4;d3d11;glcore;gles;gles3;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;57;0,-32;Float;False;False;-1;2;UnityEditor.ShaderGraphUnlitGUI;0;1;New Amplify Shader;2992e84f91cbeb14eab234972e07ea9d;True;DepthNormals;0;8;DepthNormals;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;False;False;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;7;True;12;all;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;False;;True;3;False;;False;True;1;LightMode=DepthNormalsOnly;False;True;4;d3d11;glcore;gles;gles3;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
 Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;58;0,-32;Float;False;False;-1;2;UnityEditor.ShaderGraphUnlitGUI;0;1;New Amplify Shader;2992e84f91cbeb14eab234972e07ea9d;True;DepthNormalsOnly;0;9;DepthNormalsOnly;0;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;0;False;;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;False;False;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;True;7;True;12;all;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;False;;True;3;False;;False;True;1;LightMode=DepthNormalsOnly;False;True;9;d3d11;metal;vulkan;xboxone;xboxseries;playstation;ps4;ps5;switch;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-WireConnection;48;0;33;0
+WireConnection;61;0;33;0
+WireConnection;61;1;32;5
+WireConnection;48;0;61;0
 WireConnection;48;1;46;0
 WireConnection;44;0;36;0
 WireConnection;38;0;44;0
@@ -1884,4 +1908,4 @@ WireConnection;50;3;32;5
 WireConnection;50;4;31;0
 WireConnection;50;5;39;0
 ASEEND*/
-//CHKSM=4E79483E6B9BB4F66F0224AD05BC346059F155EF
+//CHKSM=5DD2BDED496BFC28CDDD358AFA6632E84067A99A

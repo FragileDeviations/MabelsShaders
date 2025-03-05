@@ -1,3 +1,13 @@
+# v1.10.0
+## Added Shaders
+### Motion Vector Alpha Clip
+* Almost identical to SLZ's Motion Vector Opaque, but with Alpha Clipping
+## Changed Shaders
+### LitMAS+ Fade
+* Fixed property order
+### LitMAS+ Alpha Clip
+* Fixed property order
+
 # v1.9.3 - Outline Thickness Fix
 ## Changed Shaders
 ### Outline Lit/Unlit

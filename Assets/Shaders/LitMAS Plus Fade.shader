@@ -15,6 +15,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 		[Space(30)][Header(Emissions)][Space(10)][Toggle][Toggle(_EMISSION_ON)] _Emission("Emission Enable", Float) = 0
 		[NoScaleOffset]_EmissionMap("Emission Map", 2D) = "white" {}
 		[HDR]_EmissionColor("Emission Color", Color) = (1,1,1,1)
+		[Toggle(_USEFALLOFFINBAKE_ON)] _UseFalloffInBake("Use Falloff In Bake", Float) = 1
 		_EmissionFalloff("Emission Falloff", Float) = 1
 		_BakedMutiplier("Emission Baked Mutiplier", Float) = 1
 		[Space(30)][Header(Details)][Space(10)][Toggle(_DETAILS_ON)] _Details("Details enabled", Float) = 0
@@ -23,7 +24,6 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 		_MonoSHAdjustment("Mono SH Adjustment", Range( 0 , 10)) = 1
 		[HideInInspector]_Cutoff("Cutoff", Range( 0 , 1)) = 1
 		[Toggle(_NONLINEARLIGHTPROBESH_ON)] _NonLinearLightProbeSH("Non-Linear Light Probe SH", Float) = 0
-		[Toggle(_USEFALLOFFINBAKE_ON)] _UseFalloffInBake("Use Falloff In Bake", Float) = 1
 		[Space(30)][Header(Parallax Occlusion Mapping)][Space(10)][Toggle][Toggle(_HEIGHTMAPENABLED_ON)] _HeightmapEnabled("Parallax Enabled", Float) = 0
 		[Toggle(_QUESTPARALLAXENABLED_ON)] _QuestParallaxEnabled("Quest Parallax Enabled", Float) = 0
 		_ParallaxScale("Scale", Range( 0 , 1)) = 0.02
@@ -623,9 +623,9 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				float4 Normal139 = staticSwitch26_g255;
 				
 				#ifdef _MONOSHENABLED_ON
-				float staticSwitch32_g263 = (float)1;
+				float staticSwitch32_g281 = (float)1;
 				#else
-				float staticSwitch32_g263 = (float)0;
+				float staticSwitch32_g281 = (float)0;
 				#endif
 				float4 color104 = IsGammaSpace() ? float4(0,0,0,0) : float4(0,0,0,0);
 				float4 tex2DNode11 = tex2D( _EmissionMap, Texture_Coordinates149.xy );
@@ -637,7 +637,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				float4 staticSwitch103 = color104;
 				#endif
 				float4 Emission358 = staticSwitch103;
-				float3 temp_output_13_0_g263 = Emission358.rgb;
+				float3 temp_output_13_0_g281 = Emission358.rgb;
 				float4 tex2DNode9 = tex2D( _MetallicGlossMap, Texture_Coordinates149.xy );
 				float4 appendResult338 = (float4(tex2DNode9.r , tex2DNode9.g , tex2DNode9.a , 1.0));
 				float4 appendResult341 = (float4(tex2DNode9.g , tex2DNode9.b , ( 1.0 - tex2DNode9.r ) , 1.0));
@@ -655,13 +655,13 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				#endif
 				float4 break332 = staticSwitch330;
 				float Ambient_Occlusion133 = break332.g;
-				float localBakerySpecMonoSHFull4_g264 = ( 0.0 );
-				float3 mapNormal16_g266 = Normal139.rgb;
-				float3 normalizeResult18_g266 = normalize( ( ( ase_worldTangent * mapNormal16_g266.x ) + ( ase_worldBitangent * mapNormal16_g266.y ) + ( ase_worldNormal * mapNormal16_g266.z ) ) );
-				float3 normalWorld4_g264 = normalizeResult18_g266;
-				float2 lightmapUV4_g264 = (i.ase_texcoord10.xy*(unity_LightmapST).xy + (unity_LightmapST).zw);
-				float3 normalizeResult2_g264 = normalize( ase_worldViewDir );
-				float3 viewDir4_g264 = normalizeResult2_g264;
+				float localBakerySpecMonoSHFull4_g282 = ( 0.0 );
+				float3 mapNormal16_g284 = Normal139.rgb;
+				float3 normalizeResult18_g284 = normalize( ( ( ase_worldTangent * mapNormal16_g284.x ) + ( ase_worldBitangent * mapNormal16_g284.y ) + ( ase_worldNormal * mapNormal16_g284.z ) ) );
+				float3 normalWorld4_g282 = normalizeResult18_g284;
+				float2 lightmapUV4_g282 = (i.ase_texcoord10.xy*(unity_LightmapST).xy + (unity_LightmapST).zw);
+				float3 normalizeResult2_g282 = normalize( ase_worldViewDir );
+				float3 viewDir4_g282 = normalizeResult2_g282;
 				float temp_output_23_0_g255 = saturate( ( ( tex2DNode8.b + break332.b ) - 1.0 ) );
 				float detailSmooth217_g255 = tex2DNode1_g255.b;
 				float smoothness217_g255 = temp_output_23_0_g255;
@@ -672,18 +672,18 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				float staticSwitch17_g255 = temp_output_23_0_g255;
 				#endif
 				float Smoothness134 = staticSwitch17_g255;
-				float smoothness4_g264 = Smoothness134;
-				float3 temp_output_9_0_g263 = Albedo138.rgb;
-				float3 albedo4_g264 = temp_output_9_0_g263;
+				float smoothness4_g282 = Smoothness134;
+				float3 temp_output_9_0_g281 = Albedo138.rgb;
+				float3 albedo4_g282 = temp_output_9_0_g281;
 				float Metallic132 = break332.r;
-				float metalness4_g264 = Metallic132;
-				float3 diffuseSH4_g264 = float3( 0,0,0 );
-				float3 specularSH4_g264 = float3( 0,0,0 );
-				BakerySpecMonoSHFull_float( normalWorld4_g264 , lightmapUV4_g264 , viewDir4_g264 , smoothness4_g264 , albedo4_g264 , metalness4_g264 , diffuseSH4_g264 , specularSH4_g264 );
+				float metalness4_g282 = Metallic132;
+				float3 diffuseSH4_g282 = float3( 0,0,0 );
+				float3 specularSH4_g282 = float3( 0,0,0 );
+				BakerySpecMonoSHFull_float( normalWorld4_g282 , lightmapUV4_g282 , viewDir4_g282 , smoothness4_g282 , albedo4_g282 , metalness4_g282 , diffuseSH4_g282 , specularSH4_g282 );
 				#ifdef _MONOSHENABLED_ON
-				float3 staticSwitch30_g263 = ( ( temp_output_13_0_g263 + ( Ambient_Occlusion133 * ( diffuseSH4_g264 * temp_output_9_0_g263 ) ) ) + ( specularSH4_g264 * _MonoSHAdjustment ) );
+				float3 staticSwitch30_g281 = ( ( temp_output_13_0_g281 + ( Ambient_Occlusion133 * ( diffuseSH4_g282 * temp_output_9_0_g281 ) ) ) + ( specularSH4_g282 * _MonoSHAdjustment ) );
 				#else
-				float3 staticSwitch30_g263 = temp_output_13_0_g263;
+				float3 staticSwitch30_g281 = temp_output_13_0_g281;
 				#endif
 				float localNonLinearLightProbe4_g279 = ( 0.0 );
 				float3 mapNormal16_g280 = Normal139.rgb;
@@ -734,7 +734,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			
 				half3 albedo3 = Albedo138.rgb;
 				half3 normalTS = Normal139.rgb;
-				half3 emission = ( staticSwitch32_g263 == 1.0 ? float4( staticSwitch30_g263 , 0.0 ) : staticSwitch367 ).rgb;
+				half3 emission = ( staticSwitch32_g281 == 1.0 ? float4( staticSwitch30_g281 , 0.0 ) : staticSwitch367 ).rgb;
 				half3 emissionbaked = staticSwitch351.rgb;
 			
 			// Begin Injection NORMAL_MAP from Injection_NormalMaps.hlsl ----------------------------------------------------------
@@ -2356,9 +2356,9 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				float4 Albedo138 = staticSwitch16_g255;
 				
 				#ifdef _MONOSHENABLED_ON
-				float staticSwitch32_g263 = (float)1;
+				float staticSwitch32_g281 = (float)1;
 				#else
-				float staticSwitch32_g263 = (float)0;
+				float staticSwitch32_g281 = (float)0;
 				#endif
 				float4 color104 = IsGammaSpace() ? float4(0,0,0,0) : float4(0,0,0,0);
 				float4 tex2DNode11 = tex2D( _EmissionMap, Texture_Coordinates149.xy );
@@ -2370,7 +2370,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				float4 staticSwitch103 = color104;
 				#endif
 				float4 Emission358 = staticSwitch103;
-				float3 temp_output_13_0_g263 = Emission358.rgb;
+				float3 temp_output_13_0_g281 = Emission358.rgb;
 				float4 tex2DNode9 = tex2D( _MetallicGlossMap, Texture_Coordinates149.xy );
 				float4 appendResult338 = (float4(tex2DNode9.r , tex2DNode9.g , tex2DNode9.a , 1.0));
 				float4 appendResult341 = (float4(tex2DNode9.g , tex2DNode9.b , ( 1.0 - tex2DNode9.r ) , 1.0));
@@ -2388,7 +2388,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				#endif
 				float4 break332 = staticSwitch330;
 				float Ambient_Occlusion133 = break332.g;
-				float localBakerySpecMonoSHFull4_g264 = ( 0.0 );
+				float localBakerySpecMonoSHFull4_g282 = ( 0.0 );
 				float4 tex2DNode8 = tex2D( _BumpMap, Texture_Coordinates149.xy );
 				float4 In02_g219 = tex2DNode8;
 				float3 localMyCustomExpression2_g219 = MyCustomExpression( In02_g219 );
@@ -2410,12 +2410,12 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				float4 staticSwitch26_g255 = temp_output_22_0_g255;
 				#endif
 				float4 Normal139 = staticSwitch26_g255;
-				float3 mapNormal16_g266 = Normal139.rgb;
-				float3 normalizeResult18_g266 = normalize( ( ( ase_worldTangent * mapNormal16_g266.x ) + ( ase_worldBitangent * mapNormal16_g266.y ) + ( ase_worldNormal * mapNormal16_g266.z ) ) );
-				float3 normalWorld4_g264 = normalizeResult18_g266;
-				float2 lightmapUV4_g264 = (i.ase_texcoord7.xy*(unity_LightmapST).xy + (unity_LightmapST).zw);
-				float3 normalizeResult2_g264 = normalize( ase_worldViewDir );
-				float3 viewDir4_g264 = normalizeResult2_g264;
+				float3 mapNormal16_g284 = Normal139.rgb;
+				float3 normalizeResult18_g284 = normalize( ( ( ase_worldTangent * mapNormal16_g284.x ) + ( ase_worldBitangent * mapNormal16_g284.y ) + ( ase_worldNormal * mapNormal16_g284.z ) ) );
+				float3 normalWorld4_g282 = normalizeResult18_g284;
+				float2 lightmapUV4_g282 = (i.ase_texcoord7.xy*(unity_LightmapST).xy + (unity_LightmapST).zw);
+				float3 normalizeResult2_g282 = normalize( ase_worldViewDir );
+				float3 viewDir4_g282 = normalizeResult2_g282;
 				float temp_output_23_0_g255 = saturate( ( ( tex2DNode8.b + break332.b ) - 1.0 ) );
 				float detailSmooth217_g255 = tex2DNode1_g255.b;
 				float smoothness217_g255 = temp_output_23_0_g255;
@@ -2426,18 +2426,18 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				float staticSwitch17_g255 = temp_output_23_0_g255;
 				#endif
 				float Smoothness134 = staticSwitch17_g255;
-				float smoothness4_g264 = Smoothness134;
-				float3 temp_output_9_0_g263 = Albedo138.rgb;
-				float3 albedo4_g264 = temp_output_9_0_g263;
+				float smoothness4_g282 = Smoothness134;
+				float3 temp_output_9_0_g281 = Albedo138.rgb;
+				float3 albedo4_g282 = temp_output_9_0_g281;
 				float Metallic132 = break332.r;
-				float metalness4_g264 = Metallic132;
-				float3 diffuseSH4_g264 = float3( 0,0,0 );
-				float3 specularSH4_g264 = float3( 0,0,0 );
-				BakerySpecMonoSHFull_float( normalWorld4_g264 , lightmapUV4_g264 , viewDir4_g264 , smoothness4_g264 , albedo4_g264 , metalness4_g264 , diffuseSH4_g264 , specularSH4_g264 );
+				float metalness4_g282 = Metallic132;
+				float3 diffuseSH4_g282 = float3( 0,0,0 );
+				float3 specularSH4_g282 = float3( 0,0,0 );
+				BakerySpecMonoSHFull_float( normalWorld4_g282 , lightmapUV4_g282 , viewDir4_g282 , smoothness4_g282 , albedo4_g282 , metalness4_g282 , diffuseSH4_g282 , specularSH4_g282 );
 				#ifdef _MONOSHENABLED_ON
-				float3 staticSwitch30_g263 = ( ( temp_output_13_0_g263 + ( Ambient_Occlusion133 * ( diffuseSH4_g264 * temp_output_9_0_g263 ) ) ) + ( specularSH4_g264 * _MonoSHAdjustment ) );
+				float3 staticSwitch30_g281 = ( ( temp_output_13_0_g281 + ( Ambient_Occlusion133 * ( diffuseSH4_g282 * temp_output_9_0_g281 ) ) ) + ( specularSH4_g282 * _MonoSHAdjustment ) );
 				#else
-				float3 staticSwitch30_g263 = temp_output_13_0_g263;
+				float3 staticSwitch30_g281 = temp_output_13_0_g281;
 				#endif
 				float localNonLinearLightProbe4_g279 = ( 0.0 );
 				float3 mapNormal16_g280 = Normal139.rgb;
@@ -2484,7 +2484,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				//metaInput.Emission = emission.rgb;
 			
 				metaInput.Albedo = Albedo138.rgb;
-				half3 emission = ( staticSwitch32_g263 == 1.0 ? float4( staticSwitch30_g263 , 0.0 ) : staticSwitch367 ).rgb;
+				half3 emission = ( staticSwitch32_g281 == 1.0 ? float4( staticSwitch30_g281 , 0.0 ) : staticSwitch367 ).rgb;
 				half3 bakedemission = staticSwitch351.rgb;
 				metaInput.Emission = bakedemission.rgb;
 				#ifdef EDITOR_VISUALIZATION
@@ -2682,7 +2682,7 @@ Node;AmplifyShaderEditor.RangedFloatNode;219;-1936,512;Inherit;False;Constant;_Z
 Node;AmplifyShaderEditor.BreakToComponentsNode;332;-1344,832;Inherit;False;COLOR;1;0;COLOR;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
 Node;AmplifyShaderEditor.SamplerNode;8;-1952,640;Inherit;True;Property;_BumpMap;Normal Map;6;2;[NoScaleOffset];[Normal];Create;False;0;0;0;True;0;False;5;None;None;True;0;False;bump;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
 Node;AmplifyShaderEditor.AbsOpNode;46;80,1088;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;13;32,1184;Inherit;False;Property;_EmissionFalloff;Emission Falloff;12;0;Create;False;0;0;0;True;0;False;1;1;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;13;32,1184;Inherit;False;Property;_EmissionFalloff;Emission Falloff;13;0;Create;False;0;0;0;True;0;False;1;1;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;206;-1920,-192;Inherit;False;149;Texture Coordinates;1;0;OBJECT;;False;1;FLOAT4;0
 Node;AmplifyShaderEditor.CommentaryNode;208;-736,64;Inherit;False;1206;374;;7;204;139;134;138;202;203;207;Detail Map;1,1,1,1;0;0
 Node;AmplifyShaderEditor.StepOpNode;218;-1792,512;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
@@ -2705,7 +2705,7 @@ Node;AmplifyShaderEditor.StaticSwitch;99;-1344,496;Inherit;False;Property;_Norma
 Node;AmplifyShaderEditor.SaturateNode;40;-1152,832;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.ColorNode;104;48,608;Inherit;False;Constant;_EmptyEmissive;EmptyEmissive;19;1;[HDR];Create;True;0;0;0;False;0;False;0,0,0,0;0,0,0,0;True;True;0;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;29;512,720;Inherit;False;3;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.FunctionNode;202;-80,160;Inherit;False;Detail Map;14;;255;7eb669e8a4269ac43a3c284ddafaf020;0;4;21;COLOR;1,1,1,1;False;22;COLOR;0,0,1,0;False;23;FLOAT;0.5;False;218;FLOAT2;0,0;False;3;COLOR;0;COLOR;25;FLOAT;24
+Node;AmplifyShaderEditor.FunctionNode;202;-80,160;Inherit;False;Detail Map;15;;255;7eb669e8a4269ac43a3c284ddafaf020;0;4;21;COLOR;1,1,1,1;False;22;COLOR;0,0,1,0;False;23;FLOAT;0.5;False;218;FLOAT2;0,0;False;3;COLOR;0;COLOR;25;FLOAT;24
 Node;AmplifyShaderEditor.StaticSwitch;103;672,624;Inherit;False;Property;_Emission;Emission Enable;9;0;Create;False;0;0;0;False;4;Space(30);Header(Emissions);Space(10);Toggle;False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;138;240,144;Inherit;False;Albedo;-1;True;1;0;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;139;272,224;Inherit;False;Normal;-1;True;1;0;COLOR;0,0,0,0;False;1;COLOR;0
@@ -2722,9 +2722,9 @@ Node;AmplifyShaderEditor.GetLocalVarNode;363;1120,1024;Inherit;False;133;Ambient
 Node;AmplifyShaderEditor.GetLocalVarNode;364;1184,1088;Inherit;False;358;Emission;1;0;OBJECT;;False;1;COLOR;0
 Node;AmplifyShaderEditor.FunctionNode;159;-1248,-16;Inherit;False;Alpha Split;-1;;259;07dab7960105b86429ac8eebd729ed6d;0;1;2;COLOR;0,0,0,0;False;2;FLOAT3;0;FLOAT;6
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;353;272,896;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.RangedFloatNode;14;320,1280;Inherit;False;Property;_BakedMutiplier;Emission Baked Mutiplier;13;0;Create;False;0;0;0;True;0;False;1;1;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;14;320,1280;Inherit;False;Property;_BakedMutiplier;Emission Baked Mutiplier;14;0;Create;False;0;0;0;True;0;False;1;1;0;0;0;1;FLOAT;0
 Node;AmplifyShaderEditor.RangedFloatNode;67;2256,752;Inherit;False;Property;_Cull;Cull Side;37;2;[HideInInspector];[Enum];Create;False;0;0;1;UnityEngine.Rendering.CullMode;False;0;False;0;2;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;357;2176,864;Inherit;False;Property;_Cutoff;Cutoff;26;1;[HideInInspector];Create;True;0;0;0;False;0;False;1;0;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode;357;2176,864;Inherit;False;Property;_Cutoff;Cutoff;27;1;[HideInInspector];Create;True;0;0;0;False;0;False;1;0;0;1;0;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;135;1104,400;Inherit;False;134;Smoothness;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;136;1104,464;Inherit;False;132;Metallic;1;0;OBJECT;;False;1;FLOAT;0
 Node;AmplifyShaderEditor.GetLocalVarNode;137;1104,528;Inherit;False;133;Ambient Occlusion;1;0;OBJECT;;False;1;FLOAT;0
@@ -2737,9 +2737,9 @@ Node;AmplifyShaderEditor.SimpleMultiplyOpNode;35;640,1280;Inherit;False;2;2;0;CO
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;69;2448,752;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.RegisterLocalVarNode;147;-1216,96;Inherit;False;Alpha;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
 Node;AmplifyShaderEditor.SimpleMultiplyOpNode;356;2448,848;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.FunctionNode;306;1344,304;Inherit;False;BakeryMonoSH;20;;263;29c9468cd28079b448a58bef1fb32cb5;0;6;8;FLOAT3;0,0,0;False;9;FLOAT3;0,0,0;False;10;FLOAT;0;False;11;FLOAT;0;False;12;FLOAT;0;False;13;FLOAT3;0,0,0;False;2;FLOAT3;0;FLOAT;31
-Node;AmplifyShaderEditor.StaticSwitch;367;1600,1136;Inherit;False;Property;_NonLinearLightProbeSH;Non-Linear Light Probe SH;27;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.StaticSwitch;351;656,1008;Inherit;False;Property;_UseFalloffInBake;Use Falloff In Bake;28;0;Create;True;0;0;0;False;0;False;0;1;1;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.FunctionNode;306;1344,304;Inherit;False;BakeryMonoSH;21;;281;29c9468cd28079b448a58bef1fb32cb5;0;6;8;FLOAT3;0,0,0;False;9;FLOAT3;0,0,0;False;10;FLOAT;0;False;11;FLOAT;0;False;12;FLOAT;0;False;13;FLOAT3;0,0,0;False;2;FLOAT3;0;FLOAT;31
+Node;AmplifyShaderEditor.StaticSwitch;367;1600,1136;Inherit;False;Property;_NonLinearLightProbeSH;Non-Linear Light Probe SH;28;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.StaticSwitch;351;656,1008;Inherit;False;Property;_UseFalloffInBake;Use Falloff In Bake;12;0;Create;True;0;0;0;False;0;False;0;1;1;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
 Node;AmplifyShaderEditor.GetLocalVarNode;142;1968,144;Inherit;False;138;Albedo;1;0;OBJECT;;False;1;COLOR;0
 Node;AmplifyShaderEditor.GetLocalVarNode;143;1968,208;Inherit;False;139;Normal;1;0;OBJECT;;False;1;COLOR;0
 Node;AmplifyShaderEditor.GetLocalVarNode;144;1968,336;Inherit;False;134;Smoothness;1;0;OBJECT;;False;1;FLOAT;0
@@ -2882,4 +2882,4 @@ WireConnection;312;7;146;0
 WireConnection;312;8;148;0
 WireConnection;312;9;355;0
 ASEEND*/
-//CHKSM=E7852069C9A134B4D5CB9BAB065D476244375FBB
+//CHKSM=DBC97274608D095E42B4FA66DE25E16A044E2B09

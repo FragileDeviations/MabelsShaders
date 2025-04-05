@@ -1,3 +1,10 @@
+# v1.10.1
+## Changed Shaders
+### SLZ Toon
+* Set default hitramp color
+* Set default hitramp
+* Set default BRDF map
+
 # v1.10.0
 ## Added Shaders
 ### Motion Vector Alpha Clip

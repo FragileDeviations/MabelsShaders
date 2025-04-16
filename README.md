@@ -54,3 +54,9 @@
 ### Difference from SLZ Anime
 * Emissive map support
 * No specular highlights, a real toon shader wouldn't be reflective
+
+## Stencils
+### Stencil Writer
+* Stencil Targets are visible through objects with this shader
+### Stencil Target
+* Only visible within Stencil Writers

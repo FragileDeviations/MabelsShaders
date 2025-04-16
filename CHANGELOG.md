@@ -1,3 +1,10 @@
+# v1.11.0
+## Added Shaders
+### Stencil Writer
+* Only objects with the Stencil Target shader will be visible through this shader
+### Stencil Target
+* Only visible through Stencil Writers
+
 # v1.10.1
 ## Changed Shaders
 ### SLZ Toon

@@ -3,8 +3,10 @@ Shader "Mabel/Stencils/Stencil Writer"
     Properties
     {
         _Color ("Color", Color) = (1,1,1,1)
-        [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
+		_Background ("Texture", 2D) = "white" {}
+        [PerRendererData] [HideInInspector] _MainTex ("Sprite Texture", 2D) = "white" {}
     }
+	
     SubShader
     {
         Tags { "Queue"="Overlay" "RenderType"="Transparent" }
@@ -30,6 +32,7 @@ Shader "Mabel/Stencils/Stencil Writer"
 
             sampler2D _MainTex;
             fixed4 _Color;
+			sampler2D _Background;
             float4 _MainTex_ST;
 
             struct appdata
@@ -37,7 +40,7 @@ Shader "Mabel/Stencils/Stencil Writer"
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
 
-                UNITY_VERTEX_INPUT_INSTANCE_ID // Support for instancing
+                UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
             struct v2f
@@ -45,19 +48,17 @@ Shader "Mabel/Stencils/Stencil Writer"
                 float2 uv : TEXCOORD0;
                 float4 pos : SV_POSITION;
 
-                UNITY_VERTEX_OUTPUT_STEREO // Ensure stereo support
+                UNITY_VERTEX_OUTPUT_STEREO
             };
 
             v2f vert(appdata v)
             {
                 v2f o;
 
-                // Setup instance data if required
                 UNITY_SETUP_INSTANCE_ID(v);
                 UNITY_INITIALIZE_OUTPUT(v2f, o);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-                // Apply transformation for stereo rendering
                 o.pos = UnityObjectToClipPos(v.vertex);
 
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
@@ -67,7 +68,9 @@ Shader "Mabel/Stencils/Stencil Writer"
 
             fixed4 frag(v2f i) : SV_Target
             {
-                return tex2D(_MainTex, i.uv) * _Color;
+				fixed4 bg = tex2D(_Background, i.uv);
+				fixed4 background = bg * _Color;
+				return tex2D(_MainTex, i.uv) * background;
             }
 
             ENDHLSL

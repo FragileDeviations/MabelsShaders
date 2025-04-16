@@ -1,3 +1,8 @@
+# v1.11.1
+## Changed Shaders
+### Stencil Writer
+* Added texture input
+
 # v1.11.0
 ## Added Shaders
 ### Stencil Writer

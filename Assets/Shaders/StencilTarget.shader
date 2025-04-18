@@ -2,6 +2,7 @@ Shader "Mabel/Stencils/Stencil Target"
 {
     Properties
     {
+		_StencilLayer ("Stencil Layer", Int) = 1
         _BaseColor ("Base Color", Color) = (1,1,1,1)
         _MainTex ("Texture", 2D) = "white" {}
     }
@@ -12,7 +13,7 @@ Shader "Mabel/Stencils/Stencil Target"
 
         Stencil
         {
-            Ref 1
+            Ref [_StencilLayer]
             Comp Equal
             Pass Keep
             Fail Keep

@@ -1,3 +1,8 @@
+# v1.11.2
+## Changed Shaders
+### Stencils
+* Added ability to set stencil layer
+
 # v1.11.1
 ## Changed Shaders
 ### Stencil Writer

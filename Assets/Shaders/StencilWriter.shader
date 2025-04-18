@@ -2,6 +2,7 @@ Shader "Mabel/Stencils/Stencil Writer"
 {
     Properties
     {
+		_StencilLayer ("Stencil Layer", Int) = 1
         _Color ("Color", Color) = (1,1,1,1)
 		_Background ("Texture", 2D) = "white" {}
         [PerRendererData] [HideInInspector] _MainTex ("Sprite Texture", 2D) = "white" {}
@@ -13,7 +14,7 @@ Shader "Mabel/Stencils/Stencil Writer"
 
         Stencil
         {
-            Ref 1
+            Ref [_StencilLayer]
             Comp always
             Pass replace
         }

@@ -1,3 +1,14 @@
+# v1.12.0
+## Added Shaders
+### Stencil Target Lit
+* LitPBR version of Stencil Target
+## Changed Shaders
+### Stencil Writer
+* Ported to ASE, cleaner inspector window
+### Stencil Target Unlit
+* Previously Stencil Target
+* Ported to ASE, cleaner inspector window
+
 # v1.11.2
 ## Changed Shaders
 ### Stencils

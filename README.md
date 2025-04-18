@@ -56,7 +56,8 @@
 * No specular highlights, a real toon shader wouldn't be reflective
 
 ## Stencils
-### Stencil Writer
-* Stencil Targets are visible through objects with this shader
-### Stencil Target
-* Only visible within Stencil Writers
+* Stencil Writer
+* Stencil Target Lit
+* Stencil Target Unlit
+### Function
+* Stencil Targets are only visible through Stencil Writers that match the same Stencil Layer. They cannot be seen otherwise.

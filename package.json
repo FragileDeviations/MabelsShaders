@@ -17,7 +17,5 @@
   "unityRelease": "16f1",
   "hideInEditor": false,
   "dependencies": {
-    "com.unity.render-pipelines.core": "",
-    "com.unity.render-pipelines.universal": ""
   }
 }

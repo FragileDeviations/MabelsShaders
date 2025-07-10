@@ -1,3 +1,8 @@
+# v1.13.1
+## Changed Shaders
+### Local Filters
+* Changed the max range of 2 properties on HueShift to be 2 instead of 10
+
 # v1.13.0
 ## Added Shaders
 ### Local Filters

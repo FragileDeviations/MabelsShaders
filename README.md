@@ -61,3 +61,14 @@
 * Stencil Target Unlit
 ### Function
 * Stencil Targets are only visible through Stencil Writers that match the same Stencil Layer. They cannot be seen otherwise.
+
+## Local Filters
+### Function
+* Various color filters that apply to whatever objects are behind the mesh that has this shader
+### Filters
+* Grayscale
+* Hue Shift
+* Invert
+* Posterization
+* Selective Color
+* Pixelation

@@ -1,3 +1,15 @@
+# v1.13.0
+## Added Shaders
+### Local Filters
+* Many color filters that can be applied to things behind whatever mesh has this shader
+#### Filters:
+* Grayscale
+* Hue Shift
+* Invert
+* Posterization
+* Selective Color
+* Pixelation
+
 # v1.12.0
 ## Added Shaders
 ### Stencil Target Lit

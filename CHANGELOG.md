@@ -1,3 +1,12 @@
+# v1.13.2
+## Changed Shaders
+### Local Filters
+* Heavily optimized usage of Opaque Texture
+* Swapped to keywords to optimize further
+* Made custom inspector look nicer
+* Added VoronoiDistort
+* Added Dithering
+
 # v1.13.1
 ## Changed Shaders
 ### Local Filters

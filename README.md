@@ -72,3 +72,5 @@
 * Posterization
 * Selective Color
 * Pixelation
+* Dithering
+* Voronoi Distort

@@ -1,6 +1,6 @@
 {
   "name": "com.fragiledeviations.mabelsshaders",
-  "version": "1.13.2",
+  "version": "1.13.3",
   "displayName": "Mabel's Shaders",
   "description": "Various shaders for SLZ URP",
   "unity": "2021.3",
@@ -16,6 +16,13 @@
   },
   "unityRelease": "16f1",
   "hideInEditor": false,
-  "dependencies": {
-  }
+  "changelogUrl": "https://github.com/FragileDeviations/MabelsShaders/blob/main/CHANGELOG.md",
+  "licensesUrl": "https://github.com/FragileDeviations/MabelsShaders/blob/main/LICENSE.md",
+  "samples": [
+        {
+            "displayName": "Example Scene",
+            "description": "An example scene showing the purposes of some shaders.",
+            "path": "Samples~/ExampleScene"
+        }
+    ]
 }

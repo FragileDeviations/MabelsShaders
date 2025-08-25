@@ -1,3 +1,12 @@
+# v1.13.3
+## Changed Shaders
+### SLZ Toon
+* Added SLZ Toon Transparent
+* Added SLZ Toon Alpha Clip
+## Other Changes
+### Example Scene
+* Added an example scene showing various shaders purposes.
+
 # v1.13.2
 ## Changed Shaders
 ### Local Filters

@@ -1,38 +1,37 @@
-// Made with Amplify Shader Editor v1.9.6.3
+// Made with Amplify Shader Editor v1.9.9.8
 // Available at the Unity Asset Store - http://u3d.as/y3X 
 // Force reimport: 2
 Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 {
 	Properties
 	{
-		[HideInInspector] _AlphaCutoff("Alpha Cutoff ", Range(0, 1)) = 0.5
-		[Header(Base Color)][Space(10)][MainTexture]_BaseMap("Base Map", 2D) = "white" {}
-		[MainColor]_BaseColor("BaseColor", Color) = (1,1,1,1)
-		[Toggle][Space(30)][Header(PBR)][Space(10)][Toggle(_NORMALS_ON)] _Normals("Normal Map Enabled", Float) = 0
-		[NoScaleOffset][Normal]_BumpMap("Normal Map", 2D) = "bump" {}
-		[KeywordEnum(MAS,MASK,RMA,ORM)] _MapType("Map Type", Float) = 0
-		[NoScaleOffset]_MetallicGlossMap("MAS", 2D) = "white" {}
-		[Space(30)][Header(Emissions)][Space(10)][Toggle][Toggle(_EMISSION_ON)] _Emission("Emission Enable", Float) = 0
-		[NoScaleOffset]_EmissionMap("Emission Map", 2D) = "white" {}
-		[HDR]_EmissionColor("Emission Color", Color) = (1,1,1,1)
-		[Toggle(_USEFALLOFFINBAKE_ON)] _UseFalloffInBake("Use Falloff In Bake", Float) = 1
-		_EmissionFalloff("Emission Falloff", Float) = 1
-		_BakedMutiplier("Emission Baked Mutiplier", Float) = 1
-		[Space(30)][Header(Details)][Space(10)][Toggle(_DETAILS_ON)] _Details("Details enabled", Float) = 0
-		_DetailMap("DetailMap", 2D) = "white" {}
-		[Space(30)][Header(Mono SH)][Space(10)][Toggle(_MONOSHENABLED_ON)] _MonoSHEnabled("MonoSH Enabled", Float) = 0
-		_MonoSHAdjustment("Mono SH Adjustment", Range( 0 , 10)) = 1
-		[HideInInspector]_Cutoff("Cutoff", Range( 0 , 1)) = 1
-		[Toggle(_NONLINEARLIGHTPROBESH_ON)] _NonLinearLightProbeSH("Non-Linear Light Probe SH", Float) = 0
-		[Space(30)][Header(Parallax Occlusion Mapping)][Space(10)][Toggle][Toggle(_HEIGHTMAPENABLED_ON)] _HeightmapEnabled("Parallax Enabled", Float) = 0
-		[Toggle(_QUESTPARALLAXENABLED_ON)] _QuestParallaxEnabled("Quest Parallax Enabled", Float) = 0
-		_ParallaxScale("Scale", Range( 0 , 1)) = 0.02
-		[NoScaleOffset]_HeightMap("Height Map", 2D) = "white" {}
-		_MinSamples("Min Samples", Range( 1 , 128)) = 8
-		_MaxSamples("Max Samples", Range( 1 , 128)) = 16
-		_SidewallSteps("Sidewall Steps", Range( 0 , 10)) = 2
-		_RefPlane("Ref Plane", Range( 0 , 1)) = 0
-		[HideInInspector][Enum(UnityEngine.Rendering.CullMode)]_Cull("Cull Side", Float) = 0
+		[Header(Base Color)][Space(10)][MainTexture] _BaseMap( "Base Map", 2D ) = "white" {}
+		[MainColor] _BaseColor( "BaseColor", Color ) = ( 1, 1, 1, 1 )
+		[Toggle][Space(30)][Header(PBR)][Space(10)][Toggle( _NORMALS_ON )] _Normals( "Normal Map Enabled", Float ) = 0
+		[NoScaleOffset][Normal] _BumpMap( "Normal Map", 2D ) = "bump" {}
+		[KeywordEnum( MAS,MASK,RMA,ORM,MRA,MOHS )] _MapType( "Map Type", Float ) = 0
+		[NoScaleOffset] _MetallicGlossMap( "MAS", 2D ) = "white" {}
+		[Space(30)][Header(Emissions)][Space(10)][Toggle][Toggle( _EMISSION_ON )] _Emission( "Emission Enable", Float ) = 0
+		[NoScaleOffset] _EmissionMap( "Emission Map", 2D ) = "white" {}
+		[HDR] _EmissionColor( "Emission Color", Color ) = ( 1, 1, 1, 1 )
+		[Toggle( _USEFALLOFFINBAKE_ON )] _UseFalloffInBake( "Use Falloff In Bake", Float ) = 1
+		_EmissionFalloff( "Emission Falloff", Float ) = 1
+		_BakedMutiplier( "Emission Baked Mutiplier", Float ) = 1
+		[Space(30)][Header(Details)][Space(10)][Toggle( _DETAILS_ON )] _Details( "Details enabled", Float ) = 0
+		_DetailMap( "DetailMap", 2D ) = "white" {}
+		[Space(30)][Header(Mono SH)][Space(10)][Toggle( _MONOSHENABLED_ON )] _MonoSHEnabled( "MonoSH Enabled", Float ) = 0
+		_MonoSHAdjustment( "Mono SH Adjustment", Range( 0, 10 ) ) = 1
+		[HideInInspector] _Cutoff( "Cutoff", Range( 0, 1 ) ) = 1
+		[Toggle( _NONLINEARLIGHTPROBESH_ON )] _NonLinearLightProbeSH( "Non-Linear Light Probe SH", Float ) = 0
+		[Space(30)][Header(Parallax Occlusion Mapping)][Space(10)][Toggle][Toggle( _HEIGHTMAPENABLED_ON )] _HeightmapEnabled( "Parallax Enabled", Float ) = 0
+		[Toggle( _QUESTPARALLAXENABLED_ON )] _QuestParallaxEnabled( "Quest Parallax Enabled", Float ) = 0
+		_ParallaxScale( "Scale", Range( 0, 1 ) ) = 0.02
+		[NoScaleOffset] _HeightMap( "Height Map", 2D ) = "white" {}
+		_MinSamples( "Min Samples", Range( 1, 128 ) ) = 8
+		_MaxSamples( "Max Samples", Range( 1, 128 ) ) = 16
+		_SidewallSteps( "Sidewall Steps", Range( 0, 10 ) ) = 2
+		_RefPlane( "Ref Plane", Range( 0, 1 ) ) = 0
+		[HideInInspector][Enum(UnityEngine.Rendering.CullMode)] _Cull( "Cull Side", Float ) = 0
 
 		[Space(30)][Header(Screen Space Reflections)][Space(10)][Toggle(_NO_SSR)] _SSROff("Disable SSR", Float) = 0
 		[Header(This should be 0 for skinned meshes)]
@@ -79,6 +78,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			#define _ISTRANSPARENT
 			#define _SurfaceFade
 			#define _ALPHATEST_ON 1
+			#define ASE_VERSION 19908
 			#define ASE_SRP_VERSION -1
 
 			#pragma vertex vert
@@ -221,15 +221,21 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 					
 					
 			#include "Packages/com.fragiledeviations.mabelsshaders/Assets/Shaders/Include/DecodeMonoSH.hlsl"
+			#define ASE_NEEDS_TEXTURE_COORDINATES0
+			#define ASE_NEEDS_FRAG_TEXTURE_COORDINATES0
+			#define ASE_NEEDS_WORLD_POSITION
+			#define ASE_NEEDS_FRAG_WORLD_POSITION
 			#define ASE_NEEDS_VERT_TANGENT
 			#define ASE_NEEDS_VERT_NORMAL
+			#define ASE_NEEDS_TEXTURE_COORDINATES1
+			#define ASE_NEEDS_FRAG_TEXTURE_COORDINATES1
 			#pragma shader_feature_local_fragment _DETAILS_ON
 			#pragma shader_feature_local _HEIGHTMAPENABLED_ON
 			#pragma shader_feature_local _QUESTPARALLAXENABLED_ON
 			#pragma shader_feature_local _NORMALS_ON
 			#pragma shader_feature_local _MONOSHENABLED_ON
 			#pragma shader_feature_local _EMISSION_ON
-			#pragma shader_feature_local _MAPTYPE_MAS _MAPTYPE_MASK _MAPTYPE_RMA _MAPTYPE_ORM
+			#pragma shader_feature_local _MAPTYPE_MAS _MAPTYPE_MASK _MAPTYPE_RMA _MAPTYPE_ORM _MAPTYPE_MRA _MAPTYPE_MOHS
 			#pragma shader_feature_local _NONLINEARLIGHTPROBESH_ON
 			#pragma shader_feature_local _USEFALLOFFINBAKE_ON
 
@@ -330,8 +336,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			inline float2 POM( sampler2D heightMap, float2 uvs, float2 dx, float2 dy, float3 normalWorld, float3 viewWorld, float3 viewDirTan, int minSamples, int maxSamples, int sidewallSteps, float parallax, float refPlane, float2 tilling, float2 curv, int index )
 			{
 				float3 result = 0;
-				int stepIndex = 0;
-				int numSteps = ( int )lerp( (float)maxSamples, (float)minSamples, saturate( dot( normalWorld, viewWorld ) ) );
+				float stepIndex = 0;
+				float numSteps = floor( lerp( (float)maxSamples, (float)minSamples, saturate( dot( normalWorld, viewWorld ) ) ) );
 				float layerHeight = 1.0 / numSteps;
 				float2 plane = parallax * ( viewDirTan.xy / viewDirTan.z );
 				uvs.xy += refPlane * plane;
@@ -361,8 +367,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				 	 	currRayZ -= layerHeight;
 				 	}
 				}
-				int sectionSteps = sidewallSteps;
-				int sectionIndex = 0;
+				float sectionSteps = sidewallSteps;
+				float sectionIndex = 0;
 				float newZ = 0;
 				float newHeight = 0;
 				while ( sectionIndex < sectionSteps )
@@ -397,7 +403,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				return UnpackNormal(In0);;
 			}
 			
-			inline float MyCustomExpression217_g255( float detailSmooth, float smoothness )
+			inline float MyCustomExpression217_g287( float detailSmooth, float smoothness )
 			{
 				return smoothness * (2.0 * detailSmooth);
 			}
@@ -423,13 +429,13 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 			
-				float3 ase_worldTangent = TransformObjectToWorldDir(v.tangent.xyz);
-				o.ase_texcoord7.xyz = ase_worldTangent;
-				float3 ase_worldNormal = TransformObjectToWorldNormal(v.normal);
-				o.ase_texcoord8.xyz = ase_worldNormal;
-				float ase_vertexTangentSign = v.tangent.w * ( unity_WorldTransformParams.w >= 0.0 ? 1.0 : -1.0 );
-				float3 ase_worldBitangent = cross( ase_worldNormal, ase_worldTangent ) * ase_vertexTangentSign;
-				o.ase_texcoord9.xyz = ase_worldBitangent;
+				float3 ase_tangentWS = TransformObjectToWorldDir( v.tangent.xyz );
+				o.ase_texcoord7.xyz = ase_tangentWS;
+				float3 ase_normalWS = TransformObjectToWorldNormal( v.normal );
+				o.ase_texcoord8.xyz = ase_normalWS;
+				float ase_tangentSign = v.tangent.w * ( unity_WorldTransformParams.w >= 0.0 ? 1.0 : -1.0 );
+				float3 ase_bitangentWS = cross( ase_normalWS, ase_tangentWS ) * ase_tangentSign;
+				o.ase_texcoord9.xyz = ase_bitangentWS;
 				
 				o.ase_texcoord10.xy = v.uv1.xy;
 				
@@ -515,16 +521,14 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				#else
 				float staticSwitch325 = staticSwitch322;
 				#endif
-				float3 ase_worldTangent = i.ase_texcoord7.xyz;
-				float3 ase_worldNormal = i.ase_texcoord8.xyz;
-				float3 ase_worldBitangent = i.ase_texcoord9.xyz;
-				float3 tanToWorld0 = float3( ase_worldTangent.x, ase_worldBitangent.x, ase_worldNormal.x );
-				float3 tanToWorld1 = float3( ase_worldTangent.y, ase_worldBitangent.y, ase_worldNormal.y );
-				float3 tanToWorld2 = float3( ase_worldTangent.z, ase_worldBitangent.z, ase_worldNormal.z );
-				float3 ase_worldViewDir = ( _WorldSpaceCameraPos.xyz - i.wPos.xyz );
-				ase_worldViewDir = normalize(ase_worldViewDir);
-				float3 ase_tanViewDir =  tanToWorld0 * ase_worldViewDir.x + tanToWorld1 * ase_worldViewDir.y  + tanToWorld2 * ase_worldViewDir.z;
-				ase_tanViewDir = normalize(ase_tanViewDir);
+				float3 ase_tangentWS = i.ase_texcoord7.xyz;
+				float3 ase_normalWS = i.ase_texcoord8.xyz;
+				float3 ase_bitangentWS = i.ase_texcoord9.xyz;
+				float3 tanToWorld0 = float3( ase_tangentWS.x, ase_bitangentWS.x, ase_normalWS.x );
+				float3 tanToWorld1 = float3( ase_tangentWS.y, ase_bitangentWS.y, ase_normalWS.y );
+				float3 tanToWorld2 = float3( ase_tangentWS.z, ase_bitangentWS.z, ase_normalWS.z );
+				float3 ase_viewVectorTS =  tanToWorld0 * ( ( unity_OrthoParams.w == 0 ) ? _WorldSpaceCameraPos - i.wPos.xyz : UNITY_MATRIX_V[ 2 ].xyz ).x + tanToWorld1 * ( ( unity_OrthoParams.w == 0 ) ? _WorldSpaceCameraPos - i.wPos.xyz : UNITY_MATRIX_V[ 2 ].xyz ).y  + tanToWorld2 * ( ( unity_OrthoParams.w == 0 ) ? _WorldSpaceCameraPos - i.wPos.xyz : UNITY_MATRIX_V[ 2 ].xyz ).z;
+				float3 ase_viewDirTS = normalize( ase_viewVectorTS );
 				#ifdef SHADER_API_MOBILE
 				float staticSwitch321 = 0.0;
 				#else
@@ -555,6 +559,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				#else
 				float staticSwitch328 = staticSwitch319;
 				#endif
+				float3 ase_viewVectorWS = ( ( unity_OrthoParams.w == 0 ) ? _WorldSpaceCameraPos - i.wPos.xyz : UNITY_MATRIX_V[ 2 ].xyz );
+				float3 ase_viewDirWS = normalize( ase_viewVectorWS );
 				#ifdef SHADER_API_MOBILE
 				float staticSwitch323 = 0.0;
 				#else
@@ -565,7 +571,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				#else
 				float staticSwitch329 = staticSwitch323;
 				#endif
-				float2 OffsetPOM111 = POM( _HeightMap, uvs4_BaseMap.xy, ddx(uvs4_BaseMap.xy), ddy(uvs4_BaseMap.xy), ase_worldNormal, ase_worldViewDir, ase_tanViewDir, (int)staticSwitch326, (int)staticSwitch327, (int)staticSwitch328, staticSwitch325, staticSwitch329, _HeightMap_ST.xy, float2(0,0), 0 );
+				float2 OffsetPOM111 = POM( _HeightMap, uvs4_BaseMap.xy, ddx( uvs4_BaseMap.xy ), ddy( uvs4_BaseMap.xy ), ase_normalWS, ase_viewDirWS, ase_viewDirTS, (int)staticSwitch326, (int)staticSwitch327, (int)staticSwitch328, staticSwitch325, staticSwitch329, _HeightMap_ST.xy, float2( 0, 0 ), 0 );
 				#ifdef SHADER_API_MOBILE
 				float4 staticSwitch317 = uvs4_BaseMap;
 				#else
@@ -583,53 +589,53 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				#endif
 				float4 Texture_Coordinates149 = staticSwitch112;
 				float4 temp_output_17_0 = ( tex2D( _BaseMap, Texture_Coordinates149.xy ) * _BaseColor );
-				float4 temp_output_21_0_g255 = temp_output_17_0;
-				float4 temp_output_109_0_g256 = round( temp_output_21_0_g255 );
+				float4 temp_output_21_0_g287 = temp_output_17_0;
+				float4 temp_output_109_0_g288 = round( temp_output_21_0_g287 );
 				float2 texCoord203 = i.uv0XY_bitZ_fog.xy * float2( 1,1 ) + float2( 0,0 );
 				#ifdef _HEIGHTMAPENABLED_ON
 				float4 staticSwitch204 = Texture_Coordinates149;
 				#else
 				float4 staticSwitch204 = float4( texCoord203, 0.0 , 0.0 );
 				#endif
-				float2 temp_output_218_0_g255 = staticSwitch204.xy;
-				float4 tex2DNode1_g255 = tex2D( _DetailMap, ( ( temp_output_218_0_g255 * _DetailMap_ST.xy ) + _DetailMap_ST.zw ) );
+				float2 temp_output_218_0_g287 = staticSwitch204.xy;
+				float4 tex2DNode1_g287 = tex2D( _DetailMap, ( ( temp_output_218_0_g287 * _DetailMap_ST.xy ) + _DetailMap_ST.zw ) );
 				#ifdef _DETAILS_ON
-				float4 staticSwitch16_g255 = ( ( temp_output_109_0_g256 * ( 1.0 - ( ( 1.0 - temp_output_21_0_g255 ) * ( 1.0 - (tex2DNode1_g255.r).xxxx ) * 2.0 ) ) ) + ( ( 1.0 - temp_output_109_0_g256 ) * ( temp_output_21_0_g255 * (tex2DNode1_g255.r).xxxx * 2.0 ) ) );
+				float4 staticSwitch16_g287 = ( ( temp_output_109_0_g288 * ( 1.0 - ( ( 1.0 - temp_output_21_0_g287 ) * ( 1.0 - (tex2DNode1_g287.r).xxxx ) * 2.0 ) ) ) + ( ( 1.0 - temp_output_109_0_g288 ) * ( temp_output_21_0_g287 * (tex2DNode1_g287.r).xxxx * 2.0 ) ) );
 				#else
-				float4 staticSwitch16_g255 = temp_output_21_0_g255;
+				float4 staticSwitch16_g287 = temp_output_21_0_g287;
 				#endif
-				float4 Albedo138 = staticSwitch16_g255;
+				float4 Albedo138 = staticSwitch16_g287;
 				
 				float4 tex2DNode8 = tex2D( _BumpMap, Texture_Coordinates149.xy );
-				float4 In02_g219 = tex2DNode8;
-				float3 localMyCustomExpression2_g219 = MyCustomExpression( In02_g219 );
-				float3 temp_output_160_0 = localMyCustomExpression2_g219;
+				float4 In02_g286 = tex2DNode8;
+				float3 localMyCustomExpression2_g286 = MyCustomExpression( In02_g286 );
+				float3 temp_output_160_0 = localMyCustomExpression2_g286;
 				float3 lerpResult217 = lerp( temp_output_160_0 , float3( 0,0,1 ) , step( 0.0 , 0.0 ));
 				#ifdef _NORMALS_ON
 				float3 staticSwitch99 = temp_output_160_0;
 				#else
 				float3 staticSwitch99 = lerpResult217;
 				#endif
-				float4 temp_output_22_0_g255 = float4( staticSwitch99 , 0.0 );
-				float2 temp_output_57_0_g255 = (tex2DNode1_g255).ga;
-				float2 break79_g255 = temp_output_57_0_g255;
-				float3 appendResult56_g255 = (float3(break79_g255.y , break79_g255.x , 1.0));
+				float4 temp_output_22_0_g287 = float4( staticSwitch99 , 0.0 );
+				float2 temp_output_57_0_g287 = (tex2DNode1_g287).ga;
+				float2 break79_g287 = temp_output_57_0_g287;
+				float3 appendResult56_g287 = (float3(break79_g287.y , break79_g287.x , 1.0));
 				float3 temp_cast_20 = (1.0).xxx;
 				#ifdef _DETAILS_ON
-				float4 staticSwitch26_g255 = float4( BlendNormal( temp_output_22_0_g255.rgb , ( ( appendResult56_g255 * 2.0 ) - temp_cast_20 ) ) , 0.0 );
+				float4 staticSwitch26_g287 = float4( BlendNormal( temp_output_22_0_g287.rgb , ( ( appendResult56_g287 * 2.0 ) - temp_cast_20 ) ) , 0.0 );
 				#else
-				float4 staticSwitch26_g255 = temp_output_22_0_g255;
+				float4 staticSwitch26_g287 = temp_output_22_0_g287;
 				#endif
-				float4 Normal139 = staticSwitch26_g255;
+				float4 Normal139 = staticSwitch26_g287;
 				
 				#ifdef _MONOSHENABLED_ON
-				float staticSwitch32_g281 = (float)1;
+				int staticSwitch32_g294 = 1;
 				#else
-				float staticSwitch32_g281 = (float)0;
+				int staticSwitch32_g294 = 0;
 				#endif
-				float4 color104 = IsGammaSpace() ? float4(0,0,0,0) : float4(0,0,0,0);
+				float4 color104 = IsGammaSpace() ? float4( 0, 0, 0, 0 ) : float4( 0, 0, 0, 0 );
 				float4 tex2DNode11 = tex2D( _EmissionMap, Texture_Coordinates149.xy );
-				float dotResult45 = dot( ase_worldViewDir , ase_worldNormal );
+				float dotResult45 = dot( ase_viewDirWS , ase_normalWS );
 				float4 temp_output_29_0 = ( tex2DNode11 * _EmissionColor * saturate( pow( abs( dotResult45 ) , _EmissionFalloff ) ) );
 				#ifdef _EMISSION_ON
 				float4 staticSwitch103 = temp_output_29_0;
@@ -637,62 +643,73 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				float4 staticSwitch103 = color104;
 				#endif
 				float4 Emission358 = staticSwitch103;
-				float3 temp_output_13_0_g281 = Emission358.rgb;
-				float4 tex2DNode9 = tex2D( _MetallicGlossMap, Texture_Coordinates149.xy );
-				float4 appendResult338 = (float4(tex2DNode9.r , tex2DNode9.g , tex2DNode9.a , 1.0));
-				float4 appendResult341 = (float4(tex2DNode9.g , tex2DNode9.b , ( 1.0 - tex2DNode9.r ) , 1.0));
-				float4 appendResult342 = (float4(tex2DNode9.b , tex2DNode9.r , ( 1.0 - tex2DNode9.g ) , 1.0));
+				float3 temp_output_13_0_g294 = Emission358.rgb;
+				float4 temp_output_1_0_g285 = tex2D( _MetallicGlossMap, Texture_Coordinates149.xy );
+				float4 break15_g285 = temp_output_1_0_g285;
+				float4 appendResult16_g285 = (float4(break15_g285.r , break15_g285.g , break15_g285.a , break15_g285.b));
+				float4 break19_g285 = temp_output_1_0_g285;
+				float4 appendResult18_g285 = (float4(break19_g285.g , break19_g285.b , ( 1.0 - break19_g285.r ) , 1.0));
+				float4 break22_g285 = temp_output_1_0_g285;
+				float4 appendResult23_g285 = (float4(break22_g285.b , break22_g285.r , ( 1.0 - break22_g285.g ) , 1.0));
+				float4 break26_g285 = temp_output_1_0_g285;
+				float4 appendResult27_g285 = (float4(break26_g285.r , break26_g285.b , ( 1.0 - break26_g285.g ) , 1.0));
+				float4 break30_g285 = temp_output_1_0_g285;
+				float4 appendResult31_g285 = (float4(break30_g285.r , break30_g285.g , break30_g285.a , break30_g285.b));
 				#if defined( _MAPTYPE_MAS )
-				float4 staticSwitch330 = tex2DNode9;
+				float4 staticSwitch3_g285 = temp_output_1_0_g285;
 				#elif defined( _MAPTYPE_MASK )
-				float4 staticSwitch330 = appendResult338;
+				float4 staticSwitch3_g285 = appendResult16_g285;
 				#elif defined( _MAPTYPE_RMA )
-				float4 staticSwitch330 = appendResult341;
+				float4 staticSwitch3_g285 = appendResult18_g285;
 				#elif defined( _MAPTYPE_ORM )
-				float4 staticSwitch330 = appendResult342;
+				float4 staticSwitch3_g285 = appendResult23_g285;
+				#elif defined( _MAPTYPE_MRA )
+				float4 staticSwitch3_g285 = appendResult27_g285;
+				#elif defined( _MAPTYPE_MOHS )
+				float4 staticSwitch3_g285 = appendResult31_g285;
 				#else
-				float4 staticSwitch330 = tex2DNode9;
+				float4 staticSwitch3_g285 = temp_output_1_0_g285;
 				#endif
-				float4 break332 = staticSwitch330;
+				float4 break332 = staticSwitch3_g285;
 				float Ambient_Occlusion133 = break332.g;
-				float localBakerySpecMonoSHFull4_g282 = ( 0.0 );
-				float3 mapNormal16_g284 = Normal139.rgb;
-				float3 normalizeResult18_g284 = normalize( ( ( ase_worldTangent * mapNormal16_g284.x ) + ( ase_worldBitangent * mapNormal16_g284.y ) + ( ase_worldNormal * mapNormal16_g284.z ) ) );
-				float3 normalWorld4_g282 = normalizeResult18_g284;
-				float2 lightmapUV4_g282 = (i.ase_texcoord10.xy*(unity_LightmapST).xy + (unity_LightmapST).zw);
-				float3 normalizeResult2_g282 = normalize( ase_worldViewDir );
-				float3 viewDir4_g282 = normalizeResult2_g282;
-				float temp_output_23_0_g255 = saturate( ( ( tex2DNode8.b + break332.b ) - 1.0 ) );
-				float detailSmooth217_g255 = tex2DNode1_g255.b;
-				float smoothness217_g255 = temp_output_23_0_g255;
-				float localMyCustomExpression217_g255 = MyCustomExpression217_g255( detailSmooth217_g255 , smoothness217_g255 );
+				float localBakerySpecMonoSHFull4_g295 = ( 0.0 );
+				float3 mapNormal16_g297 = Normal139.rgb;
+				float3 normalizeResult18_g297 = normalize( ( ( ase_tangentWS * mapNormal16_g297.x ) + ( ase_bitangentWS * mapNormal16_g297.y ) + ( ase_normalWS * mapNormal16_g297.z ) ) );
+				float3 normalWorld4_g295 = normalizeResult18_g297;
+				float2 lightmapUV4_g295 = (i.ase_texcoord10.xy*(unity_LightmapST).xy + (unity_LightmapST).zw);
+				float3 normalizeResult2_g295 = normalize( ase_viewDirWS );
+				float3 viewDir4_g295 = normalizeResult2_g295;
+				float temp_output_23_0_g287 = saturate( ( ( tex2DNode8.b + break332.b ) - 1.0 ) );
+				float detailSmooth217_g287 = tex2DNode1_g287.b;
+				float smoothness217_g287 = temp_output_23_0_g287;
+				float localMyCustomExpression217_g287 = MyCustomExpression217_g287( detailSmooth217_g287 , smoothness217_g287 );
 				#ifdef _DETAILS_ON
-				float staticSwitch17_g255 = localMyCustomExpression217_g255;
+				float staticSwitch17_g287 = localMyCustomExpression217_g287;
 				#else
-				float staticSwitch17_g255 = temp_output_23_0_g255;
+				float staticSwitch17_g287 = temp_output_23_0_g287;
 				#endif
-				float Smoothness134 = staticSwitch17_g255;
-				float smoothness4_g282 = Smoothness134;
-				float3 temp_output_9_0_g281 = Albedo138.rgb;
-				float3 albedo4_g282 = temp_output_9_0_g281;
+				float Smoothness134 = staticSwitch17_g287;
+				float smoothness4_g295 = Smoothness134;
+				float3 temp_output_9_0_g294 = Albedo138.rgb;
+				float3 albedo4_g295 = temp_output_9_0_g294;
 				float Metallic132 = break332.r;
-				float metalness4_g282 = Metallic132;
-				float3 diffuseSH4_g282 = float3( 0,0,0 );
-				float3 specularSH4_g282 = float3( 0,0,0 );
-				BakerySpecMonoSHFull_float( normalWorld4_g282 , lightmapUV4_g282 , viewDir4_g282 , smoothness4_g282 , albedo4_g282 , metalness4_g282 , diffuseSH4_g282 , specularSH4_g282 );
+				float metalness4_g295 = Metallic132;
+				float3 diffuseSH4_g295 = float3( 0,0,0 );
+				float3 specularSH4_g295 = float3( 0,0,0 );
+				BakerySpecMonoSHFull_float( normalWorld4_g295 , lightmapUV4_g295 , viewDir4_g295 , smoothness4_g295 , albedo4_g295 , metalness4_g295 , diffuseSH4_g295 , specularSH4_g295 );
 				#ifdef _MONOSHENABLED_ON
-				float3 staticSwitch30_g281 = ( ( temp_output_13_0_g281 + ( Ambient_Occlusion133 * ( diffuseSH4_g282 * temp_output_9_0_g281 ) ) ) + ( specularSH4_g282 * _MonoSHAdjustment ) );
+				float3 staticSwitch30_g294 = ( ( temp_output_13_0_g294 + ( Ambient_Occlusion133 * ( diffuseSH4_g295 * temp_output_9_0_g294 ) ) ) + ( specularSH4_g295 * _MonoSHAdjustment ) );
 				#else
-				float3 staticSwitch30_g281 = temp_output_13_0_g281;
+				float3 staticSwitch30_g294 = temp_output_13_0_g294;
 				#endif
-				float localNonLinearLightProbe4_g279 = ( 0.0 );
-				float3 mapNormal16_g280 = Normal139.rgb;
-				float3 normalizeResult18_g280 = normalize( ( ( ase_worldTangent * mapNormal16_g280.x ) + ( ase_worldBitangent * mapNormal16_g280.y ) + ( ase_worldNormal * mapNormal16_g280.z ) ) );
-				float3 normalWorld4_g279 = normalizeResult18_g280;
-				float3 color4_g279 = float3( 0,0,0 );
-				NonLinearLightProbe_float( normalWorld4_g279 , color4_g279 );
+				float localNonLinearLightProbe4_g292 = ( 0.0 );
+				float3 mapNormal16_g293 = Normal139.rgb;
+				float3 normalizeResult18_g293 = normalize( ( ( ase_tangentWS * mapNormal16_g293.x ) + ( ase_bitangentWS * mapNormal16_g293.y ) + ( ase_normalWS * mapNormal16_g293.z ) ) );
+				float3 normalWorld4_g292 = normalizeResult18_g293;
+				float3 color4_g292 = float3( 0,0,0 );
+				NonLinearLightProbe_float( normalWorld4_g292 , color4_g292 );
 				#ifdef _NONLINEARLIGHTPROBESH_ON
-				float4 staticSwitch367 = float4( ( Emission358.rgb + ( Ambient_Occlusion133 * ( Albedo138.rgb * color4_g279 ) ) ) , 0.0 );
+				float4 staticSwitch367 = float4( ( Emission358.rgb + ( Ambient_Occlusion133 * ( Albedo138.rgb * color4_g292 ) ) ) , 0.0 );
 				#else
 				float4 staticSwitch367 = Emission358;
 				#endif
@@ -703,8 +720,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				float4 staticSwitch351 = ( ( tex2DNode11 * _EmissionColor ) * _BakedMutiplier );
 				#endif
 				
-				float4 temp_output_2_0_g259 = temp_output_17_0;
-				float Alpha147 = (temp_output_2_0_g259).a;
+				float4 temp_output_2_0_g291 = temp_output_17_0;
+				float Alpha147 = (temp_output_2_0_g291).a;
 				
 			
 			//--------------------------------------------------------------------------------------------------------------------------
@@ -734,7 +751,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			
 				half3 albedo3 = Albedo138.rgb;
 				half3 normalTS = Normal139.rgb;
-				half3 emission = ( staticSwitch32_g281 == 1.0 ? float4( staticSwitch30_g281 , 0.0 ) : staticSwitch367 ).rgb;
+				half3 emission = ( (float)staticSwitch32_g294 == 1.0 ? float4( staticSwitch30_g294 , 0.0 ) : staticSwitch367 ).rgb;
 				half3 emissionbaked = staticSwitch351.rgb;
 			
 			// Begin Injection NORMAL_MAP from Injection_NormalMaps.hlsl ----------------------------------------------------------
@@ -915,6 +932,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			#define _ISTRANSPARENT
 			#define _SurfaceFade
 			#define _ALPHATEST_ON 1
+			#define ASE_VERSION 19908
 			#define ASE_SRP_VERSION -1
 
 			#pragma vertex vert
@@ -931,6 +949,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderGraphFunctions.hlsl"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Packing.hlsl"
 
+			#define ASE_NEEDS_TEXTURE_COORDINATES0
 			#pragma shader_feature_local _HEIGHTMAPENABLED_ON
 			#pragma shader_feature_local _QUESTPARALLAXENABLED_ON
 
@@ -981,8 +1000,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			inline float2 POM( sampler2D heightMap, float2 uvs, float2 dx, float2 dy, float3 normalWorld, float3 viewWorld, float3 viewDirTan, int minSamples, int maxSamples, int sidewallSteps, float parallax, float refPlane, float2 tilling, float2 curv, int index )
 			{
 				float3 result = 0;
-				int stepIndex = 0;
-				int numSteps = ( int )lerp( (float)maxSamples, (float)minSamples, saturate( dot( normalWorld, viewWorld ) ) );
+				float stepIndex = 0;
+				float numSteps = floor( lerp( (float)maxSamples, (float)minSamples, saturate( dot( normalWorld, viewWorld ) ) ) );
 				float layerHeight = 1.0 / numSteps;
 				float2 plane = parallax * ( viewDirTan.xy / viewDirTan.z );
 				uvs.xy += refPlane * plane;
@@ -1012,8 +1031,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				 	 	currRayZ -= layerHeight;
 				 	}
 				}
-				int sectionSteps = sidewallSteps;
-				int sectionIndex = 0;
+				float sectionSteps = sidewallSteps;
+				float sectionIndex = 0;
 				float newZ = 0;
 				float newHeight = 0;
 				while ( sectionIndex < sectionSteps )
@@ -1051,15 +1070,15 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			    UNITY_TRANSFER_INSTANCE_ID(v, o);
 			    UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-			    float3 ase_worldTangent = TransformObjectToWorldDir(v.ase_tangent.xyz);
-			    o.ase_texcoord1.xyz = ase_worldTangent;
-			    float3 ase_worldNormal = TransformObjectToWorldNormal(v.ase_normal);
-			    o.ase_texcoord2.xyz = ase_worldNormal;
-			    float ase_vertexTangentSign = v.ase_tangent.w * ( unity_WorldTransformParams.w >= 0.0 ? 1.0 : -1.0 );
-			    float3 ase_worldBitangent = cross( ase_worldNormal, ase_worldTangent ) * ase_vertexTangentSign;
-			    o.ase_texcoord3.xyz = ase_worldBitangent;
-			    float3 ase_worldPos = TransformObjectToWorld( (v.vertex).xyz );
-			    o.ase_texcoord4.xyz = ase_worldPos;
+			    float3 ase_positionWS = TransformObjectToWorld( ( v.vertex ).xyz );
+			    o.ase_texcoord1.xyz = ase_positionWS;
+			    float3 ase_tangentWS = TransformObjectToWorldDir( v.ase_tangent.xyz );
+			    o.ase_texcoord2.xyz = ase_tangentWS;
+			    float3 ase_normalWS = TransformObjectToWorldNormal( v.ase_normal );
+			    o.ase_texcoord3.xyz = ase_normalWS;
+			    float ase_tangentSign = v.ase_tangent.w * ( unity_WorldTransformParams.w >= 0.0 ? 1.0 : -1.0 );
+			    float3 ase_bitangentWS = cross( ase_normalWS, ase_tangentWS ) * ase_tangentSign;
+			    o.ase_texcoord4.xyz = ase_bitangentWS;
 			    
 			    o.ase_texcoord = v.ase_texcoord;
 			    
@@ -1109,17 +1128,15 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			    #else
 			    float staticSwitch325 = staticSwitch322;
 			    #endif
-			    float3 ase_worldTangent = i.ase_texcoord1.xyz;
-			    float3 ase_worldNormal = i.ase_texcoord2.xyz;
-			    float3 ase_worldBitangent = i.ase_texcoord3.xyz;
-			    float3 tanToWorld0 = float3( ase_worldTangent.x, ase_worldBitangent.x, ase_worldNormal.x );
-			    float3 tanToWorld1 = float3( ase_worldTangent.y, ase_worldBitangent.y, ase_worldNormal.y );
-			    float3 tanToWorld2 = float3( ase_worldTangent.z, ase_worldBitangent.z, ase_worldNormal.z );
-			    float3 ase_worldPos = i.ase_texcoord4.xyz;
-			    float3 ase_worldViewDir = ( _WorldSpaceCameraPos.xyz - ase_worldPos );
-			    ase_worldViewDir = normalize(ase_worldViewDir);
-			    float3 ase_tanViewDir =  tanToWorld0 * ase_worldViewDir.x + tanToWorld1 * ase_worldViewDir.y  + tanToWorld2 * ase_worldViewDir.z;
-			    ase_tanViewDir = normalize(ase_tanViewDir);
+			    float3 ase_positionWS = i.ase_texcoord1.xyz;
+			    float3 ase_tangentWS = i.ase_texcoord2.xyz;
+			    float3 ase_normalWS = i.ase_texcoord3.xyz;
+			    float3 ase_bitangentWS = i.ase_texcoord4.xyz;
+			    float3 tanToWorld0 = float3( ase_tangentWS.x, ase_bitangentWS.x, ase_normalWS.x );
+			    float3 tanToWorld1 = float3( ase_tangentWS.y, ase_bitangentWS.y, ase_normalWS.y );
+			    float3 tanToWorld2 = float3( ase_tangentWS.z, ase_bitangentWS.z, ase_normalWS.z );
+			    float3 ase_viewVectorTS =  tanToWorld0 * ( ( unity_OrthoParams.w == 0 ) ? _WorldSpaceCameraPos - ase_positionWS : UNITY_MATRIX_V[ 2 ].xyz ).x + tanToWorld1 * ( ( unity_OrthoParams.w == 0 ) ? _WorldSpaceCameraPos - ase_positionWS : UNITY_MATRIX_V[ 2 ].xyz ).y  + tanToWorld2 * ( ( unity_OrthoParams.w == 0 ) ? _WorldSpaceCameraPos - ase_positionWS : UNITY_MATRIX_V[ 2 ].xyz ).z;
+			    float3 ase_viewDirTS = normalize( ase_viewVectorTS );
 			    #ifdef SHADER_API_MOBILE
 			    float staticSwitch321 = 0.0;
 			    #else
@@ -1150,6 +1167,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			    #else
 			    float staticSwitch328 = staticSwitch319;
 			    #endif
+			    float3 ase_viewVectorWS = ( ( unity_OrthoParams.w == 0 ) ? _WorldSpaceCameraPos - ase_positionWS : UNITY_MATRIX_V[ 2 ].xyz );
+			    float3 ase_viewDirWS = normalize( ase_viewVectorWS );
 			    #ifdef SHADER_API_MOBILE
 			    float staticSwitch323 = 0.0;
 			    #else
@@ -1160,7 +1179,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			    #else
 			    float staticSwitch329 = staticSwitch323;
 			    #endif
-			    float2 OffsetPOM111 = POM( _HeightMap, uvs4_BaseMap.xy, ddx(uvs4_BaseMap.xy), ddy(uvs4_BaseMap.xy), ase_worldNormal, ase_worldViewDir, ase_tanViewDir, (int)staticSwitch326, (int)staticSwitch327, (int)staticSwitch328, staticSwitch325, staticSwitch329, _HeightMap_ST.xy, float2(0,0), 0 );
+			    float2 OffsetPOM111 = POM( _HeightMap, uvs4_BaseMap.xy, ddx( uvs4_BaseMap.xy ), ddy( uvs4_BaseMap.xy ), ase_normalWS, ase_viewDirWS, ase_viewDirTS, (int)staticSwitch326, (int)staticSwitch327, (int)staticSwitch328, staticSwitch325, staticSwitch329, _HeightMap_ST.xy, float2( 0, 0 ), 0 );
 			    #ifdef SHADER_API_MOBILE
 			    float4 staticSwitch317 = uvs4_BaseMap;
 			    #else
@@ -1178,8 +1197,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			    #endif
 			    float4 Texture_Coordinates149 = staticSwitch112;
 			    float4 temp_output_17_0 = ( tex2D( _BaseMap, Texture_Coordinates149.xy ) * _BaseColor );
-			    float4 temp_output_2_0_g259 = temp_output_17_0;
-			    float Alpha147 = (temp_output_2_0_g259).a;
+			    float4 temp_output_2_0_g291 = temp_output_17_0;
+			    float Alpha147 = (temp_output_2_0_g291).a;
 			    
 			
 				half alpha = Alpha147;
@@ -1225,6 +1244,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			#define _ISTRANSPARENT
 			#define _SurfaceFade
 			#define _ALPHATEST_ON 1
+			#define ASE_VERSION 19908
 			#define ASE_SRP_VERSION -1
 
 			#pragma vertex vert
@@ -1254,6 +1274,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			#include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Packing.hlsl"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/EncodeNormalsTexture.hlsl"
 					
+			#define ASE_NEEDS_TEXTURE_COORDINATES0
+			#define ASE_NEEDS_FRAG_TEXTURE_COORDINATES0
 			#define ASE_NEEDS_VERT_TANGENT
 			#define ASE_NEEDS_VERT_NORMAL
 			#pragma shader_feature_local_fragment _DETAILS_ON
@@ -1339,8 +1361,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			inline float2 POM( sampler2D heightMap, float2 uvs, float2 dx, float2 dy, float3 normalWorld, float3 viewWorld, float3 viewDirTan, int minSamples, int maxSamples, int sidewallSteps, float parallax, float refPlane, float2 tilling, float2 curv, int index )
 			{
 				float3 result = 0;
-				int stepIndex = 0;
-				int numSteps = ( int )lerp( (float)maxSamples, (float)minSamples, saturate( dot( normalWorld, viewWorld ) ) );
+				float stepIndex = 0;
+				float numSteps = floor( lerp( (float)maxSamples, (float)minSamples, saturate( dot( normalWorld, viewWorld ) ) ) );
 				float layerHeight = 1.0 / numSteps;
 				float2 plane = parallax * ( viewDirTan.xy / viewDirTan.z );
 				uvs.xy += refPlane * plane;
@@ -1370,8 +1392,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				 	 	currRayZ -= layerHeight;
 				 	}
 				}
-				int sectionSteps = sidewallSteps;
-				int sectionIndex = 0;
+				float sectionSteps = sidewallSteps;
+				float sectionIndex = 0;
 				float newZ = 0;
 				float newHeight = 0;
 				while ( sectionIndex < sectionSteps )
@@ -1416,15 +1438,15 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 			
 			
-				float3 ase_worldTangent = TransformObjectToWorldDir(v.tangent.xyz);
-				o.ase_texcoord3.xyz = ase_worldTangent;
-				float3 ase_worldNormal = TransformObjectToWorldNormal(v.normal);
-				o.ase_texcoord4.xyz = ase_worldNormal;
-				float ase_vertexTangentSign = v.tangent.w * ( unity_WorldTransformParams.w >= 0.0 ? 1.0 : -1.0 );
-				float3 ase_worldBitangent = cross( ase_worldNormal, ase_worldTangent ) * ase_vertexTangentSign;
-				o.ase_texcoord5.xyz = ase_worldBitangent;
-				float3 ase_worldPos = TransformObjectToWorld( (v.vertex).xyz );
-				o.ase_texcoord6.xyz = ase_worldPos;
+				float3 ase_positionWS = TransformObjectToWorld( ( v.vertex ).xyz );
+				o.ase_texcoord3.xyz = ase_positionWS;
+				float3 ase_tangentWS = TransformObjectToWorldDir( v.tangent.xyz );
+				o.ase_texcoord4.xyz = ase_tangentWS;
+				float3 ase_normalWS = TransformObjectToWorldNormal( v.normal );
+				o.ase_texcoord5.xyz = ase_normalWS;
+				float ase_tangentSign = v.tangent.w * ( unity_WorldTransformParams.w >= 0.0 ? 1.0 : -1.0 );
+				float3 ase_bitangentWS = cross( ase_normalWS, ase_tangentWS ) * ase_tangentSign;
+				o.ase_texcoord6.xyz = ase_bitangentWS;
 				
 				
 				//setting value to unused interpolator channels and avoid initialization warnings
@@ -1483,17 +1505,15 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			   #else
 			   float staticSwitch325 = staticSwitch322;
 			   #endif
-			   float3 ase_worldTangent = i.ase_texcoord3.xyz;
-			   float3 ase_worldNormal = i.ase_texcoord4.xyz;
-			   float3 ase_worldBitangent = i.ase_texcoord5.xyz;
-			   float3 tanToWorld0 = float3( ase_worldTangent.x, ase_worldBitangent.x, ase_worldNormal.x );
-			   float3 tanToWorld1 = float3( ase_worldTangent.y, ase_worldBitangent.y, ase_worldNormal.y );
-			   float3 tanToWorld2 = float3( ase_worldTangent.z, ase_worldBitangent.z, ase_worldNormal.z );
-			   float3 ase_worldPos = i.ase_texcoord6.xyz;
-			   float3 ase_worldViewDir = ( _WorldSpaceCameraPos.xyz - ase_worldPos );
-			   ase_worldViewDir = normalize(ase_worldViewDir);
-			   float3 ase_tanViewDir =  tanToWorld0 * ase_worldViewDir.x + tanToWorld1 * ase_worldViewDir.y  + tanToWorld2 * ase_worldViewDir.z;
-			   ase_tanViewDir = normalize(ase_tanViewDir);
+			   float3 ase_positionWS = i.ase_texcoord3.xyz;
+			   float3 ase_tangentWS = i.ase_texcoord4.xyz;
+			   float3 ase_normalWS = i.ase_texcoord5.xyz;
+			   float3 ase_bitangentWS = i.ase_texcoord6.xyz;
+			   float3 tanToWorld0 = float3( ase_tangentWS.x, ase_bitangentWS.x, ase_normalWS.x );
+			   float3 tanToWorld1 = float3( ase_tangentWS.y, ase_bitangentWS.y, ase_normalWS.y );
+			   float3 tanToWorld2 = float3( ase_tangentWS.z, ase_bitangentWS.z, ase_normalWS.z );
+			   float3 ase_viewVectorTS =  tanToWorld0 * ( ( unity_OrthoParams.w == 0 ) ? _WorldSpaceCameraPos - ase_positionWS : UNITY_MATRIX_V[ 2 ].xyz ).x + tanToWorld1 * ( ( unity_OrthoParams.w == 0 ) ? _WorldSpaceCameraPos - ase_positionWS : UNITY_MATRIX_V[ 2 ].xyz ).y  + tanToWorld2 * ( ( unity_OrthoParams.w == 0 ) ? _WorldSpaceCameraPos - ase_positionWS : UNITY_MATRIX_V[ 2 ].xyz ).z;
+			   float3 ase_viewDirTS = normalize( ase_viewVectorTS );
 			   #ifdef SHADER_API_MOBILE
 			   float staticSwitch321 = 0.0;
 			   #else
@@ -1524,6 +1544,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			   #else
 			   float staticSwitch328 = staticSwitch319;
 			   #endif
+			   float3 ase_viewVectorWS = ( ( unity_OrthoParams.w == 0 ) ? _WorldSpaceCameraPos - ase_positionWS : UNITY_MATRIX_V[ 2 ].xyz );
+			   float3 ase_viewDirWS = normalize( ase_viewVectorWS );
 			   #ifdef SHADER_API_MOBILE
 			   float staticSwitch323 = 0.0;
 			   #else
@@ -1534,7 +1556,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			   #else
 			   float staticSwitch329 = staticSwitch323;
 			   #endif
-			   float2 OffsetPOM111 = POM( _HeightMap, uvs4_BaseMap.xy, ddx(uvs4_BaseMap.xy), ddy(uvs4_BaseMap.xy), ase_worldNormal, ase_worldViewDir, ase_tanViewDir, (int)staticSwitch326, (int)staticSwitch327, (int)staticSwitch328, staticSwitch325, staticSwitch329, _HeightMap_ST.xy, float2(0,0), 0 );
+			   float2 OffsetPOM111 = POM( _HeightMap, uvs4_BaseMap.xy, ddx( uvs4_BaseMap.xy ), ddy( uvs4_BaseMap.xy ), ase_normalWS, ase_viewDirWS, ase_viewDirTS, (int)staticSwitch326, (int)staticSwitch327, (int)staticSwitch328, staticSwitch325, staticSwitch329, _HeightMap_ST.xy, float2( 0, 0 ), 0 );
 			   #ifdef SHADER_API_MOBILE
 			   float4 staticSwitch317 = uvs4_BaseMap;
 			   #else
@@ -1552,38 +1574,38 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			   #endif
 			   float4 Texture_Coordinates149 = staticSwitch112;
 			   float4 tex2DNode8 = tex2D( _BumpMap, Texture_Coordinates149.xy );
-			   float4 In02_g219 = tex2DNode8;
-			   float3 localMyCustomExpression2_g219 = MyCustomExpression( In02_g219 );
-			   float3 temp_output_160_0 = localMyCustomExpression2_g219;
+			   float4 In02_g286 = tex2DNode8;
+			   float3 localMyCustomExpression2_g286 = MyCustomExpression( In02_g286 );
+			   float3 temp_output_160_0 = localMyCustomExpression2_g286;
 			   float3 lerpResult217 = lerp( temp_output_160_0 , float3( 0,0,1 ) , step( 0.0 , 0.0 ));
 			   #ifdef _NORMALS_ON
 			   float3 staticSwitch99 = temp_output_160_0;
 			   #else
 			   float3 staticSwitch99 = lerpResult217;
 			   #endif
-			   float4 temp_output_22_0_g255 = float4( staticSwitch99 , 0.0 );
+			   float4 temp_output_22_0_g287 = float4( staticSwitch99 , 0.0 );
 			   float2 texCoord203 = i.uv0.xy * float2( 1,1 ) + float2( 0,0 );
 			   #ifdef _HEIGHTMAPENABLED_ON
 			   float4 staticSwitch204 = Texture_Coordinates149;
 			   #else
 			   float4 staticSwitch204 = float4( texCoord203, 0.0 , 0.0 );
 			   #endif
-			   float2 temp_output_218_0_g255 = staticSwitch204.xy;
-			   float4 tex2DNode1_g255 = tex2D( _DetailMap, ( ( temp_output_218_0_g255 * _DetailMap_ST.xy ) + _DetailMap_ST.zw ) );
-			   float2 temp_output_57_0_g255 = (tex2DNode1_g255).ga;
-			   float2 break79_g255 = temp_output_57_0_g255;
-			   float3 appendResult56_g255 = (float3(break79_g255.y , break79_g255.x , 1.0));
+			   float2 temp_output_218_0_g287 = staticSwitch204.xy;
+			   float4 tex2DNode1_g287 = tex2D( _DetailMap, ( ( temp_output_218_0_g287 * _DetailMap_ST.xy ) + _DetailMap_ST.zw ) );
+			   float2 temp_output_57_0_g287 = (tex2DNode1_g287).ga;
+			   float2 break79_g287 = temp_output_57_0_g287;
+			   float3 appendResult56_g287 = (float3(break79_g287.y , break79_g287.x , 1.0));
 			   float3 temp_cast_16 = (1.0).xxx;
 			   #ifdef _DETAILS_ON
-			   float4 staticSwitch26_g255 = float4( BlendNormal( temp_output_22_0_g255.rgb , ( ( appendResult56_g255 * 2.0 ) - temp_cast_16 ) ) , 0.0 );
+			   float4 staticSwitch26_g287 = float4( BlendNormal( temp_output_22_0_g287.rgb , ( ( appendResult56_g287 * 2.0 ) - temp_cast_16 ) ) , 0.0 );
 			   #else
-			   float4 staticSwitch26_g255 = temp_output_22_0_g255;
+			   float4 staticSwitch26_g287 = temp_output_22_0_g287;
 			   #endif
-			   float4 Normal139 = staticSwitch26_g255;
+			   float4 Normal139 = staticSwitch26_g287;
 			   
 			   float4 temp_output_17_0 = ( tex2D( _BaseMap, Texture_Coordinates149.xy ) * _BaseColor );
-			   float4 temp_output_2_0_g259 = temp_output_17_0;
-			   float Alpha147 = (temp_output_2_0_g259).a;
+			   float4 temp_output_2_0_g291 = temp_output_17_0;
+			   float Alpha147 = (temp_output_2_0_g291).a;
 			   
 			
 			
@@ -1654,6 +1676,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			#define _ISTRANSPARENT
 			#define _SurfaceFade
 			#define _ALPHATEST_ON 1
+			#define ASE_VERSION 19908
 			#define ASE_SRP_VERSION -1
 
 			#pragma vertex vert
@@ -1672,6 +1695,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/ShaderGraphFunctions.hlsl"
 			//#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/SLZExtentions.hlsl"
 
+			#define ASE_NEEDS_TEXTURE_COORDINATES0
 			#define ASE_NEEDS_VERT_NORMAL
 			#pragma shader_feature_local _HEIGHTMAPENABLED_ON
 			#pragma shader_feature_local _QUESTPARALLAXENABLED_ON
@@ -1726,8 +1750,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			inline float2 POM( sampler2D heightMap, float2 uvs, float2 dx, float2 dy, float3 normalWorld, float3 viewWorld, float3 viewDirTan, int minSamples, int maxSamples, int sidewallSteps, float parallax, float refPlane, float2 tilling, float2 curv, int index )
 			{
 				float3 result = 0;
-				int stepIndex = 0;
-				int numSteps = ( int )lerp( (float)maxSamples, (float)minSamples, saturate( dot( normalWorld, viewWorld ) ) );
+				float stepIndex = 0;
+				float numSteps = floor( lerp( (float)maxSamples, (float)minSamples, saturate( dot( normalWorld, viewWorld ) ) ) );
 				float layerHeight = 1.0 / numSteps;
 				float2 plane = parallax * ( viewDirTan.xy / viewDirTan.z );
 				uvs.xy += refPlane * plane;
@@ -1757,8 +1781,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				 	 	currRayZ -= layerHeight;
 				 	}
 				}
-				int sectionSteps = sidewallSteps;
-				int sectionIndex = 0;
+				float sectionSteps = sidewallSteps;
+				float sectionIndex = 0;
 				float newZ = 0;
 				float newHeight = 0;
 				while ( sectionIndex < sectionSteps )
@@ -1818,15 +1842,15 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			{
 			    Varyings output;
 			    UNITY_SETUP_INSTANCE_ID(input);
-			    float3 ase_worldTangent = TransformObjectToWorldDir(input.ase_tangent.xyz);
-			    output.ase_texcoord2.xyz = ase_worldTangent;
-			    float3 ase_worldNormal = TransformObjectToWorldNormal(input.normalOS);
-			    output.ase_texcoord3.xyz = ase_worldNormal;
-			    float ase_vertexTangentSign = input.ase_tangent.w * ( unity_WorldTransformParams.w >= 0.0 ? 1.0 : -1.0 );
-			    float3 ase_worldBitangent = cross( ase_worldNormal, ase_worldTangent ) * ase_vertexTangentSign;
-			    output.ase_texcoord4.xyz = ase_worldBitangent;
-			    float3 ase_worldPos = TransformObjectToWorld( (input.positionOS).xyz );
-			    output.ase_texcoord5.xyz = ase_worldPos;
+			    float3 ase_positionWS = TransformObjectToWorld( ( input.positionOS ).xyz );
+			    output.ase_texcoord2.xyz = ase_positionWS;
+			    float3 ase_tangentWS = TransformObjectToWorldDir( input.ase_tangent.xyz );
+			    output.ase_texcoord3.xyz = ase_tangentWS;
+			    float3 ase_normalWS = TransformObjectToWorldNormal( input.normalOS );
+			    output.ase_texcoord4.xyz = ase_normalWS;
+			    float ase_tangentSign = input.ase_tangent.w * ( unity_WorldTransformParams.w >= 0.0 ? 1.0 : -1.0 );
+			    float3 ase_bitangentWS = cross( ase_normalWS, ase_tangentWS ) * ase_tangentSign;
+			    output.ase_texcoord5.xyz = ase_bitangentWS;
 			    
 			    output.ase_texcoord1 = input.ase_texcoord;
 			    
@@ -1878,17 +1902,15 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			    #else
 			    float staticSwitch325 = staticSwitch322;
 			    #endif
-			    float3 ase_worldTangent = input.ase_texcoord2.xyz;
-			    float3 ase_worldNormal = input.ase_texcoord3.xyz;
-			    float3 ase_worldBitangent = input.ase_texcoord4.xyz;
-			    float3 tanToWorld0 = float3( ase_worldTangent.x, ase_worldBitangent.x, ase_worldNormal.x );
-			    float3 tanToWorld1 = float3( ase_worldTangent.y, ase_worldBitangent.y, ase_worldNormal.y );
-			    float3 tanToWorld2 = float3( ase_worldTangent.z, ase_worldBitangent.z, ase_worldNormal.z );
-			    float3 ase_worldPos = input.ase_texcoord5.xyz;
-			    float3 ase_worldViewDir = ( _WorldSpaceCameraPos.xyz - ase_worldPos );
-			    ase_worldViewDir = normalize(ase_worldViewDir);
-			    float3 ase_tanViewDir =  tanToWorld0 * ase_worldViewDir.x + tanToWorld1 * ase_worldViewDir.y  + tanToWorld2 * ase_worldViewDir.z;
-			    ase_tanViewDir = normalize(ase_tanViewDir);
+			    float3 ase_positionWS = input.ase_texcoord2.xyz;
+			    float3 ase_tangentWS = input.ase_texcoord3.xyz;
+			    float3 ase_normalWS = input.ase_texcoord4.xyz;
+			    float3 ase_bitangentWS = input.ase_texcoord5.xyz;
+			    float3 tanToWorld0 = float3( ase_tangentWS.x, ase_bitangentWS.x, ase_normalWS.x );
+			    float3 tanToWorld1 = float3( ase_tangentWS.y, ase_bitangentWS.y, ase_normalWS.y );
+			    float3 tanToWorld2 = float3( ase_tangentWS.z, ase_bitangentWS.z, ase_normalWS.z );
+			    float3 ase_viewVectorTS =  tanToWorld0 * ( ( unity_OrthoParams.w == 0 ) ? _WorldSpaceCameraPos - ase_positionWS : UNITY_MATRIX_V[ 2 ].xyz ).x + tanToWorld1 * ( ( unity_OrthoParams.w == 0 ) ? _WorldSpaceCameraPos - ase_positionWS : UNITY_MATRIX_V[ 2 ].xyz ).y  + tanToWorld2 * ( ( unity_OrthoParams.w == 0 ) ? _WorldSpaceCameraPos - ase_positionWS : UNITY_MATRIX_V[ 2 ].xyz ).z;
+			    float3 ase_viewDirTS = normalize( ase_viewVectorTS );
 			    #ifdef SHADER_API_MOBILE
 			    float staticSwitch321 = 0.0;
 			    #else
@@ -1919,6 +1941,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			    #else
 			    float staticSwitch328 = staticSwitch319;
 			    #endif
+			    float3 ase_viewVectorWS = ( ( unity_OrthoParams.w == 0 ) ? _WorldSpaceCameraPos - ase_positionWS : UNITY_MATRIX_V[ 2 ].xyz );
+			    float3 ase_viewDirWS = normalize( ase_viewVectorWS );
 			    #ifdef SHADER_API_MOBILE
 			    float staticSwitch323 = 0.0;
 			    #else
@@ -1929,7 +1953,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			    #else
 			    float staticSwitch329 = staticSwitch323;
 			    #endif
-			    float2 OffsetPOM111 = POM( _HeightMap, uvs4_BaseMap.xy, ddx(uvs4_BaseMap.xy), ddy(uvs4_BaseMap.xy), ase_worldNormal, ase_worldViewDir, ase_tanViewDir, (int)staticSwitch326, (int)staticSwitch327, (int)staticSwitch328, staticSwitch325, staticSwitch329, _HeightMap_ST.xy, float2(0,0), 0 );
+			    float2 OffsetPOM111 = POM( _HeightMap, uvs4_BaseMap.xy, ddx( uvs4_BaseMap.xy ), ddy( uvs4_BaseMap.xy ), ase_normalWS, ase_viewDirWS, ase_viewDirTS, (int)staticSwitch326, (int)staticSwitch327, (int)staticSwitch328, staticSwitch325, staticSwitch329, _HeightMap_ST.xy, float2( 0, 0 ), 0 );
 			    #ifdef SHADER_API_MOBILE
 			    float4 staticSwitch317 = uvs4_BaseMap;
 			    #else
@@ -1947,8 +1971,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			    #endif
 			    float4 Texture_Coordinates149 = staticSwitch112;
 			    float4 temp_output_17_0 = ( tex2D( _BaseMap, Texture_Coordinates149.xy ) * _BaseColor );
-			    float4 temp_output_2_0_g259 = temp_output_17_0;
-			    float Alpha147 = (temp_output_2_0_g259).a;
+			    float4 temp_output_2_0_g291 = temp_output_17_0;
+			    float Alpha147 = (temp_output_2_0_g291).a;
 			    
 
 				half alpha = Alpha147;
@@ -1999,6 +2023,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			#define _ISTRANSPARENT
 			#define _SurfaceFade
 			#define _ALPHATEST_ON 1
+			#define ASE_VERSION 19908
 			#define ASE_SRP_VERSION -1
 
 			#define _NORMAL_DROPOFF_TS 1
@@ -2042,12 +2067,16 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			#include "Packages/com.unity.render-pipelines.universal/Editor/ShaderGraph/Includes/ShaderPass.hlsl"
 
 			#include "Packages/com.fragiledeviations.mabelsshaders/Assets/Shaders/Include/DecodeMonoSH.hlsl"
+			#define ASE_NEEDS_TEXTURE_COORDINATES0
+			#define ASE_NEEDS_FRAG_TEXTURE_COORDINATES0
+			#define ASE_NEEDS_TEXTURE_COORDINATES1
+			#define ASE_NEEDS_FRAG_TEXTURE_COORDINATES1
 			#pragma shader_feature_local_fragment _DETAILS_ON
 			#pragma shader_feature_local _HEIGHTMAPENABLED_ON
 			#pragma shader_feature_local _QUESTPARALLAXENABLED_ON
 			#pragma shader_feature_local _MONOSHENABLED_ON
 			#pragma shader_feature_local _EMISSION_ON
-			#pragma shader_feature_local _MAPTYPE_MAS _MAPTYPE_MASK _MAPTYPE_RMA _MAPTYPE_ORM
+			#pragma shader_feature_local _MAPTYPE_MAS _MAPTYPE_MASK _MAPTYPE_RMA _MAPTYPE_ORM _MAPTYPE_MRA _MAPTYPE_MOHS
 			#pragma shader_feature_local _NORMALS_ON
 			#pragma shader_feature_local _NONLINEARLIGHTPROBESH_ON
 			#pragma shader_feature_local _USEFALLOFFINBAKE_ON
@@ -2137,8 +2166,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 			inline float2 POM( sampler2D heightMap, float2 uvs, float2 dx, float2 dy, float3 normalWorld, float3 viewWorld, float3 viewDirTan, int minSamples, int maxSamples, int sidewallSteps, float parallax, float refPlane, float2 tilling, float2 curv, int index )
 			{
 				float3 result = 0;
-				int stepIndex = 0;
-				int numSteps = ( int )lerp( (float)maxSamples, (float)minSamples, saturate( dot( normalWorld, viewWorld ) ) );
+				float stepIndex = 0;
+				float numSteps = floor( lerp( (float)maxSamples, (float)minSamples, saturate( dot( normalWorld, viewWorld ) ) ) );
 				float layerHeight = 1.0 / numSteps;
 				float2 plane = parallax * ( viewDirTan.xy / viewDirTan.z );
 				uvs.xy += refPlane * plane;
@@ -2168,8 +2197,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				 	 	currRayZ -= layerHeight;
 				 	}
 				}
-				int sectionSteps = sidewallSteps;
-				int sectionIndex = 0;
+				float sectionSteps = sidewallSteps;
+				float sectionIndex = 0;
 				float newZ = 0;
 				float newHeight = 0;
 				while ( sectionIndex < sectionSteps )
@@ -2204,7 +2233,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				return UnpackNormal(In0);;
 			}
 			
-			inline float MyCustomExpression217_g255( float detailSmooth, float smoothness )
+			inline float MyCustomExpression217_g287( float detailSmooth, float smoothness )
 			{
 				return smoothness * (2.0 * detailSmooth);
 			}
@@ -2216,15 +2245,15 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				UNITY_SETUP_INSTANCE_ID(v);
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-				float3 ase_worldTangent = TransformObjectToWorldDir(v.ase_tangent.xyz);
-				o.ase_texcoord3.xyz = ase_worldTangent;
-				float3 ase_worldNormal = TransformObjectToWorldNormal(v.ase_normal);
-				o.ase_texcoord4.xyz = ase_worldNormal;
-				float ase_vertexTangentSign = v.ase_tangent.w * ( unity_WorldTransformParams.w >= 0.0 ? 1.0 : -1.0 );
-				float3 ase_worldBitangent = cross( ase_worldNormal, ase_worldTangent ) * ase_vertexTangentSign;
-				o.ase_texcoord5.xyz = ase_worldBitangent;
-				float3 ase_worldPos = TransformObjectToWorld( (v.vertex).xyz );
-				o.ase_texcoord6.xyz = ase_worldPos;
+				float3 ase_positionWS = TransformObjectToWorld( ( v.vertex ).xyz );
+				o.ase_texcoord3.xyz = ase_positionWS;
+				float3 ase_tangentWS = TransformObjectToWorldDir( v.ase_tangent.xyz );
+				o.ase_texcoord4.xyz = ase_tangentWS;
+				float3 ase_normalWS = TransformObjectToWorldNormal( v.ase_normal );
+				o.ase_texcoord5.xyz = ase_normalWS;
+				float ase_tangentSign = v.ase_tangent.w * ( unity_WorldTransformParams.w >= 0.0 ? 1.0 : -1.0 );
+				float3 ase_bitangentWS = cross( ase_normalWS, ase_tangentWS ) * ase_tangentSign;
+				o.ase_texcoord6.xyz = ase_bitangentWS;
 				
 				o.ase_texcoord7.xy = v.uv1.xy;
 				
@@ -2269,17 +2298,15 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				#else
 				float staticSwitch325 = staticSwitch322;
 				#endif
-				float3 ase_worldTangent = i.ase_texcoord3.xyz;
-				float3 ase_worldNormal = i.ase_texcoord4.xyz;
-				float3 ase_worldBitangent = i.ase_texcoord5.xyz;
-				float3 tanToWorld0 = float3( ase_worldTangent.x, ase_worldBitangent.x, ase_worldNormal.x );
-				float3 tanToWorld1 = float3( ase_worldTangent.y, ase_worldBitangent.y, ase_worldNormal.y );
-				float3 tanToWorld2 = float3( ase_worldTangent.z, ase_worldBitangent.z, ase_worldNormal.z );
-				float3 ase_worldPos = i.ase_texcoord6.xyz;
-				float3 ase_worldViewDir = ( _WorldSpaceCameraPos.xyz - ase_worldPos );
-				ase_worldViewDir = normalize(ase_worldViewDir);
-				float3 ase_tanViewDir =  tanToWorld0 * ase_worldViewDir.x + tanToWorld1 * ase_worldViewDir.y  + tanToWorld2 * ase_worldViewDir.z;
-				ase_tanViewDir = normalize(ase_tanViewDir);
+				float3 ase_positionWS = i.ase_texcoord3.xyz;
+				float3 ase_tangentWS = i.ase_texcoord4.xyz;
+				float3 ase_normalWS = i.ase_texcoord5.xyz;
+				float3 ase_bitangentWS = i.ase_texcoord6.xyz;
+				float3 tanToWorld0 = float3( ase_tangentWS.x, ase_bitangentWS.x, ase_normalWS.x );
+				float3 tanToWorld1 = float3( ase_tangentWS.y, ase_bitangentWS.y, ase_normalWS.y );
+				float3 tanToWorld2 = float3( ase_tangentWS.z, ase_bitangentWS.z, ase_normalWS.z );
+				float3 ase_viewVectorTS =  tanToWorld0 * ( ( unity_OrthoParams.w == 0 ) ? _WorldSpaceCameraPos - ase_positionWS : UNITY_MATRIX_V[ 2 ].xyz ).x + tanToWorld1 * ( ( unity_OrthoParams.w == 0 ) ? _WorldSpaceCameraPos - ase_positionWS : UNITY_MATRIX_V[ 2 ].xyz ).y  + tanToWorld2 * ( ( unity_OrthoParams.w == 0 ) ? _WorldSpaceCameraPos - ase_positionWS : UNITY_MATRIX_V[ 2 ].xyz ).z;
+				float3 ase_viewDirTS = normalize( ase_viewVectorTS );
 				#ifdef SHADER_API_MOBILE
 				float staticSwitch321 = 0.0;
 				#else
@@ -2310,6 +2337,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				#else
 				float staticSwitch328 = staticSwitch319;
 				#endif
+				float3 ase_viewVectorWS = ( ( unity_OrthoParams.w == 0 ) ? _WorldSpaceCameraPos - ase_positionWS : UNITY_MATRIX_V[ 2 ].xyz );
+				float3 ase_viewDirWS = normalize( ase_viewVectorWS );
 				#ifdef SHADER_API_MOBILE
 				float staticSwitch323 = 0.0;
 				#else
@@ -2320,7 +2349,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				#else
 				float staticSwitch329 = staticSwitch323;
 				#endif
-				float2 OffsetPOM111 = POM( _HeightMap, uvs4_BaseMap.xy, ddx(uvs4_BaseMap.xy), ddy(uvs4_BaseMap.xy), ase_worldNormal, ase_worldViewDir, ase_tanViewDir, (int)staticSwitch326, (int)staticSwitch327, (int)staticSwitch328, staticSwitch325, staticSwitch329, _HeightMap_ST.xy, float2(0,0), 0 );
+				float2 OffsetPOM111 = POM( _HeightMap, uvs4_BaseMap.xy, ddx( uvs4_BaseMap.xy ), ddy( uvs4_BaseMap.xy ), ase_normalWS, ase_viewDirWS, ase_viewDirTS, (int)staticSwitch326, (int)staticSwitch327, (int)staticSwitch328, staticSwitch325, staticSwitch329, _HeightMap_ST.xy, float2( 0, 0 ), 0 );
 				#ifdef SHADER_API_MOBILE
 				float4 staticSwitch317 = uvs4_BaseMap;
 				#else
@@ -2338,31 +2367,31 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				#endif
 				float4 Texture_Coordinates149 = staticSwitch112;
 				float4 temp_output_17_0 = ( tex2D( _BaseMap, Texture_Coordinates149.xy ) * _BaseColor );
-				float4 temp_output_21_0_g255 = temp_output_17_0;
-				float4 temp_output_109_0_g256 = round( temp_output_21_0_g255 );
+				float4 temp_output_21_0_g287 = temp_output_17_0;
+				float4 temp_output_109_0_g288 = round( temp_output_21_0_g287 );
 				float2 texCoord203 = i.uv * float2( 1,1 ) + float2( 0,0 );
 				#ifdef _HEIGHTMAPENABLED_ON
 				float4 staticSwitch204 = Texture_Coordinates149;
 				#else
 				float4 staticSwitch204 = float4( texCoord203, 0.0 , 0.0 );
 				#endif
-				float2 temp_output_218_0_g255 = staticSwitch204.xy;
-				float4 tex2DNode1_g255 = tex2D( _DetailMap, ( ( temp_output_218_0_g255 * _DetailMap_ST.xy ) + _DetailMap_ST.zw ) );
+				float2 temp_output_218_0_g287 = staticSwitch204.xy;
+				float4 tex2DNode1_g287 = tex2D( _DetailMap, ( ( temp_output_218_0_g287 * _DetailMap_ST.xy ) + _DetailMap_ST.zw ) );
 				#ifdef _DETAILS_ON
-				float4 staticSwitch16_g255 = ( ( temp_output_109_0_g256 * ( 1.0 - ( ( 1.0 - temp_output_21_0_g255 ) * ( 1.0 - (tex2DNode1_g255.r).xxxx ) * 2.0 ) ) ) + ( ( 1.0 - temp_output_109_0_g256 ) * ( temp_output_21_0_g255 * (tex2DNode1_g255.r).xxxx * 2.0 ) ) );
+				float4 staticSwitch16_g287 = ( ( temp_output_109_0_g288 * ( 1.0 - ( ( 1.0 - temp_output_21_0_g287 ) * ( 1.0 - (tex2DNode1_g287.r).xxxx ) * 2.0 ) ) ) + ( ( 1.0 - temp_output_109_0_g288 ) * ( temp_output_21_0_g287 * (tex2DNode1_g287.r).xxxx * 2.0 ) ) );
 				#else
-				float4 staticSwitch16_g255 = temp_output_21_0_g255;
+				float4 staticSwitch16_g287 = temp_output_21_0_g287;
 				#endif
-				float4 Albedo138 = staticSwitch16_g255;
+				float4 Albedo138 = staticSwitch16_g287;
 				
 				#ifdef _MONOSHENABLED_ON
-				float staticSwitch32_g281 = (float)1;
+				int staticSwitch32_g294 = 1;
 				#else
-				float staticSwitch32_g281 = (float)0;
+				int staticSwitch32_g294 = 0;
 				#endif
-				float4 color104 = IsGammaSpace() ? float4(0,0,0,0) : float4(0,0,0,0);
+				float4 color104 = IsGammaSpace() ? float4( 0, 0, 0, 0 ) : float4( 0, 0, 0, 0 );
 				float4 tex2DNode11 = tex2D( _EmissionMap, Texture_Coordinates149.xy );
-				float dotResult45 = dot( ase_worldViewDir , ase_worldNormal );
+				float dotResult45 = dot( ase_viewDirWS , ase_normalWS );
 				float4 temp_output_29_0 = ( tex2DNode11 * _EmissionColor * saturate( pow( abs( dotResult45 ) , _EmissionFalloff ) ) );
 				#ifdef _EMISSION_ON
 				float4 staticSwitch103 = temp_output_29_0;
@@ -2370,83 +2399,94 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				float4 staticSwitch103 = color104;
 				#endif
 				float4 Emission358 = staticSwitch103;
-				float3 temp_output_13_0_g281 = Emission358.rgb;
-				float4 tex2DNode9 = tex2D( _MetallicGlossMap, Texture_Coordinates149.xy );
-				float4 appendResult338 = (float4(tex2DNode9.r , tex2DNode9.g , tex2DNode9.a , 1.0));
-				float4 appendResult341 = (float4(tex2DNode9.g , tex2DNode9.b , ( 1.0 - tex2DNode9.r ) , 1.0));
-				float4 appendResult342 = (float4(tex2DNode9.b , tex2DNode9.r , ( 1.0 - tex2DNode9.g ) , 1.0));
+				float3 temp_output_13_0_g294 = Emission358.rgb;
+				float4 temp_output_1_0_g285 = tex2D( _MetallicGlossMap, Texture_Coordinates149.xy );
+				float4 break15_g285 = temp_output_1_0_g285;
+				float4 appendResult16_g285 = (float4(break15_g285.r , break15_g285.g , break15_g285.a , break15_g285.b));
+				float4 break19_g285 = temp_output_1_0_g285;
+				float4 appendResult18_g285 = (float4(break19_g285.g , break19_g285.b , ( 1.0 - break19_g285.r ) , 1.0));
+				float4 break22_g285 = temp_output_1_0_g285;
+				float4 appendResult23_g285 = (float4(break22_g285.b , break22_g285.r , ( 1.0 - break22_g285.g ) , 1.0));
+				float4 break26_g285 = temp_output_1_0_g285;
+				float4 appendResult27_g285 = (float4(break26_g285.r , break26_g285.b , ( 1.0 - break26_g285.g ) , 1.0));
+				float4 break30_g285 = temp_output_1_0_g285;
+				float4 appendResult31_g285 = (float4(break30_g285.r , break30_g285.g , break30_g285.a , break30_g285.b));
 				#if defined( _MAPTYPE_MAS )
-				float4 staticSwitch330 = tex2DNode9;
+				float4 staticSwitch3_g285 = temp_output_1_0_g285;
 				#elif defined( _MAPTYPE_MASK )
-				float4 staticSwitch330 = appendResult338;
+				float4 staticSwitch3_g285 = appendResult16_g285;
 				#elif defined( _MAPTYPE_RMA )
-				float4 staticSwitch330 = appendResult341;
+				float4 staticSwitch3_g285 = appendResult18_g285;
 				#elif defined( _MAPTYPE_ORM )
-				float4 staticSwitch330 = appendResult342;
+				float4 staticSwitch3_g285 = appendResult23_g285;
+				#elif defined( _MAPTYPE_MRA )
+				float4 staticSwitch3_g285 = appendResult27_g285;
+				#elif defined( _MAPTYPE_MOHS )
+				float4 staticSwitch3_g285 = appendResult31_g285;
 				#else
-				float4 staticSwitch330 = tex2DNode9;
+				float4 staticSwitch3_g285 = temp_output_1_0_g285;
 				#endif
-				float4 break332 = staticSwitch330;
+				float4 break332 = staticSwitch3_g285;
 				float Ambient_Occlusion133 = break332.g;
-				float localBakerySpecMonoSHFull4_g282 = ( 0.0 );
+				float localBakerySpecMonoSHFull4_g295 = ( 0.0 );
 				float4 tex2DNode8 = tex2D( _BumpMap, Texture_Coordinates149.xy );
-				float4 In02_g219 = tex2DNode8;
-				float3 localMyCustomExpression2_g219 = MyCustomExpression( In02_g219 );
-				float3 temp_output_160_0 = localMyCustomExpression2_g219;
+				float4 In02_g286 = tex2DNode8;
+				float3 localMyCustomExpression2_g286 = MyCustomExpression( In02_g286 );
+				float3 temp_output_160_0 = localMyCustomExpression2_g286;
 				float3 lerpResult217 = lerp( temp_output_160_0 , float3( 0,0,1 ) , step( 0.0 , 0.0 ));
 				#ifdef _NORMALS_ON
 				float3 staticSwitch99 = temp_output_160_0;
 				#else
 				float3 staticSwitch99 = lerpResult217;
 				#endif
-				float4 temp_output_22_0_g255 = float4( staticSwitch99 , 0.0 );
-				float2 temp_output_57_0_g255 = (tex2DNode1_g255).ga;
-				float2 break79_g255 = temp_output_57_0_g255;
-				float3 appendResult56_g255 = (float3(break79_g255.y , break79_g255.x , 1.0));
-				float3 temp_cast_28 = (1.0).xxx;
+				float4 temp_output_22_0_g287 = float4( staticSwitch99 , 0.0 );
+				float2 temp_output_57_0_g287 = (tex2DNode1_g287).ga;
+				float2 break79_g287 = temp_output_57_0_g287;
+				float3 appendResult56_g287 = (float3(break79_g287.y , break79_g287.x , 1.0));
+				float3 temp_cast_24 = (1.0).xxx;
 				#ifdef _DETAILS_ON
-				float4 staticSwitch26_g255 = float4( BlendNormal( temp_output_22_0_g255.rgb , ( ( appendResult56_g255 * 2.0 ) - temp_cast_28 ) ) , 0.0 );
+				float4 staticSwitch26_g287 = float4( BlendNormal( temp_output_22_0_g287.rgb , ( ( appendResult56_g287 * 2.0 ) - temp_cast_24 ) ) , 0.0 );
 				#else
-				float4 staticSwitch26_g255 = temp_output_22_0_g255;
+				float4 staticSwitch26_g287 = temp_output_22_0_g287;
 				#endif
-				float4 Normal139 = staticSwitch26_g255;
-				float3 mapNormal16_g284 = Normal139.rgb;
-				float3 normalizeResult18_g284 = normalize( ( ( ase_worldTangent * mapNormal16_g284.x ) + ( ase_worldBitangent * mapNormal16_g284.y ) + ( ase_worldNormal * mapNormal16_g284.z ) ) );
-				float3 normalWorld4_g282 = normalizeResult18_g284;
-				float2 lightmapUV4_g282 = (i.ase_texcoord7.xy*(unity_LightmapST).xy + (unity_LightmapST).zw);
-				float3 normalizeResult2_g282 = normalize( ase_worldViewDir );
-				float3 viewDir4_g282 = normalizeResult2_g282;
-				float temp_output_23_0_g255 = saturate( ( ( tex2DNode8.b + break332.b ) - 1.0 ) );
-				float detailSmooth217_g255 = tex2DNode1_g255.b;
-				float smoothness217_g255 = temp_output_23_0_g255;
-				float localMyCustomExpression217_g255 = MyCustomExpression217_g255( detailSmooth217_g255 , smoothness217_g255 );
+				float4 Normal139 = staticSwitch26_g287;
+				float3 mapNormal16_g297 = Normal139.rgb;
+				float3 normalizeResult18_g297 = normalize( ( ( ase_tangentWS * mapNormal16_g297.x ) + ( ase_bitangentWS * mapNormal16_g297.y ) + ( ase_normalWS * mapNormal16_g297.z ) ) );
+				float3 normalWorld4_g295 = normalizeResult18_g297;
+				float2 lightmapUV4_g295 = (i.ase_texcoord7.xy*(unity_LightmapST).xy + (unity_LightmapST).zw);
+				float3 normalizeResult2_g295 = normalize( ase_viewDirWS );
+				float3 viewDir4_g295 = normalizeResult2_g295;
+				float temp_output_23_0_g287 = saturate( ( ( tex2DNode8.b + break332.b ) - 1.0 ) );
+				float detailSmooth217_g287 = tex2DNode1_g287.b;
+				float smoothness217_g287 = temp_output_23_0_g287;
+				float localMyCustomExpression217_g287 = MyCustomExpression217_g287( detailSmooth217_g287 , smoothness217_g287 );
 				#ifdef _DETAILS_ON
-				float staticSwitch17_g255 = localMyCustomExpression217_g255;
+				float staticSwitch17_g287 = localMyCustomExpression217_g287;
 				#else
-				float staticSwitch17_g255 = temp_output_23_0_g255;
+				float staticSwitch17_g287 = temp_output_23_0_g287;
 				#endif
-				float Smoothness134 = staticSwitch17_g255;
-				float smoothness4_g282 = Smoothness134;
-				float3 temp_output_9_0_g281 = Albedo138.rgb;
-				float3 albedo4_g282 = temp_output_9_0_g281;
+				float Smoothness134 = staticSwitch17_g287;
+				float smoothness4_g295 = Smoothness134;
+				float3 temp_output_9_0_g294 = Albedo138.rgb;
+				float3 albedo4_g295 = temp_output_9_0_g294;
 				float Metallic132 = break332.r;
-				float metalness4_g282 = Metallic132;
-				float3 diffuseSH4_g282 = float3( 0,0,0 );
-				float3 specularSH4_g282 = float3( 0,0,0 );
-				BakerySpecMonoSHFull_float( normalWorld4_g282 , lightmapUV4_g282 , viewDir4_g282 , smoothness4_g282 , albedo4_g282 , metalness4_g282 , diffuseSH4_g282 , specularSH4_g282 );
+				float metalness4_g295 = Metallic132;
+				float3 diffuseSH4_g295 = float3( 0,0,0 );
+				float3 specularSH4_g295 = float3( 0,0,0 );
+				BakerySpecMonoSHFull_float( normalWorld4_g295 , lightmapUV4_g295 , viewDir4_g295 , smoothness4_g295 , albedo4_g295 , metalness4_g295 , diffuseSH4_g295 , specularSH4_g295 );
 				#ifdef _MONOSHENABLED_ON
-				float3 staticSwitch30_g281 = ( ( temp_output_13_0_g281 + ( Ambient_Occlusion133 * ( diffuseSH4_g282 * temp_output_9_0_g281 ) ) ) + ( specularSH4_g282 * _MonoSHAdjustment ) );
+				float3 staticSwitch30_g294 = ( ( temp_output_13_0_g294 + ( Ambient_Occlusion133 * ( diffuseSH4_g295 * temp_output_9_0_g294 ) ) ) + ( specularSH4_g295 * _MonoSHAdjustment ) );
 				#else
-				float3 staticSwitch30_g281 = temp_output_13_0_g281;
+				float3 staticSwitch30_g294 = temp_output_13_0_g294;
 				#endif
-				float localNonLinearLightProbe4_g279 = ( 0.0 );
-				float3 mapNormal16_g280 = Normal139.rgb;
-				float3 normalizeResult18_g280 = normalize( ( ( ase_worldTangent * mapNormal16_g280.x ) + ( ase_worldBitangent * mapNormal16_g280.y ) + ( ase_worldNormal * mapNormal16_g280.z ) ) );
-				float3 normalWorld4_g279 = normalizeResult18_g280;
-				float3 color4_g279 = float3( 0,0,0 );
-				NonLinearLightProbe_float( normalWorld4_g279 , color4_g279 );
+				float localNonLinearLightProbe4_g292 = ( 0.0 );
+				float3 mapNormal16_g293 = Normal139.rgb;
+				float3 normalizeResult18_g293 = normalize( ( ( ase_tangentWS * mapNormal16_g293.x ) + ( ase_bitangentWS * mapNormal16_g293.y ) + ( ase_normalWS * mapNormal16_g293.z ) ) );
+				float3 normalWorld4_g292 = normalizeResult18_g293;
+				float3 color4_g292 = float3( 0,0,0 );
+				NonLinearLightProbe_float( normalWorld4_g292 , color4_g292 );
 				#ifdef _NONLINEARLIGHTPROBESH_ON
-				float4 staticSwitch367 = float4( ( Emission358.rgb + ( Ambient_Occlusion133 * ( Albedo138.rgb * color4_g279 ) ) ) , 0.0 );
+				float4 staticSwitch367 = float4( ( Emission358.rgb + ( Ambient_Occlusion133 * ( Albedo138.rgb * color4_g292 ) ) ) , 0.0 );
 				#else
 				float4 staticSwitch367 = Emission358;
 				#endif
@@ -2457,8 +2497,8 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				float4 staticSwitch351 = ( ( tex2DNode11 * _EmissionColor ) * _BakedMutiplier );
 				#endif
 				
-				float4 temp_output_2_0_g259 = temp_output_17_0;
-				float Alpha147 = (temp_output_2_0_g259).a;
+				float4 temp_output_2_0_g291 = temp_output_17_0;
+				float Alpha147 = (temp_output_2_0_g291).a;
 				
 
 				MetaInput metaInput = (MetaInput)0;
@@ -2484,7 +2524,7 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 				//metaInput.Emission = emission.rgb;
 			
 				metaInput.Albedo = Albedo138.rgb;
-				half3 emission = ( staticSwitch32_g281 == 1.0 ? float4( staticSwitch30_g281 , 0.0 ) : staticSwitch367 ).rgb;
+				half3 emission = ( (float)staticSwitch32_g294 == 1.0 ? float4( staticSwitch30_g294 , 0.0 ) : staticSwitch367 ).rgb;
 				half3 bakedemission = staticSwitch351.rgb;
 				metaInput.Emission = bakedemission.rgb;
 				#ifdef EDITOR_VISUALIZATION
@@ -2639,120 +2679,115 @@ Shader "Mabel/LitMAS Plus/LitMAS+ Fade"
 	
 }
 /*ASEBEGIN
-Version=19603
-Node;AmplifyShaderEditor.CommentaryNode;115;-720,-816;Inherit;False;1868.141;824.6599;;23;111;149;112;318;317;113;323;322;321;320;319;108;324;110;105;109;106;107;325;326;327;328;329;Parallax Mapping;1,1,1,1;0;0
-Node;AmplifyShaderEditor.RangedFloatNode;107;-672,-336;Inherit;False;Property;_RefPlane;Ref Plane;36;0;Create;True;0;0;0;False;0;False;0;0;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;106;-672,-592;Inherit;False;Property;_ParallaxScale;Scale;31;0;Create;False;0;0;0;False;0;False;0.02;0;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;109;-672,-528;Inherit;False;Property;_MinSamples;Min Samples;33;0;Create;True;0;0;0;False;0;False;8;0;1;128;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;105;-672,-400;Inherit;False;Property;_SidewallSteps;Sidewall Steps;35;0;Create;True;0;0;0;False;0;False;2;2;0;10;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;110;-672,-464;Inherit;False;Property;_MaxSamples;Max Samples;34;0;Create;True;0;0;0;False;0;False;16;16;1;128;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;324;-576,-272;Inherit;False;Constant;_ZeroConstLol;ZeroConstLol;27;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;319;-304,-432;Inherit;False;Property;_SHADER_API_MOBILE2;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;320;-304,-528;Inherit;False;Property;_SHADER_API_MOBILE3;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;321;-304,-624;Inherit;False;Property;_SHADER_API_MOBILE4;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;322;-304,-720;Inherit;False;Property;_SHADER_API_MOBILE5;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;323;-304,-336;Inherit;False;Property;_SHADER_API_MOBILE1;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;325;16,-720;Inherit;False;Property;_Keyword10;Keyword 10;30;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;318;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;326;16,-624;Inherit;False;Property;_Keyword11;Keyword 10;30;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;318;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;327;16,-528;Inherit;False;Property;_Keyword12;Keyword 10;30;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;318;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;328;16,-432;Inherit;False;Property;_Keyword13;Keyword 10;30;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;318;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.StaticSwitch;329;16,-336;Inherit;False;Property;_Keyword14;Keyword 10;30;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;318;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.TexturePropertyNode;108;-624,-768;Inherit;True;Property;_HeightMap;Height Map;32;1;[NoScaleOffset];Create;True;1;Parallax Occlusion Mapping;0;0;False;0;False;None;None;False;white;Auto;Texture2D;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
-Node;AmplifyShaderEditor.TextureCoordinatesNode;113;-560,-192;Inherit;False;0;5;4;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.ParallaxOcclusionMappingNode;111;400,-704;Inherit;False;0;8;False;;16;False;;2;0.022;0;False;1,1;False;0,0;11;0;FLOAT2;0,0;False;1;SAMPLER2D;;False;7;SAMPLERSTATE;;False;2;FLOAT;0.02;False;3;FLOAT3;0,0,0;False;8;INT;0;False;9;INT;0;False;10;INT;0;False;4;FLOAT;0;False;5;FLOAT2;0,0;False;6;FLOAT;0;False;1;FLOAT2;0
-Node;AmplifyShaderEditor.StaticSwitch;317;752,-672;Inherit;False;Property;_SHADER_API_MOBILE;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.StaticSwitch;318;432,-384;Inherit;False;Property;_QuestParallaxEnabled;Quest Parallax Enabled;30;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.StaticSwitch;112;240,-192;Inherit;False;Property;_HeightmapEnabled;Parallax Enabled;29;0;Create;False;0;0;0;False;4;Space(30);Header(Parallax Occlusion Mapping);Space(10);Toggle;False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.CommentaryNode;49;-2224,384;Inherit;False;1237.2;711.9001;;20;42;40;41;99;9;8;151;160;217;218;219;330;332;338;339;342;340;341;132;133;Normal;1,1,1,1;0;0
-Node;AmplifyShaderEditor.RegisterLocalVarNode;149;576,-176;Inherit;False;Texture Coordinates;-1;True;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.GetLocalVarNode;151;-2208,688;Inherit;False;149;Texture Coordinates;1;0;OBJECT;;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.SamplerNode;9;-2192,832;Inherit;True;Property;_MetallicGlossMap;MAS;8;1;[NoScaleOffset];Create;False;0;0;0;True;0;False;5;75f1fbacfa73385419ec8d7700a107ea;75f1fbacfa73385419ec8d7700a107ea;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
-Node;AmplifyShaderEditor.OneMinusNode;340;-1872,992;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.OneMinusNode;339;-2048,1024;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.CommentaryNode;52;-528,512;Inherit;False;1472.8;1054.2;;19;35;103;14;104;29;11;12;48;47;13;46;45;44;43;153;351;353;354;358;Emission Standard;1,1,1,1;0;0
-Node;AmplifyShaderEditor.DynamicAppendNode;341;-1712,960;Inherit;False;FLOAT4;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;1;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.DynamicAppendNode;342;-1696,832;Inherit;False;FLOAT4;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;1;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.DynamicAppendNode;338;-1824,832;Inherit;False;FLOAT4;4;0;FLOAT;0;False;1;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;1;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.WorldNormalVector;43;-240,1232;Inherit;False;False;1;0;FLOAT3;0,0,1;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
-Node;AmplifyShaderEditor.ViewDirInputsCoordNode;44;-240,1088;Inherit;False;World;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
-Node;AmplifyShaderEditor.StaticSwitch;330;-1552,832;Inherit;False;Property;_MapType;Map Type;7;0;Create;True;0;0;0;False;0;False;0;0;0;True;;KeywordEnum;4;MAS;MASK;RMA;ORM;Create;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.DotProductOpNode;45;-48,1088;Inherit;False;2;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.CommentaryNode;50;-1968,-272;Inherit;False;987.9999;522.3;;6;159;5;17;6;206;147;BaseMap;1,1,1,1;0;0
-Node;AmplifyShaderEditor.RangedFloatNode;219;-1936,512;Inherit;False;Constant;_ZeroConst;ZeroConst;25;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.BreakToComponentsNode;332;-1344,832;Inherit;False;COLOR;1;0;COLOR;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
-Node;AmplifyShaderEditor.SamplerNode;8;-1952,640;Inherit;True;Property;_BumpMap;Normal Map;6;2;[NoScaleOffset];[Normal];Create;False;0;0;0;True;0;False;5;None;None;True;0;False;bump;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
-Node;AmplifyShaderEditor.AbsOpNode;46;80,1088;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;13;32,1184;Inherit;False;Property;_EmissionFalloff;Emission Falloff;13;0;Create;False;0;0;0;True;0;False;1;1;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.GetLocalVarNode;206;-1920,-192;Inherit;False;149;Texture Coordinates;1;0;OBJECT;;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.CommentaryNode;208;-736,64;Inherit;False;1206;374;;7;204;139;134;138;202;203;207;Detail Map;1,1,1,1;0;0
-Node;AmplifyShaderEditor.StepOpNode;218;-1792,512;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleAddOpNode;41;-1296,640;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.FunctionNode;160;-1648,640;Inherit;False;UnpackNormal;-1;;219;d579cc33c6fa60b4ea9cee9e184b62e3;0;1;1;FLOAT4;0,0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.PowerNode;47;224,1088;Inherit;False;False;2;0;FLOAT;0;False;1;FLOAT;1;False;1;FLOAT;0
-Node;AmplifyShaderEditor.GetLocalVarNode;153;-496,704;Inherit;False;149;Texture Coordinates;1;0;OBJECT;;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.GetLocalVarNode;207;-704,304;Inherit;False;149;Texture Coordinates;1;0;OBJECT;;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.LerpOp;217;-1632,480;Inherit;False;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,1;False;2;FLOAT;0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.SimpleSubtractOpNode;42;-1184,672;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;1;False;1;FLOAT;0
-Node;AmplifyShaderEditor.ColorNode;6;-1680,-32;Inherit;False;Property;_BaseColor;BaseColor;4;0;Create;False;0;0;0;True;1;MainColor;False;1,1,1,1;1,1,1,1;True;True;0;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
-Node;AmplifyShaderEditor.SamplerNode;5;-1680,-224;Inherit;True;Property;_BaseMap;Base Map;3;0;Create;False;1;Base Color;0;0;False;3;Header(Base Color);Space(10);MainTexture;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
-Node;AmplifyShaderEditor.TextureCoordinatesNode;203;-672,160;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
-Node;AmplifyShaderEditor.SaturateNode;48;400,1088;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.ColorNode;12;-176,880;Inherit;False;Property;_EmissionColor;Emission Color;11;1;[HDR];Create;False;0;0;0;True;0;False;1,1,1,1;0,0,0,1;True;True;0;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
-Node;AmplifyShaderEditor.SamplerNode;11;-240,688;Inherit;True;Property;_EmissionMap;Emission Map;10;1;[NoScaleOffset];Create;False;0;0;0;True;0;False;8;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;17;-1232,-208;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.StaticSwitch;204;-448,176;Inherit;False;Property;_Keyword0;Keyword 0;29;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;112;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
-Node;AmplifyShaderEditor.StaticSwitch;99;-1344,496;Inherit;False;Property;_Normals;Normal Map Enabled;5;0;Create;False;0;0;0;False;4;Toggle;Space(30);Header(PBR);Space(10);False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.SaturateNode;40;-1152,832;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.ColorNode;104;48,608;Inherit;False;Constant;_EmptyEmissive;EmptyEmissive;19;1;[HDR];Create;True;0;0;0;False;0;False;0,0,0,0;0,0,0,0;True;True;0;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;29;512,720;Inherit;False;3;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.FunctionNode;202;-80,160;Inherit;False;Detail Map;15;;255;7eb669e8a4269ac43a3c284ddafaf020;0;4;21;COLOR;1,1,1,1;False;22;COLOR;0,0,1,0;False;23;FLOAT;0.5;False;218;FLOAT2;0,0;False;3;COLOR;0;COLOR;25;FLOAT;24
-Node;AmplifyShaderEditor.StaticSwitch;103;672,624;Inherit;False;Property;_Emission;Emission Enable;9;0;Create;False;0;0;0;False;4;Space(30);Header(Emissions);Space(10);Toggle;False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.RegisterLocalVarNode;138;240,144;Inherit;False;Albedo;-1;True;1;0;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.RegisterLocalVarNode;139;272,224;Inherit;False;Normal;-1;True;1;0;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.RegisterLocalVarNode;133;-1232,992;Inherit;False;Ambient Occlusion;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RegisterLocalVarNode;358;736,752;Inherit;False;Emission;-1;True;1;0;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.CommentaryNode;360;1072,848;Inherit;False;963;424;;6;365;364;363;362;361;367;Non-Linear Probe;1,1,1,1;0;0
-Node;AmplifyShaderEditor.CommentaryNode;96;2160,656;Inherit;False;589.4475;294.7469;It's set up this way because otherwise, these properties get ignored.;5;357;356;355;69;67;Surface Properties;1,1,1,1;0;0
-Node;AmplifyShaderEditor.CommentaryNode;98;1088,240;Inherit;False;622;370;;6;136;135;137;140;141;359;Mono SH;1,1,1,1;0;0
-Node;AmplifyShaderEditor.RegisterLocalVarNode;134;240,304;Inherit;False;Smoothness;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RegisterLocalVarNode;132;-1216,912;Inherit;False;Metallic;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.GetLocalVarNode;361;1184,896;Inherit;False;138;Albedo;1;0;OBJECT;;False;1;COLOR;0
-Node;AmplifyShaderEditor.GetLocalVarNode;362;1184,960;Inherit;False;139;Normal;1;0;OBJECT;;False;1;COLOR;0
-Node;AmplifyShaderEditor.GetLocalVarNode;363;1120,1024;Inherit;False;133;Ambient Occlusion;1;0;OBJECT;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.GetLocalVarNode;364;1184,1088;Inherit;False;358;Emission;1;0;OBJECT;;False;1;COLOR;0
-Node;AmplifyShaderEditor.FunctionNode;159;-1248,-16;Inherit;False;Alpha Split;-1;;259;07dab7960105b86429ac8eebd729ed6d;0;1;2;COLOR;0,0,0,0;False;2;FLOAT3;0;FLOAT;6
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;353;272,896;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.RangedFloatNode;14;320,1280;Inherit;False;Property;_BakedMutiplier;Emission Baked Mutiplier;14;0;Create;False;0;0;0;True;0;False;1;1;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;67;2256,752;Inherit;False;Property;_Cull;Cull Side;37;2;[HideInInspector];[Enum];Create;False;0;0;1;UnityEngine.Rendering.CullMode;False;0;False;0;2;0;0;0;1;FLOAT;0
-Node;AmplifyShaderEditor.RangedFloatNode;357;2176,864;Inherit;False;Property;_Cutoff;Cutoff;27;1;[HideInInspector];Create;True;0;0;0;False;0;False;1;0;0;1;0;1;FLOAT;0
-Node;AmplifyShaderEditor.GetLocalVarNode;135;1104,400;Inherit;False;134;Smoothness;1;0;OBJECT;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.GetLocalVarNode;136;1104,464;Inherit;False;132;Metallic;1;0;OBJECT;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.GetLocalVarNode;137;1104,528;Inherit;False;133;Ambient Occlusion;1;0;OBJECT;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.GetLocalVarNode;140;1104,272;Inherit;False;138;Albedo;1;0;OBJECT;;False;1;COLOR;0
-Node;AmplifyShaderEditor.GetLocalVarNode;141;1104,336;Inherit;False;139;Normal;1;0;OBJECT;;False;1;COLOR;0
-Node;AmplifyShaderEditor.GetLocalVarNode;359;1392,512;Inherit;False;358;Emission;1;0;OBJECT;;False;1;COLOR;0
-Node;AmplifyShaderEditor.FunctionNode;365;1408,960;Inherit;False;BakeryNonLinearLightProbe;0;;279;c510387f01015ab478517ff0d72607db;0;4;5;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;10;FLOAT;0;False;9;FLOAT3;0,0,0;False;1;FLOAT3;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;354;448,928;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;35;640,1280;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;1;COLOR;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;69;2448,752;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.RegisterLocalVarNode;147;-1216,96;Inherit;False;Alpha;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleMultiplyOpNode;356;2448,848;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.FunctionNode;306;1344,304;Inherit;False;BakeryMonoSH;21;;281;29c9468cd28079b448a58bef1fb32cb5;0;6;8;FLOAT3;0,0,0;False;9;FLOAT3;0,0,0;False;10;FLOAT;0;False;11;FLOAT;0;False;12;FLOAT;0;False;13;FLOAT3;0,0,0;False;2;FLOAT3;0;FLOAT;31
-Node;AmplifyShaderEditor.StaticSwitch;367;1600,1136;Inherit;False;Property;_NonLinearLightProbeSH;Non-Linear Light Probe SH;28;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.StaticSwitch;351;656,1008;Inherit;False;Property;_UseFalloffInBake;Use Falloff In Bake;12;0;Create;True;0;0;0;False;0;False;0;1;1;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.GetLocalVarNode;142;1968,144;Inherit;False;138;Albedo;1;0;OBJECT;;False;1;COLOR;0
-Node;AmplifyShaderEditor.GetLocalVarNode;143;1968,208;Inherit;False;139;Normal;1;0;OBJECT;;False;1;COLOR;0
-Node;AmplifyShaderEditor.GetLocalVarNode;144;1968,336;Inherit;False;134;Smoothness;1;0;OBJECT;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.GetLocalVarNode;145;1968,272;Inherit;False;132;Metallic;1;0;OBJECT;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.GetLocalVarNode;146;1904,400;Inherit;False;133;Ambient Occlusion;1;0;OBJECT;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.SimpleAddOpNode;355;2624,832;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
-Node;AmplifyShaderEditor.GetLocalVarNode;148;1984,464;Inherit;False;147;Alpha;1;0;OBJECT;;False;1;FLOAT;0
-Node;AmplifyShaderEditor.Compare;366;1856,576;Inherit;False;0;4;0;FLOAT;0;False;1;FLOAT;1;False;2;FLOAT3;0,0,0;False;3;COLOR;0,0,0,0;False;1;COLOR;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;312;2272,208;Float;False;True;-1;2;UnityEditor.ShaderGraphLitGUI;0;14;Mabel/LitMAS Plus/LitMAS+ Fade;623634af11bd9ab448550ee777f3493e;True;Forward;0;0;Forward;14;False;True;1;5;False;_BlendSrc;10;False;_BlendDst;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;True;True;0;True;_Cull;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;2;False;_ZWrite;True;3;False;;True;True;0;False;;0;False;;True;3;RenderPipeline=UniversalPipeline;RenderType=Transparent=RenderType;Queue=Transparent=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;False;False;False;True;1;Lightmode=UniversalForward;True;7;False;0;Hidden/InternalErrorShader;0;0;Standard;24;Workflow;1;0;Surface;2;638681150268396527;Two Sided;1;0;Cast Shadows;1;0;  Use Shadow Threshold;0;0;GPU Instancing;0;0;Built-in Fog;1;0;Lightmaps;1;0;Volumetrics;1;0;Decals;0;0;Write Depth;0;0;  Early Z (broken);0;0;Vertex Position,InvertActionOnDeselection;1;0;Emission;1;0;PC Reflection Probe;3;0;PC Receive Shadows;1;0;PC Vertex Lights;0;0;PC SSAO;1;0;Q Reflection Probe;0;0;Q Receive Shadows;0;0;Q Vertex Lights;1;0;Q SSAO;0;0;Environment Reflections;1;0;Meta Pass;1;0;0;5;True;True;True;True;True;False;;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;313;2272,208;Float;False;False;-1;2;UnityEditor.ShaderGraphLitGUI;0;1;New Amplify Shader;623634af11bd9ab448550ee777f3493e;True;DepthOnly;0;1;DepthOnly;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;False;False;False;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;1;Lightmode=DepthOnly;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;314;2272,208;Float;False;False;-1;2;UnityEditor.ShaderGraphLitGUI;0;1;New Amplify Shader;623634af11bd9ab448550ee777f3493e;True;DepthNormals;0;2;DepthNormals;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;Lightmode=DepthNormals;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;315;2272,208;Float;False;False;-1;2;UnityEditor.ShaderGraphLitGUI;0;1;New Amplify Shader;623634af11bd9ab448550ee777f3493e;True;ShadowCaster;0;3;ShadowCaster;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;False;False;False;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=ShadowCaster;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
-Node;AmplifyShaderEditor.TemplateMultiPassMasterNode;316;2272,208;Float;False;False;-1;2;UnityEditor.ShaderGraphLitGUI;0;1;New Amplify Shader;623634af11bd9ab448550ee777f3493e;True;Meta;0;4;Meta;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
+Version=19908
+Node;AmplifyShaderEditor.CommentaryNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;115;-720,-816;Inherit;False;1868.141;824.6599;;23;111;149;112;318;317;113;323;322;321;320;319;108;324;110;105;109;106;107;325;326;327;328;329;Parallax Mapping;1,1,1,1;0;0
+Node;AmplifyShaderEditor.RangedFloatNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;107;-672,-336;Inherit;False;Property;_RefPlane;Ref Plane;37;0;Create;True;0;0;0;False;0;False;0;0;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;106;-672,-592;Inherit;False;Property;_ParallaxScale;Scale;32;0;Create;False;0;0;0;False;0;False;0.02;0;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;109;-672,-528;Inherit;False;Property;_MinSamples;Min Samples;34;0;Create;True;0;0;0;False;0;False;8;0;1;128;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;105;-672,-400;Inherit;False;Property;_SidewallSteps;Sidewall Steps;36;0;Create;True;0;0;0;False;0;False;2;2;0;10;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;110;-672,-464;Inherit;False;Property;_MaxSamples;Max Samples;35;0;Create;True;0;0;0;False;0;False;16;16;1;128;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;324;-576,-272;Inherit;False;Constant;_ZeroConstLol;ZeroConstLol;27;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;319;-304,-432;Inherit;False;Property;_SHADER_API_MOBILE2;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;320;-304,-528;Inherit;False;Property;_SHADER_API_MOBILE3;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;321;-304,-624;Inherit;False;Property;_SHADER_API_MOBILE4;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;322;-304,-720;Inherit;False;Property;_SHADER_API_MOBILE5;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;323;-304,-336;Inherit;False;Property;_SHADER_API_MOBILE1;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;325;16,-720;Inherit;False;Property;_Keyword10;Keyword 10;31;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;318;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;326;16,-624;Inherit;False;Property;_Keyword11;Keyword 10;31;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;318;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;327;16,-528;Inherit;False;Property;_Keyword12;Keyword 10;31;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;318;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;328;16,-432;Inherit;False;Property;_Keyword13;Keyword 10;31;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;318;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;329;16,-336;Inherit;False;Property;_Keyword14;Keyword 10;31;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;318;True;True;All;9;1;FLOAT;0;False;0;FLOAT;0;False;2;FLOAT;0;False;3;FLOAT;0;False;4;FLOAT;0;False;5;FLOAT;0;False;6;FLOAT;0;False;7;FLOAT;0;False;8;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.TexturePropertyNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;108;-624,-768;Inherit;True;Property;_HeightMap;Height Map;33;1;[NoScaleOffset];Create;True;1;Parallax Occlusion Mapping;0;0;False;0;False;None;None;False;white;Auto;Texture2D;False;-1;0;2;SAMPLER2D;0;SAMPLERSTATE;1
+Node;AmplifyShaderEditor.TextureCoordinatesNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;113;-560,-192;Inherit;False;0;5;4;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT4;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.CommentaryNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;52;-528,512;Inherit;False;1472.8;1054.2;;19;35;103;14;104;29;11;12;48;47;13;46;45;44;43;153;351;353;354;358;Emission Standard;1,1,1,1;0;0
+Node;AmplifyShaderEditor.ParallaxOcclusionMappingNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;111;400,-704;Inherit;False;0;8;False;;16;False;;2;0.022;0;False;1,1;False;0,0;11;0;FLOAT2;0,0;False;1;SAMPLER2D;;False;7;SAMPLERSTATE;;False;2;FLOAT;0.02;False;3;FLOAT3;0,0,0;False;8;INT;0;False;9;INT;0;False;10;INT;0;False;4;FLOAT;0;False;5;FLOAT2;0,0;False;6;FLOAT;0;False;1;FLOAT2;0
+Node;AmplifyShaderEditor.WorldNormalVector, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;43;-240,1232;Inherit;False;False;1;0;FLOAT3;0,0,1;False;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
+Node;AmplifyShaderEditor.ViewDirInputsCoordNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;44;-240,1088;Inherit;False;World;False;0;4;FLOAT3;0;FLOAT;1;FLOAT;2;FLOAT;3
+Node;AmplifyShaderEditor.StaticSwitch, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;317;752,-672;Inherit;False;Property;_SHADER_API_MOBILE;SHADER_API_MOBILE;33;0;Create;True;0;0;0;False;0;False;0;0;0;False;SHADER_API_MOBILE;Toggle;2;Key0;Key1;Fetch;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.CommentaryNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;49;-2224,384;Inherit;False;1237.2;711.9001;;14;42;40;41;99;9;8;151;160;217;218;219;332;132;133;Normal;1,1,1,1;0;0
+Node;AmplifyShaderEditor.DotProductOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;45;-48,1088;Inherit;False;2;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;318;432,-384;Inherit;False;Property;_QuestParallaxEnabled;Quest Parallax Enabled;31;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.SamplerNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;9;-2192,832;Inherit;True;Property;_MetallicGlossMap;MAS;9;1;[NoScaleOffset];Create;False;0;0;0;True;0;False;5;75f1fbacfa73385419ec8d7700a107ea;75f1fbacfa73385419ec8d7700a107ea;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;False;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
+Node;AmplifyShaderEditor.AbsOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;46;80,1088;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;13;32,1184;Inherit;False;Property;_EmissionFalloff;Emission Falloff;14;0;Create;False;0;0;0;True;0;False;1;1;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.StaticSwitch, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;112;240,-192;Inherit;False;Property;_HeightmapEnabled;Parallax Enabled;30;0;Create;False;0;0;0;False;4;Space(30);Header(Parallax Occlusion Mapping);Space(10);Toggle;False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;151;-2208,688;Inherit;False;149;Texture Coordinates;1;0;OBJECT;;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.PowerNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;47;224,1088;Inherit;False;False;2;0;FLOAT;0;False;1;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;153;-496,704;Inherit;False;149;Texture Coordinates;1;0;OBJECT;;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.FunctionNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;368;-1744,896;Inherit;False;MASFormatSwap;7;;285;d4aacd9e61651b0429135e5c3f7db7f9;0;1;1;COLOR;0,0,0,0;False;5;COLOR;0;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7
+Node;AmplifyShaderEditor.RegisterLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;149;576,-176;Inherit;False;Texture Coordinates;-1;True;1;0;FLOAT4;0,0,0,0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.CommentaryNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;50;-1968,-272;Inherit;False;987.9999;522.3;;6;159;5;17;6;206;147;BaseMap;1,1,1,1;0;0
+Node;AmplifyShaderEditor.RangedFloatNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;219;-1936,512;Inherit;False;Constant;_ZeroConst;ZeroConst;25;0;Create;True;0;0;0;False;0;False;0;0;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.BreakToComponentsNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;332;-1344,832;Inherit;False;COLOR;1;0;COLOR;0,0,0,0;False;16;FLOAT;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT;5;FLOAT;6;FLOAT;7;FLOAT;8;FLOAT;9;FLOAT;10;FLOAT;11;FLOAT;12;FLOAT;13;FLOAT;14;FLOAT;15
+Node;AmplifyShaderEditor.SamplerNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;8;-1952,640;Inherit;True;Property;_BumpMap;Normal Map;6;2;[NoScaleOffset];[Normal];Create;False;0;0;0;True;0;False;5;None;None;True;0;False;bump;Auto;False;Object;-1;Auto;Texture2D;False;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
+Node;AmplifyShaderEditor.SaturateNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;48;400,1088;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.ColorNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;12;-176,880;Inherit;False;Property;_EmissionColor;Emission Color;12;1;[HDR];Create;False;0;0;0;True;0;False;1,1,1,1;0,0,0,1;True;True;0;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
+Node;AmplifyShaderEditor.SamplerNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;11;-240,688;Inherit;True;Property;_EmissionMap;Emission Map;11;1;[NoScaleOffset];Create;False;0;0;0;True;0;False;8;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;False;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;206;-1920,-192;Inherit;False;149;Texture Coordinates;1;0;OBJECT;;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.CommentaryNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;208;-736,64;Inherit;False;1206;374;;7;204;139;134;138;202;203;207;Detail Map;1,1,1,1;0;0
+Node;AmplifyShaderEditor.StepOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;218;-1792,512;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleAddOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;41;-1296,640;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;160;-1648,640;Inherit;False;UnpackNormal;-1;;286;d579cc33c6fa60b4ea9cee9e184b62e3;0;1;1;FLOAT4;0,0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.ColorNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;104;48,608;Inherit;False;Constant;_EmptyEmissive;EmptyEmissive;19;1;[HDR];Create;True;0;0;0;False;0;False;0,0,0,0;0,0,0,0;True;True;0;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;29;512,720;Inherit;False;3;3;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;2;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;207;-704,304;Inherit;False;149;Texture Coordinates;1;0;OBJECT;;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.LerpOp, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;217;-1632,480;Inherit;False;3;0;FLOAT3;0,0,0;False;1;FLOAT3;0,0,1;False;2;FLOAT;0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.SimpleSubtractOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;42;-1184,672;Inherit;False;2;0;FLOAT;0;False;1;FLOAT;1;False;1;FLOAT;0
+Node;AmplifyShaderEditor.ColorNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;6;-1680,-32;Inherit;False;Property;_BaseColor;BaseColor;4;0;Create;False;0;0;0;True;1;MainColor;False;1,1,1,1;1,1,1,1;True;True;0;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
+Node;AmplifyShaderEditor.SamplerNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;5;-1680,-224;Inherit;True;Property;_BaseMap;Base Map;3;0;Create;False;1;Base Color;0;0;False;3;Header(Base Color);Space(10);MainTexture;False;-1;None;None;True;0;False;white;Auto;False;Object;-1;Auto;Texture2D;False;8;0;SAMPLER2D;;False;1;FLOAT2;0,0;False;2;FLOAT;0;False;3;FLOAT2;0,0;False;4;FLOAT2;0,0;False;5;FLOAT;1;False;6;FLOAT;0;False;7;SAMPLERSTATE;;False;6;COLOR;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4;FLOAT3;5
+Node;AmplifyShaderEditor.TextureCoordinatesNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;203;-672,160;Inherit;False;0;-1;2;3;2;SAMPLER2D;;False;0;FLOAT2;1,1;False;1;FLOAT2;0,0;False;5;FLOAT2;0;FLOAT;1;FLOAT;2;FLOAT;3;FLOAT;4
+Node;AmplifyShaderEditor.StaticSwitch, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;103;672,624;Inherit;False;Property;_Emission;Emission Enable;10;0;Create;False;0;0;0;False;4;Space(30);Header(Emissions);Space(10);Toggle;False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.CommentaryNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;360;1072,848;Inherit;False;963;424;;6;365;364;363;362;361;367;Non-Linear Probe;1,1,1,1;0;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;17;-1232,-208;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.StaticSwitch, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;204;-448,176;Inherit;False;Property;_Keyword0;Keyword 0;30;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Reference;112;True;True;All;9;1;FLOAT4;0,0,0,0;False;0;FLOAT4;0,0,0,0;False;2;FLOAT4;0,0,0,0;False;3;FLOAT4;0,0,0,0;False;4;FLOAT4;0,0,0,0;False;5;FLOAT4;0,0,0,0;False;6;FLOAT4;0,0,0,0;False;7;FLOAT4;0,0,0,0;False;8;FLOAT4;0,0,0,0;False;1;FLOAT4;0
+Node;AmplifyShaderEditor.StaticSwitch, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;99;-1344,496;Inherit;False;Property;_Normals;Normal Map Enabled;5;0;Create;False;0;0;0;False;4;Toggle;Space(30);Header(PBR);Space(10);False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;FLOAT3;0,0,0;False;0;FLOAT3;0,0,0;False;2;FLOAT3;0,0,0;False;3;FLOAT3;0,0,0;False;4;FLOAT3;0,0,0;False;5;FLOAT3;0,0,0;False;6;FLOAT3;0,0,0;False;7;FLOAT3;0,0,0;False;8;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.SaturateNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;40;-1152,832;Inherit;False;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;139;272,224;Inherit;False;Normal;-1;True;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;133;-1232,992;Inherit;False;Ambient Occlusion;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;358;736,752;Inherit;False;Emission;-1;True;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.CommentaryNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;96;2160,656;Inherit;False;589.4475;294.7469;It's set up this way because otherwise, these properties get ignored.;5;357;356;355;69;67;Surface Properties;1,1,1,1;0;0
+Node;AmplifyShaderEditor.CommentaryNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;98;1088,240;Inherit;False;622;370;;6;136;135;137;140;141;359;Mono SH;1,1,1,1;0;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;134;240,304;Inherit;False;Smoothness;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;132;-1216,912;Inherit;False;Metallic;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;361;1184,896;Inherit;False;138;Albedo;1;0;OBJECT;;False;1;COLOR;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;362;1184,960;Inherit;False;139;Normal;1;0;OBJECT;;False;1;COLOR;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;363;1120,1024;Inherit;False;133;Ambient Occlusion;1;0;OBJECT;;False;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;202;-80,160;Inherit;False;Detail Map;16;;287;7eb669e8a4269ac43a3c284ddafaf020;0;4;21;COLOR;1,1,1,1;False;22;COLOR;0,0,1,0;False;23;FLOAT;0.5;False;218;FLOAT2;0,0;False;3;COLOR;0;COLOR;25;FLOAT;24
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;364;1184,1088;Inherit;False;358;Emission;1;0;OBJECT;;False;1;COLOR;0
+Node;AmplifyShaderEditor.FunctionNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;159;-1248,-16;Inherit;False;Alpha Split;-1;;291;07dab7960105b86429ac8eebd729ed6d;0;1;2;COLOR;0,0,0,0;False;2;FLOAT3;0;FLOAT;6
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;353;272,896;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.RangedFloatNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;14;320,1280;Inherit;False;Property;_BakedMutiplier;Emission Baked Mutiplier;15;0;Create;False;0;0;0;True;0;False;1;1;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;67;2256,752;Inherit;False;Property;_Cull;Cull Side;38;2;[HideInInspector];[Enum];Create;False;0;0;1;UnityEngine.Rendering.CullMode;False;0;False;0;2;0;0;0;1;FLOAT;0
+Node;AmplifyShaderEditor.RangedFloatNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;357;2176,864;Inherit;False;Property;_Cutoff;Cutoff;28;1;[HideInInspector];Create;True;0;0;0;False;0;False;1;0;0;1;0;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;135;1104,400;Inherit;False;134;Smoothness;1;0;OBJECT;;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;136;1104,464;Inherit;False;132;Metallic;1;0;OBJECT;;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;137;1104,528;Inherit;False;133;Ambient Occlusion;1;0;OBJECT;;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;140;1104,272;Inherit;False;138;Albedo;1;0;OBJECT;;False;1;COLOR;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;141;1104,336;Inherit;False;139;Normal;1;0;OBJECT;;False;1;COLOR;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;359;1392,512;Inherit;False;358;Emission;1;0;OBJECT;;False;1;COLOR;0
+Node;AmplifyShaderEditor.FunctionNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;365;1408,960;Inherit;False;BakeryNonLinearLightProbe;0;;292;c510387f01015ab478517ff0d72607db;0;4;5;FLOAT3;0,0,0;False;1;FLOAT3;0,0,0;False;10;FLOAT;0;False;9;FLOAT3;0,0,0;False;1;FLOAT3;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;138;240,144;Inherit;False;Albedo;-1;True;1;0;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;354;448,928;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;35;640,1280;Inherit;False;2;2;0;COLOR;0,0,0,0;False;1;FLOAT;0;False;1;COLOR;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;69;2448,752;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.RegisterLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;147;-1216,96;Inherit;False;Alpha;-1;True;1;0;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleMultiplyOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;356;2448,848;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.FunctionNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;306;1344,304;Inherit;False;BakeryMonoSH;22;;294;29c9468cd28079b448a58bef1fb32cb5;0;6;8;FLOAT3;0,0,0;False;9;FLOAT3;0,0,0;False;10;FLOAT;0;False;11;FLOAT;0;False;12;FLOAT;0;False;13;FLOAT3;0,0,0;False;2;FLOAT3;0;INT;31
+Node;AmplifyShaderEditor.StaticSwitch, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;367;1600,1136;Inherit;False;Property;_NonLinearLightProbeSH;Non-Linear Light Probe SH;29;0;Create;True;0;0;0;False;0;False;0;0;0;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.StaticSwitch, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;351;656,1008;Inherit;False;Property;_UseFalloffInBake;Use Falloff In Bake;13;0;Create;True;0;0;0;False;0;False;0;1;1;True;;Toggle;2;Key0;Key1;Create;True;True;All;9;1;COLOR;0,0,0,0;False;0;COLOR;0,0,0,0;False;2;COLOR;0,0,0,0;False;3;COLOR;0,0,0,0;False;4;COLOR;0,0,0,0;False;5;COLOR;0,0,0,0;False;6;COLOR;0,0,0,0;False;7;COLOR;0,0,0,0;False;8;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;142;1968,144;Inherit;False;138;Albedo;1;0;OBJECT;;False;1;COLOR;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;143;1968,208;Inherit;False;139;Normal;1;0;OBJECT;;False;1;COLOR;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;144;1968,336;Inherit;False;134;Smoothness;1;0;OBJECT;;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;145;1968,272;Inherit;False;132;Metallic;1;0;OBJECT;;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;146;1904,400;Inherit;False;133;Ambient Occlusion;1;0;OBJECT;;False;1;FLOAT;0
+Node;AmplifyShaderEditor.SimpleAddOpNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;355;2624,832;Inherit;False;2;2;0;FLOAT;0;False;1;FLOAT;0;False;1;FLOAT;0
+Node;AmplifyShaderEditor.GetLocalVarNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;148;1984,464;Inherit;False;147;Alpha;1;0;OBJECT;;False;1;FLOAT;0
+Node;AmplifyShaderEditor.Compare, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;366;1856,576;Inherit;False;0;4;0;INT;0;False;1;FLOAT;1;False;2;FLOAT3;0,0,0;False;3;COLOR;0,0,0,0;False;1;COLOR;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;312;2272,208;Float;False;True;-1;2;UnityEditor.ShaderGraphLitGUI;0;12;Mabel/LitMAS Plus/LitMAS+ Fade;623634af11bd9ab448550ee777f3493e;True;Forward;0;0;Forward;14;False;True;1;5;False;_BlendSrc;10;False;_BlendDst;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;True;True;0;True;_Cull;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;2;False;_ZWrite;True;3;False;;True;True;0;False;;0;False;;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Transparent=RenderType;Queue=Transparent=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;False;False;False;False;True;1;Lightmode=UniversalForward;True;7;False;0;Hidden/InternalErrorShader;0;0;Standard;24;Workflow;1;0;Surface;2;638681150268396527;Two Sided;1;0;Cast Shadows;1;0;  Use Shadow Threshold;0;0;GPU Instancing;0;0;Built-in Fog;1;0;Lightmaps;1;0;Volumetrics;1;0;Decals;0;0;Write Depth;0;0;  Early Z (broken);0;0;Vertex Position;1;0;Emission;1;0;PC Reflection Probe;3;0;PC Receive Shadows;1;0;PC Vertex Lights;0;0;PC SSAO;1;0;Q Reflection Probe;0;0;Q Receive Shadows;0;0;Q Vertex Lights;1;0;Q SSAO;0;0;Environment Reflections;1;0;Meta Pass;1;0;0;5;True;True;True;True;True;False;;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;313;2272,208;Float;False;False;-1;2;UnityEditor.ShaderGraphLitGUI;0;1;New Amplify Shader;623634af11bd9ab448550ee777f3493e;True;DepthOnly;0;1;DepthOnly;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;False;False;False;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;Lightmode=DepthOnly;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;314;2272,208;Float;False;False;-1;2;UnityEditor.ShaderGraphLitGUI;0;1;New Amplify Shader;623634af11bd9ab448550ee777f3493e;True;DepthNormals;0;2;DepthNormals;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;Lightmode=DepthNormals;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;315;2272,208;Float;False;False;-1;2;UnityEditor.ShaderGraphLitGUI;0;1;New Amplify Shader;623634af11bd9ab448550ee777f3493e;True;ShadowCaster;0;3;ShadowCaster;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;False;False;False;False;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=ShadowCaster;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
+Node;AmplifyShaderEditor.TemplateMultiPassMasterNode, AmplifyShaderEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null;316;2272,208;Float;False;False;-1;2;UnityEditor.ShaderGraphLitGUI;0;1;New Amplify Shader;623634af11bd9ab448550ee777f3493e;True;Meta;0;4;Meta;0;False;True;1;1;False;;0;False;;0;1;False;;0;False;;False;False;False;False;False;False;False;False;False;False;False;False;True;0;False;;False;True;True;True;True;True;0;False;;False;False;False;False;False;False;False;True;False;0;False;;255;False;;255;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;0;False;;False;True;1;False;;True;3;False;;True;True;0;False;;0;False;;False;True;3;RenderPipeline=UniversalPipeline;RenderType=Opaque=RenderType;Queue=Geometry=Queue=0;False;False;0;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;2;False;;False;False;False;False;False;False;False;False;False;False;False;False;False;False;False;True;1;LightMode=Meta;False;False;0;Hidden/InternalErrorShader;0;0;Standard;0;False;0
 WireConnection;319;1;105;0
 WireConnection;319;0;324;0
 WireConnection;320;1;110;0
@@ -2783,44 +2818,35 @@ WireConnection;111;10;328;0
 WireConnection;111;4;329;0
 WireConnection;317;1;111;0
 WireConnection;317;0;113;0
-WireConnection;318;1;317;0
-WireConnection;318;0;111;0
-WireConnection;112;1;113;0
-WireConnection;112;0;318;0
-WireConnection;149;0;112;0
-WireConnection;9;1;151;0
-WireConnection;340;0;9;2
-WireConnection;339;0;9;1
-WireConnection;341;0;9;2
-WireConnection;341;1;9;3
-WireConnection;341;2;339;0
-WireConnection;342;0;9;3
-WireConnection;342;1;9;1
-WireConnection;342;2;340;0
-WireConnection;338;0;9;1
-WireConnection;338;1;9;2
-WireConnection;338;2;9;4
-WireConnection;330;1;9;0
-WireConnection;330;0;338;0
-WireConnection;330;2;341;0
-WireConnection;330;3;342;0
 WireConnection;45;0;44;0
 WireConnection;45;1;43;0
-WireConnection;332;0;330;0
-WireConnection;8;1;151;0
+WireConnection;318;1;317;0
+WireConnection;318;0;111;0
+WireConnection;9;1;151;0
 WireConnection;46;0;45;0
+WireConnection;112;1;113;0
+WireConnection;112;0;318;0
+WireConnection;47;0;46;0
+WireConnection;47;1;13;0
+WireConnection;368;1;9;0
+WireConnection;149;0;112;0
+WireConnection;332;0;368;0
+WireConnection;8;1;151;0
+WireConnection;48;0;47;0
+WireConnection;11;1;153;0
 WireConnection;218;0;219;0
 WireConnection;41;0;8;3
 WireConnection;41;1;332;2
 WireConnection;160;1;8;0
-WireConnection;47;0;46;0
-WireConnection;47;1;13;0
+WireConnection;29;0;11;0
+WireConnection;29;1;12;0
+WireConnection;29;2;48;0
 WireConnection;217;0;160;0
 WireConnection;217;2;218;0
 WireConnection;42;0;41;0
 WireConnection;5;1;206;0
-WireConnection;48;0;47;0
-WireConnection;11;1;153;0
+WireConnection;103;1;104;0
+WireConnection;103;0;29;0
 WireConnection;17;0;5;0
 WireConnection;17;1;6;0
 WireConnection;204;1;203;0
@@ -2828,21 +2854,15 @@ WireConnection;204;0;207;0
 WireConnection;99;1;217;0
 WireConnection;99;0;160;0
 WireConnection;40;0;42;0
-WireConnection;29;0;11;0
-WireConnection;29;1;12;0
-WireConnection;29;2;48;0
-WireConnection;202;21;17;0
-WireConnection;202;22;99;0
-WireConnection;202;23;40;0
-WireConnection;202;218;204;0
-WireConnection;103;1;104;0
-WireConnection;103;0;29;0
-WireConnection;138;0;202;0
 WireConnection;139;0;202;25
 WireConnection;133;0;332;1
 WireConnection;358;0;103;0
 WireConnection;134;0;202;24
 WireConnection;132;0;332;0
+WireConnection;202;21;17;0
+WireConnection;202;22;99;0
+WireConnection;202;23;40;0
+WireConnection;202;218;204;0
 WireConnection;159;2;17;0
 WireConnection;353;0;11;0
 WireConnection;353;1;12;0
@@ -2850,6 +2870,7 @@ WireConnection;365;5;361;0
 WireConnection;365;1;362;0
 WireConnection;365;10;363;0
 WireConnection;365;9;364;0
+WireConnection;138;0;202;0
 WireConnection;354;0;353;0
 WireConnection;354;1;14;0
 WireConnection;35;0;29;0
@@ -2882,4 +2903,4 @@ WireConnection;312;7;146;0
 WireConnection;312;8;148;0
 WireConnection;312;9;355;0
 ASEEND*/
-//CHKSM=DBC97274608D095E42B4FA66DE25E16A044E2B09
+//CHKSM=C675722075253523F369FF9B1E3229A2B6B73FE7

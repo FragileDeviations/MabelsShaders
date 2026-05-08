@@ -1,6 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 namespace MabelsShaders
 {
@@ -19,17 +20,17 @@ namespace MabelsShaders
 			DepthTexture = 8
 		}
 		
-		string[] filterKeywords = new string[]
+		static readonly Dictionary<Filter, string> FilterKeywords = new()
 		{
-			"_FILTER_GRAYSCALE",
-			"_FILTER_HUESHIFT",
-			"_FILTER_INVERT",
-			"_FILTER_POSTERIZATION",
-			"_FILTER_SELECTIVECOLOR",
-			"_FILTER_PIXELATION",
-			"_FILTER_DITHERING",
-			"_FILTER_VORONOIDISTORT",
-			"_FILTER_DEPTHTEXTURE"
+			{ Filter.Grayscale, "_FILTER_GRAYSCALE" },
+			{ Filter.HueShift, "_FILTER_HUESHIFT" },
+			{ Filter.Invert, "_FILTER_INVERT" },
+			{ Filter.Posterization, "_FILTER_POSTERIZATION" },
+			{ Filter.SelectiveColor, "_FILTER_SELECTIVECOLOR" },
+			{ Filter.Pixelation, "_FILTER_PIXELATION" },
+			{ Filter.Dithering, "_FILTER_DITHERING" },
+			{ Filter.VoronoiDistort, "_FILTER_VORONOIDISTORT" },
+			{ Filter.DepthTexture, "_FILTER_DEPTHTEXTURE" }
 		};
 
 		public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
@@ -40,7 +41,11 @@ namespace MabelsShaders
 
 			Material mat = materialEditor.target as Material;
 			var filterProp = FindProperty("_Filter", properties, true);
-			int filterValue = (int)filterProp.floatValue;
+			int filterValue = Mathf.Clamp(
+				Mathf.RoundToInt(filterProp.floatValue),
+				0,
+				Enum.GetValues(typeof(Filter)).Length - 1
+			);
 
 			EditorGUI.BeginChangeCheck();
 			filterValue = EditorGUILayout.Popup("Filter", filterValue, Enum.GetNames(typeof(Filter)));
@@ -50,10 +55,10 @@ namespace MabelsShaders
 
 				foreach (Material m in materialEditor.targets)
 				{
-					foreach (string kw in filterKeywords)
+					foreach (var kw in FilterKeywords.Values)
 						m.DisableKeyword(kw);
 
-					m.EnableKeyword(filterKeywords[filterValue]);
+					m.EnableKeyword(FilterKeywords[(Filter)filterValue]);
 				}
 			}
 			

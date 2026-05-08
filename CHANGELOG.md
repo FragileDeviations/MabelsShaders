@@ -1,3 +1,16 @@
+# v1.13.5
+## Changed Shaders
+### LitMAS+
+* See MAS Format Swap changes
+### Fractal
+* See MAS Format Swap changes
+### Local Filters
+* Slight optimizations
+## Changed Functions
+### MAS Format Swap
+* MRA Support
+* MOHS Support
+
 # v1.13.4
 ## Changed Shaders
 ### Local Filters

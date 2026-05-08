@@ -1,3 +1,8 @@
+# v1.13.4
+## Changed Shaders
+### Local Filters
+* Added DepthTexture
+
 # v1.13.3
 ## Changed Shaders
 ### SLZ Toon

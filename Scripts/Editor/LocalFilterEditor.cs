@@ -15,7 +15,8 @@ namespace MabelsShaders
 			SelectiveColor = 4,
 			Pixelation = 5,
 			Dithering = 6,
-			VoronoiDistort = 7
+			VoronoiDistort = 7,
+			DepthTexture = 8
 		}
 		
 		string[] filterKeywords = new string[]
@@ -27,7 +28,8 @@ namespace MabelsShaders
 			"_FILTER_SELECTIVECOLOR",
 			"_FILTER_PIXELATION",
 			"_FILTER_DITHERING",
-			"_FILTER_VORONOIDISTORT"
+			"_FILTER_VORONOIDISTORT",
+			"_FILTER_DEPTHTEXTURE"
 		};
 
 		public override void OnGUI(MaterialEditor materialEditor, MaterialProperty[] properties)
@@ -112,6 +114,10 @@ namespace MabelsShaders
 				case Filter.VoronoiDistort:
 					DrawProp(editor, props, "_VoronoiScale", "The scale of the Voronoi texture.");
 					DrawProp(editor, props, "_VoronoiSpeed", "The speed of the Voronoi texture's scrolling.");
+					break;
+					
+				case Filter.DepthTexture:
+					DrawProp(editor, props, "_Brightness", "The brightness of the shown depth texture.");
 					break;
 			}
 		}

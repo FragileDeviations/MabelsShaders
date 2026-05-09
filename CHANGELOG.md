@@ -1,3 +1,8 @@
+# v1.14.0
+## Added Shaders
+### WorldVertexTransition
+* Port of Source Engine's WorldVertexTransition shader to SLZ's LitMAS format
+
 # v1.13.5
 ## Changed Shaders
 ### LitMAS+

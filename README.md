@@ -1,3 +1,12 @@
+# IMPORTANT NOTICE!
+I have moved over to Forgejo.
+
+New page: https://git.weatherelectric.xyz/MabelAmber/MabelsShaders
+
+New installation link: https://git.weatherelectric.xyz/MabelAmber/MabelsShaders.git
+
+This repository will be left up as an archive, but it will not receive future updates. All future updates will be published to the Forgejo repository instead.
+
 # MabelsShaders
  Various shaders for SLZ URP.
 
